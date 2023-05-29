@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_item_fragment_characters"
+        android:icon="@drawable/baseline_person_24"
+        android:title="@string/title_nav_bar_item_characters"/>
+
+    <item
+        android:id="@+id/nav_item_fragment_locations"
+        android:icon="@drawable/baseline_place_24"
+        android:title="@string/title_nav_bar_item_locations"/>
+
+    <item
+        android:id="@+id/nav_item_fragment_episodes"
+        android:icon="@drawable/baseline_movie_24"
+        android:title="@string/title_nav_bar_item_episodes"/>
+
+</menu>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_open_filters"
+        style="@style/style_fab"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/content_description_icon_filter"
+        app:backgroundTint="?attr/colorPrimary"
+        app:fabCustomSize="@dimen/size_fab_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_filter_alt_24"
+        tools:src="@drawable/baseline_filter_alt_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_scroll_to_top"
+        style="@style/style_fab"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/content_description_icon_up_arrow"
+        app:backgroundTint="?attr/colorPrimary"
+        app:fabCustomSize="@dimen/size_fab_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/baseline_arrow_upward_24"
+        tools:src="@drawable/baseline_arrow_upward_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

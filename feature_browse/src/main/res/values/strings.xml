@@ -1,0 +1,50 @@
+<resources>
+
+    <string name="title_nav_bar_item_characters">Characters</string>
+    <string name="title_nav_bar_item_locations">Locations</string>
+    <string name="title_nav_bar_item_episodes">Episodes</string>
+
+    <string name="hint_character_name">Name</string>
+    <string name="hint_character_type">Type</string>
+    <string name="hint_character_species">Species</string>
+
+    <string name="hint_location_name">Name</string>
+    <string name="hint_location_type">Type</string>
+    <string name="hint_location_dimension">Dimension</string>
+
+    <string name="hint_episode_name">Name</string>
+    <string name="hint_episode_code">Code</string>
+
+    <string name="label_filter_character_status">Status</string>
+    <string name="label_filter_character_gender">Gender</string>
+
+    <string name="composite_text_character_species">Species: %1$s</string>
+    <string name="composite_text_character_status">Status: %1$s</string>
+    <string name="composite_text_character_type">Type: %1$s</string>
+    <string name="composite_text_character_gender">Gender: %1$s</string>
+    <string name="composite_text_character_origin">Origin: %1$s</string>
+    <string name="composite_text_character_location">Location: %1$s</string>
+
+    <string name="composite_text_episode_air_date">Aired on: %1$s</string>
+
+    <string name="composite_text_location_type">Type: %1$s</string>
+    <string name="composite_text_location_dimension">Dimension: %1$s</string>
+
+    <string name="text_character_origin">Origin:</string>
+    <string name="text_character_location">Location:</string>
+
+    <string name="text_character_episodes">Appears in episodes:</string>
+    <string name="text_episode_characters">Features characters:</string>
+    <string name="text_location_residents">Residents:</string>
+
+    <string name="content_description_icon_filter">Filter icon</string>
+    <string name="content_description_icon_up_arrow">Up arrow</string>
+
+    <string name="text_list_network_lost">No network connection. Data may be incomplete.</string>
+    <string name="text_list_network_restored">Network connection restored. Pull to refresh data.</string>
+
+    <string name="text_info_loading">loading...</string>
+    <string name="text_info_loading_error">failed to load!</string>
+    <string name="text_info_none">none</string>
+
+</resources>

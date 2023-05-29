@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="size_fab_large">56dp</dimen>
+    <dimen name="size_fab_small">48dp</dimen>
+
+    <dimen name="dimen_pager_footer_loading_height">48dp</dimen>
+</resources>

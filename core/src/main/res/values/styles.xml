@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <style name="style_fab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="style_no_fullscreen_keyboard">
+        <item name="android:imeOptions">flagNoExtractUi|actionDone</item>
+    </style>
+
+    <style name="style_text_input_filter" parent="style_no_fullscreen_keyboard">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:inputType">text</item>
+        <item name="marginHorizontal">16dp</item>
+    </style>
+
+    <style name="style_round_corner_image">
+        <item name="cornerSize">32dp</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+</resources>

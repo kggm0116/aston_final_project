@@ -1,0 +1,8 @@
+<resources>
+    <string name="label_pager_retry">Retry</string>
+    <string name="text_pager_empty">Nothing to display</string>
+    <string name="text_pager_loading">Loading data...</string>
+    <string name="text_pager_error">Couldn\'t load data</string>
+
+    <string name="label_apply_filter">Apply</string>
+</resources>
