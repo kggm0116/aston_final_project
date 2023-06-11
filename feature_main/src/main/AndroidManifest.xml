@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name="ru.kggm.core.presentation.ui.MainActivity"
+            android:name="ru.kggm.aston_final_project.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
