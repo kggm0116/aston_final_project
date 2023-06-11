@@ -13,4 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Aston Final Project"
-include ':app'
+include ':application'
+include ':core'
