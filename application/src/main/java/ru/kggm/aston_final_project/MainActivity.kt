@@ -2,7 +2,7 @@ package ru.kggm.aston_final_project
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import ru.kggm.feeature_main.presentation.ui.main.BlankFragment
+import ru.kggm.feeature_main.presentation.ui.characters.CharactersFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_activity_main, BlankFragment())
+                .replace(R.id.fragment_container_activity_main, CharactersFragment())
                 .commit()
         }
     }
