@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "Aston Final Project"
 include ':application'
 include ':core'
-include ':feature_characters'
+include ':feature_lists'
