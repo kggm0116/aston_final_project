@@ -13,7 +13,7 @@ import ru.kggm.feeature_characters.data.entities.CharacterDataEntity
     version = 1,
     exportSchema = false
 )
-abstract class SharedDatabase(): RoomDatabase() {
+abstract class SharedDatabase: RoomDatabase() {
     abstract fun characterDao() : CharacterDao
     companion object {
         const val NAME = "aston_database"

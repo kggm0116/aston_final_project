@@ -7,6 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.map
+import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.feeature_characters.domain.use_cases.GetCharactersPagingSource
 import ru.kggm.feeature_characters.presentation.entities.CharacterPresentationEntity.Companion.toPresentationEntity
 import javax.inject.Inject
@@ -16,20 +17,22 @@ class CharactersViewModel @Inject constructor(
 ): ViewModel() {
 
     companion object {
-        private const val PAGE_SIZE = 50
+        private const val PAGE_SIZE = 20
     }
 
     val characterPagingData = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
-        pagingSourceFactory = { getCharactersPagingSource() }
+        pagingSourceFactory = {
+            getCharactersPagingSource().also { source ->
+                source.registerInvalidatedCallback {
+                    safeLaunch { source.invalidateCache() }
+                }
+            }
+        }
     )
         .flow
         .map { data ->
             data.map { it.toPresentationEntity() }
         }
         .cachedIn(viewModelScope)
-
-    fun resetPaging() {
-        getCharactersPagingSource().invalidate()
-    }
 }

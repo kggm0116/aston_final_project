@@ -18,7 +18,7 @@ class CharactersFragment : BaseFragment<FragmentCharactersBinding, CharactersVie
 ) {
     override fun createBinding() = FragmentCharactersBinding.inflate(layoutInflater)
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
-        CharacterComponent.init(dependenciesProvider).inject(this)
+        CharacterComponent.init(requireContext(), dependenciesProvider).inject(this)
     }
 
     override fun onInitialize() {

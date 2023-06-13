@@ -39,7 +39,7 @@ android {
 dependencies {
     // MODULES
     implementation project(path: ':core')
-    implementation project(path: ':feature_lists')
+    implementation project(path: ':feature_main')
 
     // DI
     implementation "com.google.dagger:dagger:2.43.2"
