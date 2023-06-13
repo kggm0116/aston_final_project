@@ -5,7 +5,9 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.kggm.feeature_characters.data.database.daos.CharacterDao
 import ru.kggm.feeature_characters.data.entities.CharacterDataEntity
+import ru.kggm.feeature_characters.data.entities.CharacterDataEntity.Companion.toDomainEntity
 import ru.kggm.feeature_characters.data.network.dtos.CharacterPageResponse
 import ru.kggm.feeature_characters.data.network.services.CharacterService
 import ru.kggm.feeature_characters.domain.entities.CharacterEntity
@@ -13,7 +15,8 @@ import javax.inject.Inject
 import kotlin.math.max
 
 class CharacterPagingSourceImpl @Inject constructor(
-    private val characterService: CharacterService
+    private val characterService: CharacterService,
+//    private val characterDao: CharacterDao
 ) : PagingSource<Int, CharacterEntity>() {
 
     companion object {
@@ -46,17 +49,10 @@ class CharacterPagingSourceImpl @Inject constructor(
             val lastPage = ((itemRange.first + params.loadSize) / NETWORK_ITEMS_PER_PAGE + 1)
                 .coerceAtMost(networkConstants?.pageCount ?: Int.MAX_VALUE)
 
-            val fetchedItems = mutableListOf<CharacterDataEntity>()
-            for (iPage in firstPage .. lastPage) {
-                try {
-                    characterService.getCharacterPage(iPage).join()
-                        .also { trySetNetworkConstants(it) }
-                        .results
-                        .map { it.toDataEntity() }
-                        .let { fetchedItems.addAll(it) }
-                } catch (e: Exception) {
-                    return@withContext LoadResult.Error(e)
-                }
+            val fetchedItems = try {
+                fetchFromNetwork(firstPage..lastPage)
+            } catch (e: Throwable) {
+                return@withContext LoadResult.Error(e)
             }
 
             val requestedItems = fetchedItems
@@ -77,4 +73,16 @@ class CharacterPagingSourceImpl @Inject constructor(
                     .takeIf { it < (networkConstants?.characterCount ?: Int.MAX_VALUE) }
             )
         }
+
+    private fun fetchFromNetwork(pages: IntRange): List<CharacterDataEntity> {
+        val fetchedItems = mutableListOf<CharacterDataEntity>()
+        for (iPage in pages) {
+            characterService.getCharacterPage(iPage).join()
+                .also { trySetNetworkConstants(it) }
+                .results
+                .map { it.toDataEntity() }
+                .let { fetchedItems.addAll(it) }
+        }
+        return fetchedItems
+    }
 }

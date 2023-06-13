@@ -1,5 +1,7 @@
 package ru.kggm.feeature_characters.di
 
+import android.content.Context
+import dagger.BindsInstance
 import dagger.Component
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.di.ViewModelFactoryModule
@@ -13,7 +15,8 @@ import javax.inject.Singleton
         CharacterNetworkModule::class,
         CharacterRepositoryModule::class,
         ViewModelFactoryModule::class,
-        CharacterViewModelModule::class
+        CharacterViewModelModule::class,
+//        CharacterDatabaseModule::class
     ],
 )
 interface CharacterComponent {
@@ -22,16 +25,19 @@ interface CharacterComponent {
     @Component.Factory
     interface Factory {
         fun create(
+//            @BindsInstance context: Context,
             dependenciesProvider: DependenciesProvider
         ): CharacterComponent
     }
 
     companion object {
         fun init(
+//            context: Context,
             dependenciesProvider: DependenciesProvider,
         ): CharacterComponent {
             return DaggerCharacterComponent.factory()
                 .create(
+//                    context = context,
                     dependenciesProvider = dependenciesProvider
                 )
         }
