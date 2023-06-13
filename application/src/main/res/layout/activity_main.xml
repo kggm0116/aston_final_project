@@ -8,7 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_activity_main"
-        android:name="ru.kggm.feeature_main.presentation.ui.characters.CharactersFragment"
+        android:name="ru.kggm.feeature_characters.presentation.ui.CharactersFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
