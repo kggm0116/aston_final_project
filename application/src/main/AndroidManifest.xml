@@ -17,7 +17,7 @@
         android:theme="@style/Theme.AstonFinalProject"
         tools:targetApi="31">
 
-        <activity
+        <activity android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
