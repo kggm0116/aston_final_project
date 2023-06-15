@@ -3,7 +3,7 @@ package ru.kggm.feature_browse.data.network.dtos
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 
 data class CharacterDto(
-    val id: Int,
+    val id: Long,
     val name: String,
     val status: String,
     val species: String,

@@ -12,7 +12,8 @@ import ru.kggm.feature_browse.data.entities.CharacterDataEntity.Companion.toDoma
 import ru.kggm.feature_browse.data.network.dtos.CharacterPageResponse
 import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import ru.kggm.feature_browse.domain.repositories.paging.CharacterPagingSource
+import ru.kggm.feature_browse.domain.entities.CharacterFilter
+import ru.kggm.feature_browse.domain.entities.CharacterPagingSource
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -20,23 +21,30 @@ class CharacterPagingSourceImpl @Inject constructor(
     private val characterService: CharacterService,
     private val characterDao: CharacterDao
 ) : CharacterPagingSource() {
-    private val tag = classTag()
 
     companion object {
         private const val NETWORK_ITEMS_PER_PAGE = 20
         private const val STARTING_KEY = 0
+        private val tag = classTag()
+    }
+
+    init {
+        Log.i(classTag(), "Initialized")
     }
 
     override suspend fun invalidateCache() {
         withContext(Dispatchers.IO) {
             characterDao.deleteAll()
-            Log.i(tag, "Cleared database cache")
+            Log.i(tag, "Cleared cache")
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, CharacterEntity>): Int? {
-        return 0
+    override suspend fun setFilters(search: String, filters: List<CharacterFilter>) {
+        require(filters.groupBy)
+        filters.
     }
+
+    override fun getRefreshKey(state: PagingState<Int, CharacterEntity>) = 0
 
     private data class NetworkConstants(val pageCount: Int, val characterCount: Int)
 

@@ -8,7 +8,7 @@ import ru.kggm.feature_browse.domain.entities.CharacterEntity
 @Entity(tableName = CharacterDataEntity.TABLE)
 data class CharacterDataEntity(
     @PrimaryKey @ColumnInfo(name = ID)
-    val id: Int,
+    val id: Long,
     val name: String,
     val status: String,
     val species: String,

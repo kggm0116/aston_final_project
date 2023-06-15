@@ -15,7 +15,7 @@ interface CharacterDao: BaseDao<CharacterDataEntity> {
     fun getRange(skip: Int, take: Int): Flow<List<CharacterDataEntity>>
 
     @Query("SELECT * FROM ${CharacterDataEntity.TABLE} WHERE ${CharacterDataEntity.ID} = :id")
-    suspend fun getById(id: Int): CharacterDataEntity?
+    suspend fun getById(id: Long): CharacterDataEntity?
 
     @Query("DELETE FROM ${CharacterDataEntity.TABLE}")
     suspend fun deleteAll()

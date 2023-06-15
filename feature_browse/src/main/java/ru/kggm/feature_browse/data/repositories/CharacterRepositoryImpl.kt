@@ -7,7 +7,7 @@ import ru.kggm.feature_browse.data.entities.CharacterDataEntity.Companion.toDoma
 import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.data.paging.CharacterPagingSourceImpl
 import ru.kggm.feature_browse.domain.repositories.CharacterRepository
-import ru.kggm.feature_browse.domain.repositories.paging.CharacterPagingSource
+import ru.kggm.feature_browse.domain.entities.CharacterPagingSource
 import javax.inject.Inject
 
 class CharacterRepositoryImpl @Inject constructor(
@@ -17,7 +17,7 @@ class CharacterRepositoryImpl @Inject constructor(
     override fun characterPagingSource(): CharacterPagingSource =
         CharacterPagingSourceImpl(characterService, characterDao)
 
-    override suspend fun getById(id: Int) = withContext(Dispatchers.IO) {
+    override suspend fun getById(id: Long) = withContext(Dispatchers.IO) {
         when (val databaseEntity = characterDao.getById(id)) {
             null -> {
                 val fetchedEntity = characterService.getById(id).join()

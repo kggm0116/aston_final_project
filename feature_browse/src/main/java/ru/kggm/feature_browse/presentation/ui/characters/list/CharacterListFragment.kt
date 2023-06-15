@@ -1,5 +1,6 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list
 
+import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -10,13 +11,12 @@ import ru.kggm.feature_main.R
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.characters.CharactersFragment
-import ru.kggm.feature_browse.presentation.ui.characters.CharactersViewModel
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharactersListAdapter
 import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
 
-class CharacterListFragment : ViewModelFragment<FragmentCharacterListBinding, CharactersViewModel>(
-    CharactersViewModel::class.java,
+class CharacterListFragment : ViewModelFragment<FragmentCharacterListBinding, CharacterListViewModel>(
+    CharacterListViewModel::class.java,
 ) {
     override fun createBinding() = FragmentCharacterListBinding.inflate(layoutInflater)
     override fun getViewModelOwner() = parentFragmentOfType<CharactersFragment>()
@@ -44,7 +44,9 @@ class CharacterListFragment : ViewModelFragment<FragmentCharacterListBinding, Ch
     }
 
     private fun onCharacterClicked(character: CharacterPresentationEntity) {
-        viewModel.setDetailedCharacter(character)
+        val fragment = CharacterDetailsFragment().apply {
+            arguments = bundleOf(CharacterDetailsFragment.ARG_CHARACTER_ID to character.id)
+        }
         parentFragmentManager.commit {
             setCustomAnimations(
                 R.anim.slide_in_right,
@@ -52,13 +54,13 @@ class CharacterListFragment : ViewModelFragment<FragmentCharacterListBinding, Ch
                 R.anim.slide_in_left,
                 R.anim.slide_out_right
             )
-            add(R.id.fragment_container_characters, CharacterDetailsFragment())
+            add(R.id.fragment_container_characters, fragment)
             addToBackStack(null)
         }
     }
 
     private fun onRefreshRecycler() {
-        recyclerAdapter.refresh()
+        viewModel.refreshPagingData()
         binding.refresherCharacters.isRefreshing = false
     }
 }

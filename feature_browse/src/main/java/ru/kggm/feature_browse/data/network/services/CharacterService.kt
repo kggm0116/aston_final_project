@@ -15,6 +15,6 @@ interface CharacterService {
 
     @GET("character/{id}")
     fun getById(
-        @Path("id") id: Int
+        @Path("id") id: Long
     ): CompletableFuture<CharacterDto>
 }
