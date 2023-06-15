@@ -2,6 +2,7 @@ package ru.kggm.aston_final_project
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.commit
 import com.google.android.material.navigation.NavigationBarView
 import ru.kggm.aston_final_project.databinding.ActivityMainBinding
 import ru.kggm.feature_browse.presentation.ui.characters.CharactersFragment
@@ -26,23 +27,23 @@ class MainActivity : AppCompatActivity() {
     private val navItemSelectedListener = NavigationBarView.OnItemSelectedListener { item ->
         when (item.itemId) {
             R.id.nav_item_fragment_characters -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_activity_main, CharactersFragment())
-                    .commit()
+                supportFragmentManager.commit {
+                    replace(R.id.fragment_container_activity_main, CharactersFragment())
+                }
                 true
             }
 
             R.id.nav_item_fragment_episodes -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_activity_main, CharactersFragment())
-                    .commit()
+                supportFragmentManager.commit {
+                    replace(R.id.fragment_container_activity_main, CharactersFragment())
+                }
                 true
             }
 
             R.id.nav_item_fragment_locations -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_activity_main, CharactersFragment())
-                    .commit()
+                supportFragmentManager.commit {
+                    replace(R.id.fragment_container_activity_main, CharactersFragment())
+                }
                 true
             }
 

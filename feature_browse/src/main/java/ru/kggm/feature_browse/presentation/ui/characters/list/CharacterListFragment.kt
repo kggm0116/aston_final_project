@@ -1,5 +1,6 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list
 
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
@@ -44,16 +45,16 @@ class CharacterListFragment : ViewModelFragment<FragmentCharacterListBinding, Ch
 
     private fun onCharacterClicked(character: CharacterPresentationEntity) {
         viewModel.setDetailedCharacter(character)
-        parentFragmentManager.beginTransaction()
-            .setCustomAnimations(
+        parentFragmentManager.commit {
+            setCustomAnimations(
                 R.anim.slide_in_right,
                 R.anim.slide_out_left,
                 R.anim.slide_in_left,
                 R.anim.slide_out_right
             )
-            .replace(R.id.fragment_container_characters, CharacterDetailsFragment())
-            .addToBackStack(null)
-            .commit()
+            add(R.id.fragment_container_characters, CharacterDetailsFragment())
+            addToBackStack(null)
+        }
     }
 
     private fun onRefreshRecycler() {

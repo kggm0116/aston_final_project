@@ -1,10 +1,13 @@
 package ru.kggm.feature_browse.presentation.ui.characters.details
 
+import androidx.core.R
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.ViewModelFragment
 import ru.kggm.core.presentation.utility.parentFragmentOfType
+import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_main.databinding.FragmentCharacterDetailsBinding
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
@@ -24,6 +27,7 @@ class CharacterDetailsFragment :
 
     override fun onInitialize() {
         lifecycleScope.launch { subscribeToViewModel() }
+        initializeViewObservers()
     }
 
     private suspend fun subscribeToViewModel() {
@@ -32,9 +36,17 @@ class CharacterDetailsFragment :
         }
     }
 
+    private fun initializeViewObservers() {
+        binding.fabBack.setDebouncedClickListener { navigateBack() }
+    }
+
     private fun display(character: CharacterPresentationEntity) {
         with(character) {
             binding.textViewCharacterName.text = name
         }
+    }
+
+    private fun navigateBack() {
+        parentFragmentManager.popBackStack()
     }
 }

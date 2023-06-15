@@ -7,7 +7,6 @@ import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.di.ViewModelFactoryModule
 import ru.kggm.feature_browse.data.database.di.CharacterDatabaseModule
 import ru.kggm.feature_browse.data.network.di.CharacterNetworkModule
-import ru.kggm.feature_browse.presentation.di.CharacterDetailsViewModelModule
 import ru.kggm.feature_browse.presentation.di.CharactersViewModelModule
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
@@ -23,7 +22,6 @@ import javax.inject.Singleton
 
         ViewModelFactoryModule::class,
         CharactersViewModelModule::class,
-        CharacterDetailsViewModelModule::class,
     ],
 )
 interface CharacterComponent {
