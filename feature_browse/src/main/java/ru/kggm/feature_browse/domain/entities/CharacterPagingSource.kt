@@ -6,5 +6,5 @@ abstract class CharacterPagingSource: PagingSource<Int, CharacterEntity>() {
 
     abstract suspend fun invalidateCache()
 
-    abstract suspend fun setFilters(search: String, filters: List<CharacterFilter>)
+    abstract suspend fun setFilters(search: String, filters: CharacterFilterCollection)
 }

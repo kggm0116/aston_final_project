@@ -10,6 +10,7 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.map
 import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.core.utility.classTag
+import ru.kggm.feature_browse.domain.entities.CharacterFilterCollection
 import ru.kggm.feature_browse.domain.entities.CharacterPagingSource
 import ru.kggm.feature_browse.domain.use_cases.GetCharactersPagingSource
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity.Companion.toPresentationEntity
@@ -27,9 +28,30 @@ class CharacterListViewModel @Inject constructor(
         Log.i(classTag(), "Initialized")
     }
 
-    private lateinit var characterPagingSource: CharacterPagingSource
-    private fun createPagingSource() = getCharactersPagingSource().apply {
+    var searchString = ""
+        set(value) {
+            if (field != value) {
+                field = value
+                updateFilters()
+            }
+        }
 
+    var filters = CharacterFilterCollection.Empty
+        set(value) {
+            if (field != value) {
+                field = value
+                updateFilters()
+            }
+        }
+
+    private fun updateFilters() {
+        safeLaunch { characterPagingSource.setFilters(searchString, filters) }
+    }
+
+    private lateinit var characterPagingSource: CharacterPagingSource
+    private fun createPagingSource(): CharacterPagingSource {
+        characterPagingSource = getCharactersPagingSource()
+        return characterPagingSource
     }
 
     fun refreshPagingData() = safeLaunch {

@@ -13,6 +13,7 @@ import ru.kggm.feature_browse.data.network.dtos.CharacterPageResponse
 import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.CharacterFilter
+import ru.kggm.feature_browse.domain.entities.CharacterFilterCollection
 import ru.kggm.feature_browse.domain.entities.CharacterPagingSource
 import javax.inject.Inject
 import kotlin.math.max
@@ -37,11 +38,16 @@ class CharacterPagingSourceImpl @Inject constructor(
             characterDao.deleteAll()
             Log.i(tag, "Cleared cache")
         }
+        invalidate()
     }
 
-    override suspend fun setFilters(search: String, filters: List<CharacterFilter>) {
-        require(filters.groupBy)
-        filters.
+    private data class FilterData(val search: String, val filters: CharacterFilterCollection)
+    private lateinit var filter: FilterData
+
+    override suspend fun setFilters(search: String, filters: CharacterFilterCollection) {
+        Log.i(tag, "Search: $search, Filters: $filters")
+        filter = FilterData(search, filters)
+        invalidateCache()
     }
 
     override fun getRefreshKey(state: PagingState<Int, CharacterEntity>) = 0
