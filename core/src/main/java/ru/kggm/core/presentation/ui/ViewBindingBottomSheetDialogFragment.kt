@@ -14,7 +14,7 @@ import ru.kggm.core.application.DependenciesProviderApplication
 import ru.kggm.core.di.DependenciesProvider
 import javax.inject.Inject
 
-abstract class ViewBindingFragment<VB : ViewBinding> : Fragment() {
+abstract class ViewBindingBottomSheetDialogFragment<VB : ViewBinding> : BottomSheetDialogFragment() {
 
     private var _binding: VB? = null
     protected val binding get() = requireNotNull(_binding) { "Binding not initialized" }

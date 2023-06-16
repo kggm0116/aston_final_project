@@ -5,16 +5,18 @@ import ru.kggm.feature_browse.domain.entities.CharacterEntity
 data class CharacterPresentationEntity(
     val id: Long,
     val name: String,
-    val status: String,
+    val status: CharacterEntity.Status,
     val species: String,
-    val gender: String
+    val type: String,
+    val gender: CharacterEntity.Gender
 ) {
     companion object {
         fun CharacterEntity.toPresentationEntity() = CharacterPresentationEntity(
-            id = id.toLong(),
+            id = id,
             name = name,
             status = status,
             species = species,
+            type = type,
             gender = gender
         )
     }

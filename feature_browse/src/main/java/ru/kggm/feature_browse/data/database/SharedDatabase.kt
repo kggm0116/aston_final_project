@@ -10,12 +10,13 @@ import ru.kggm.feature_browse.data.entities.CharacterDataEntity
     [
         CharacterDataEntity::class,
     ],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class SharedDatabase: RoomDatabase() {
     abstract fun characterDao() : CharacterDao
     companion object {
         const val NAME = "aston_database"
+        const val TABLE_CHARACTER = "character_table"
     }
 }

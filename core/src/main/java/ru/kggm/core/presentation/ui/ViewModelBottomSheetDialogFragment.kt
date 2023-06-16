@@ -14,7 +14,7 @@ import ru.kggm.core.application.DependenciesProviderApplication
 import ru.kggm.core.di.DependenciesProvider
 import javax.inject.Inject
 
-abstract class ViewModelFragment<VB : ViewBinding, VM : ViewModel>(
+abstract class ViewModelBottomSheetDialogFragment<VB : ViewBinding, VM : ViewModel>(
     private val viewModelClass: Class<VM>,
 ) : ViewBindingBottomSheetDialogFragment<VB>() {
 

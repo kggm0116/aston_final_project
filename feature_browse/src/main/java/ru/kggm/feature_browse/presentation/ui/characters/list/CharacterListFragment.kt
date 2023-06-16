@@ -27,6 +27,7 @@ class CharacterListFragment : ViewModelFragment<FragmentCharacterListBinding, Ch
 
     override fun onInitialize() {
         initializeRecycler()
+        initializeViewListeners()
         binding.refresherCharacters.setOnRefreshListener { onRefreshRecycler() }
         lifecycleScope.launch { subscribeToViewModel() }
     }
@@ -35,6 +36,12 @@ class CharacterListFragment : ViewModelFragment<FragmentCharacterListBinding, Ch
     private fun initializeRecycler() {
         binding.recyclerCharacters.adapter = recyclerAdapter
         recyclerAdapter.onCharacterClicked = { onCharacterClicked(it) }
+    }
+
+    private fun initializeViewListeners() {
+        binding.fabOpenCharacterFilters.setOnClickListener {
+            CharacterFilterFragment().show(parentFragmentManager, "bottom sheet dialog")
+        }
     }
 
     private suspend fun subscribeToViewModel() {

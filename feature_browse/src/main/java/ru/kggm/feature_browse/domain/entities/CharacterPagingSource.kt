@@ -2,9 +2,9 @@ package ru.kggm.feature_browse.domain.entities
 
 import androidx.paging.PagingSource
 
-abstract class CharacterPagingSource: PagingSource<Int, CharacterEntity>() {
+abstract class CharacterPagingSource(
+    val filterParameters: CharacterFilterParameters
+): PagingSource<Int, CharacterEntity>() {
 
-    abstract suspend fun invalidateCache()
-
-    abstract suspend fun setFilters(search: String, filters: CharacterFilterCollection)
+    abstract suspend fun invalidateAndClearCache()
 }
