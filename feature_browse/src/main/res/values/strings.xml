@@ -1,6 +1,13 @@
 <resources>
-    <string name="text_character_gender_male">Male</string>
     <string name="hint_character_name">Name</string>
     <string name="hint_character_type">Type</string>
     <string name="hint_character_species">Species</string>
+
+    <string name="label_filter_character_status">Status</string>
+    <string name="label_filter_character_gender">Gender</string>
+
+    <string name="composite_text_character_species">Species: %1$s</string>
+    <string name="composite_text_character_status">Status: %1$s</string>
+    <string name="composite_text_character_type">Type: %1$s</string>
+    <string name="composite_text_character_gender">Gender: %1$s</string>
 </resources>

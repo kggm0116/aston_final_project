@@ -8,7 +8,8 @@ data class CharacterPresentationEntity(
     val status: CharacterEntity.Status,
     val species: String,
     val type: String,
-    val gender: CharacterEntity.Gender
+    val gender: CharacterEntity.Gender,
+    val image: String
 ) {
     companion object {
         fun CharacterEntity.toPresentationEntity() = CharacterPresentationEntity(
@@ -17,7 +18,8 @@ data class CharacterPresentationEntity(
             status = status,
             species = species,
             type = type,
-            gender = gender
+            gender = gender,
+            image = image
         )
     }
 }

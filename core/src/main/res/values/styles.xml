@@ -7,9 +7,15 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="style_text_input_filter">
+    <style name="style_no_fullscreen_keyboard">
+        <item name="android:imeOptions">flagNoExtractUi|actionDone</item>
+    </style>
+
+    <style name="style_text_input_filter" parent="style_no_fullscreen_keyboard">
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:inputType">text</item>
     </style>
+
+
 </resources>

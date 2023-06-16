@@ -6,17 +6,19 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.ViewModelFragment
 import ru.kggm.feature_main.R
+import ru.kggm.presentation.R as coreR
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
 import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
 import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
+import ru.kggm.feature_browse.presentation.ui.characters.list.filter.CharacterFilterFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharacterPagingAdapter
 import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
 
@@ -72,7 +74,8 @@ class CharacterListFragment :
 
     private fun initializeViewListeners() {
         binding.fabOpenCharacterFilters.setOnClickListener {
-            CharacterFilterFragment().show(parentFragmentManager, "bottom sheet dialog")
+            CharacterFilterFragment()
+                .show(parentFragmentManager, null)
         }
         binding.recyclerCharacters.addOnScrollListener(scrollListener)
         binding.fabCharactersScrollToTop.setOnClickListener {
@@ -104,10 +107,10 @@ class CharacterListFragment :
         }
         parentFragmentManager.commit {
             setCustomAnimations(
-                R.anim.slide_in_right,
-                R.anim.slide_out_left,
-                R.anim.slide_in_left,
-                R.anim.slide_out_right
+                coreR.anim.slide_in_right,
+                coreR.anim.slide_out_left,
+                coreR.anim.slide_in_left,
+                coreR.anim.slide_out_right
             )
             add(R.id.fragment_container_characters, fragment)
             addToBackStack(null)

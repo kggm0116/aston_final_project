@@ -24,6 +24,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@id/text_view_pager_footer_load_failed"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/text_pager_retry"/>
+        android:text="@string/label_pager_retry"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

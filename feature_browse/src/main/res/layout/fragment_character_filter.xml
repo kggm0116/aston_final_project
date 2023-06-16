@@ -72,8 +72,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_filter_character_gender"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_layout_character_name"
-        tools:text="Status" />
+        app:layout_constraintBottom_toTopOf="@id/button_apply_character_filter"
+        android:text="@string/label_filter_character_status" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_filter_character_gender"
@@ -83,6 +83,16 @@
         app:layout_constraintBaseline_toBaselineOf="@id/button_filter_character_status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/button_filter_character_status"
-        tools:text="Gender" />
+        android:text="@string/label_filter_character_gender" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_apply_character_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/button_filter_character_status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/label_apply_filter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

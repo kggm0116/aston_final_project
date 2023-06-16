@@ -10,7 +10,7 @@ import ru.kggm.feature_browse.data.network.di.CharacterNetworkModule
 import ru.kggm.feature_browse.presentation.di.CharacterDetailsViewModelModule
 import ru.kggm.feature_browse.presentation.di.CharacterListModelModule
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterFilterFragment
+import ru.kggm.feature_browse.presentation.ui.characters.list.filter.CharacterFilterFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
 import javax.inject.Singleton
 

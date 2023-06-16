@@ -2,30 +2,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/windowBackground"
-    android:padding="16dp">
+    android:layout_height="match_parent"
+    android:background="?android:attr/windowBackground">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_back"
-        style="@style/style_fab"
-        android:layout_margin="16dp"
-        app:fabCustomSize="@dimen/size_fab_large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_arrow_back_24"
-        tools:src="@drawable/baseline_arrow_back_24"
-        android:importantForAccessibility="no" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text_view_character_name"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_character_details"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_large"
-        android:textStyle="bold"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        tools:background="#9909"
+        tools:layout_height="56dp"
+        tools:paddingHorizontal="156dp"
+        tools:title="TOOLBAR" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Name" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar_character_details">
+
+        <include
+            android:id="@+id/layout_character_details"
+            layout="@layout/pager_item_character"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

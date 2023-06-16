@@ -6,7 +6,7 @@ abstract class CharacterPagingSource(
     val filterParameters: CharacterFilterParameters
 ): PagingSource<Int, CharacterEntity>() {
 
-    abstract suspend fun invalidateAndClearCache()
+    abstract suspend fun clearCache()
 
     class CharacterPagerLoadError: Exception()
 }

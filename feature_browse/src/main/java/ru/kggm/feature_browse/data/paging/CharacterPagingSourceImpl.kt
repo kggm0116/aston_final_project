@@ -16,7 +16,6 @@ import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.CharacterFilterParameters
 import ru.kggm.feature_browse.domain.entities.CharacterPagingSource
-import java.util.concurrent.CompletionException
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -37,12 +36,11 @@ class CharacterPagingSourceImpl @Inject constructor(
         Log.i(tag, "Initialized with filter params: $filterParameters")
     }
 
-    override suspend fun invalidateAndClearCache() {
+    override suspend fun clearCache() {
         withContext(Dispatchers.IO) {
             characterDao.deleteAll()
             Log.i(tag, "Cleared cache")
         }
-        invalidate()
     }
 
     override fun getRefreshKey(state: PagingState<Int, CharacterEntity>) = 0
@@ -74,7 +72,7 @@ class CharacterPagingSourceImpl @Inject constructor(
                 val lastPage = ((fetchRange.first + params.loadSize) / NETWORK_ITEMS_PER_PAGE + 1)
                     .coerceAtMost(networkConstants.pageCount)
                 try {
-                    if (SIMULATE_DELAY) delay(2000)
+                    if (SIMULATE_DELAY) delay(500)
                     fetchFromNetwork(firstPage..lastPage)
                 }
                 catch (exception: Throwable) {

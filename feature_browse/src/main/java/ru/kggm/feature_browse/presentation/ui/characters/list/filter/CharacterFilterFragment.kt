@@ -1,4 +1,4 @@
-package ru.kggm.feature_browse.presentation.ui.characters.list
+package ru.kggm.feature_browse.presentation.ui.characters.list.filter
 
 import android.text.Editable
 import androidx.core.widget.addTextChangedListener
@@ -6,17 +6,17 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.ViewModelBottomSheetDialogFragment
-import ru.kggm.core.presentation.utility.parentFragmentOfType
 import ru.kggm.feature_browse.di.CharacterComponent
-import ru.kggm.feature_browse.presentation.ui.characters.CharactersFragment
+import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListViewModel
 import ru.kggm.feature_main.databinding.FragmentCharacterFilterBinding
 
 class CharacterFilterFragment :
     ViewModelBottomSheetDialogFragment<FragmentCharacterFilterBinding, CharacterListViewModel>(
         CharacterListViewModel::class.java,
     ) {
+
     override fun createBinding() = FragmentCharacterFilterBinding.inflate(layoutInflater)
-    override fun getViewModelOwner() = parentFragmentOfType<CharactersFragment>()
+    override fun getViewModelOwner() = requireActivity()
 
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
         CharacterComponent.init(requireContext(), dependenciesProvider).inject(this)
@@ -33,25 +33,20 @@ class CharacterFilterFragment :
         binding.inputTextCharacterType.addTextChangedListener { onTypeTextChanged(it!!) }
         binding.buttonFilterCharacterGender.setOnClickListener { onGenderButtonClick() }
         binding.buttonFilterCharacterStatus.setOnClickListener { onStatusButtonClick() }
+        binding.buttonApplyCharacterFilter.setOnClickListener { onApplyFiltersClick() }
     }
 
-//    private val searchStringQueryListener =
-//        object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
-//
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                query?.let {
-//                    viewModel.searchString = it
-//                }
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                newText?.let {
-//                    viewModel.searchString = it
-//                }
-//                return true
-//            }
-//        }
+    private suspend fun subscribeToViewModel() {
+        viewModel.filterParameters.collect { parameters ->
+            with (parameters) {
+                binding.buttonFilterCharacterGender.text = gender?.toString() ?: "Any"
+                binding.buttonFilterCharacterStatus.text = status?.toString() ?: "Any"
+                binding.inputTextCharacterName.setText(name)
+                binding.inputTextCharacterSpecies.setText(species)
+                binding.inputTextCharacterType.setText(type)
+            }
+        }
+    }
 
     private fun onGenderButtonClick() {
         viewModel.cycleGender()
@@ -59,6 +54,11 @@ class CharacterFilterFragment :
 
     private fun onStatusButtonClick() {
         viewModel.cycleStatus()
+    }
+
+    private fun onApplyFiltersClick() {
+        viewModel.applyFilters()
+        this.dismiss()
     }
 
     private fun onNameTextChanged(editable: Editable) {
@@ -71,12 +71,5 @@ class CharacterFilterFragment :
 
     private fun onTypeTextChanged(editable: Editable) {
         viewModel.setTypeFilter(editable.toString())
-    }
-
-    private suspend fun subscribeToViewModel() {
-        viewModel.filterParameters.collect { parameters ->
-            binding.buttonFilterCharacterGender.text = parameters.gender?.toString() ?: "Any"
-            binding.buttonFilterCharacterStatus.text = parameters.status?.toString() ?: "Any"
-        }
     }
 }

@@ -1,13 +1,15 @@
 package ru.kggm.feature_browse.presentation.ui.characters.details
 
 import androidx.lifecycle.lifecycleScope
+import coil.load
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.ViewModelFragment
-import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_main.databinding.FragmentCharacterDetailsBinding
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
+import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
+import ru.kggm.feature_main.R
 
 class CharacterDetailsFragment :
     ViewModelFragment<FragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
@@ -32,7 +34,15 @@ class CharacterDetailsFragment :
     override fun onInitialize() {
         viewModel.loadCharacter(characterId)
         lifecycleScope.launch { subscribeToViewModel() }
-        initializeViewObservers()
+        initializeToolbar()
+    }
+
+    private fun initializeToolbar() {
+        binding.toolbarCharacterDetails.apply {
+            setNavigationIcon(ru.kggm.presentation.R.drawable.baseline_arrow_back_24)
+            setNavigationOnClickListener { navigateBack() }
+            menu.clear()
+        }
     }
 
     private suspend fun subscribeToViewModel() {
@@ -41,15 +51,10 @@ class CharacterDetailsFragment :
         }
     }
 
-    private fun initializeViewObservers() {
-        binding.fabBack.setDebouncedClickListener { navigateBack() }
-    }
-
     private fun display(character: CharacterPresentationEntity) {
         with(character) {
-            binding.textViewCharacterName.text = name
+            binding.toolbarCharacterDetails.title = name
         }
-
     }
 
     private fun navigateBack() {
