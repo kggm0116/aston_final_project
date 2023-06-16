@@ -1,15 +1,18 @@
-package ru.kggm.feature_browse.presentation.ui.characters.list.recycler
+package ru.kggm.core.presentation.ui.paging
 
 import android.content.Context
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.kggm.feature_main.R
 
-class CharacterLayoutManager(
+class FooterOptimizedGridLayoutManager(
     context: Context,
     spanCount: Int,
     private val adapter: RecyclerView.Adapter<*>
 ) : GridLayoutManager(context, spanCount) {
+
+    init {
+        spanSizeLookup = spanSizeLookup
+    }
 
     override fun getSpanSizeLookup(): SpanSizeLookup {
         return object : SpanSizeLookup() {

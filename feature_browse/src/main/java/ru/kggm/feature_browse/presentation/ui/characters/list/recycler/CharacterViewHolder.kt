@@ -7,7 +7,7 @@ import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_main.databinding.PagerItemCharacterBinding
 
 class CharacterViewHolder(
-    val binding: PagerItemCharacterBinding,
+    private val binding: PagerItemCharacterBinding,
     private val onCharacterClicked: (CharacterPresentationEntity) -> Unit = { }
 ) : RecyclerView.ViewHolder(binding.root) {
 

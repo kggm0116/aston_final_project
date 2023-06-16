@@ -1,5 +1,4 @@
 <resources>
-
     <string name="text_character_gender_male">Male</string>
     <string name="hint_character_name">Name</string>
     <string name="hint_character_type">Type</string>

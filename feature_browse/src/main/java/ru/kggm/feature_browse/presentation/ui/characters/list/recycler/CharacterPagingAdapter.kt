@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_main.databinding.PagerItemCharacterBinding
-import java.util.*
 
 class CharacterPagingAdapter : PagingDataAdapter<CharacterPresentationEntity, CharacterViewHolder>(
     CharacterDiffUtil
@@ -13,12 +12,9 @@ class CharacterPagingAdapter : PagingDataAdapter<CharacterPresentationEntity, Ch
 
     var onCharacterClicked: (CharacterPresentationEntity) -> Unit = { }
 
-    @Suppress("UNREACHABLE_CODE")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = PagerItemCharacterBinding.inflate(
-            inflater, parent, false
-        )
+        val binding = PagerItemCharacterBinding.inflate(inflater, parent, false)
         return CharacterViewHolder(
             binding = binding,
             onCharacterClicked = onCharacterClicked,
@@ -29,31 +25,4 @@ class CharacterPagingAdapter : PagingDataAdapter<CharacterPresentationEntity, Ch
         val character = getItem(position)!!
         holder.bind(character)
     }
-
-//    class KeyProvider(
-//        recyclerView: RecyclerView
-//    ) : ItemKeyProvider<Long>(SCOPE_MAPPED) {
-//
-//        private val adapter = recyclerView.adapter as CharactersListAdapter
-//
-//        override fun getKey(position: Int): Long? {
-//            return adapter.getItem(position)?.id
-//        }
-//
-//        override fun getPosition(key: Long): Int {
-//            return adapter.currentList.indexOfFirst { it.id == key }
-//        }
-//    }
-
-//    class DetailsLookup(private val recyclerView: RecyclerView
-//    ) : ItemDetailsLookup<Long>() {
-//        override fun getItemDetails(event: MotionEvent): ItemDetails<Long>? {
-//            val view = recyclerView.findChildViewUnder(event.x, event.y)
-//            if (view != null) {
-//                val holder = recyclerView.getChildViewHolder(view) as CharacterViewHolder
-//                return holder.getItemDetails()
-//            }
-//            return null
-//        }
-//    }
 }

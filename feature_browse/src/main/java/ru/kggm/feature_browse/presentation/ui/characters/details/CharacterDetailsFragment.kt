@@ -1,17 +1,13 @@
 package ru.kggm.feature_browse.presentation.ui.characters.details
 
-import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.ViewModelFragment
-import ru.kggm.core.presentation.utility.parentFragmentOfType
+import ru.kggm.core.presentation.ui.fragments.ViewModelFragment
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_main.databinding.FragmentCharacterDetailsBinding
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
-import ru.kggm.feature_browse.presentation.ui.characters.CharactersFragment
-import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListViewModel
 
 class CharacterDetailsFragment :
     ViewModelFragment<FragmentCharacterDetailsBinding, CharacterDetailsViewModel>(

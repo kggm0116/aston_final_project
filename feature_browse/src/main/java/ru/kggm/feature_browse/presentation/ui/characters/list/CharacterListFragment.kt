@@ -1,23 +1,22 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list
 
-import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.ViewModelFragment
-import ru.kggm.core.presentation.utility.parentFragmentOfType
+import ru.kggm.core.presentation.ui.fragments.ViewModelFragment
 import ru.kggm.feature_main.R
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
-import ru.kggm.feature_browse.presentation.ui.characters.CharactersFragment
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharacterLayoutManager
-import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharacterLoadStateAdapter
+import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
+import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
 import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharacterPagingAdapter
 import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
 
@@ -46,13 +45,29 @@ class CharacterListFragment :
     }
 
     private val adapter by lazy { CharacterPagingAdapter() }
-    private lateinit var layoutManager: CharacterLayoutManager
+    private lateinit var layoutManager: FooterOptimizedGridLayoutManager
     private fun initializeRecycler() {
-        layoutManager = CharacterLayoutManager(requireContext(), 2, adapter)
+        layoutManager = FooterOptimizedGridLayoutManager(requireContext(), 2, adapter)
         binding.recyclerCharacters.layoutManager = layoutManager
-        binding.recyclerCharacters.adapter = adapter
-            .withLoadStateFooter(CharacterLoadStateAdapter())
+        binding.recyclerCharacters.adapter =
+            adapter.withLoadStateFooter(CommonLoadStateAdapter { adapter.retry() })
+
         adapter.onCharacterClicked = { onCharacterClicked(it) }
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collect { displayLoadStates(it) }
+        }
+    }
+
+    private fun displayLoadStates(states: CombinedLoadStates) {
+        with (states) {
+            binding.recyclerCharacters.isVisible = adapter.itemCount > 0
+            binding.layoutPagerLoading.root.isVisible = adapter.itemCount == 0
+                    && refresh is LoadState.Loading
+            binding.layoutPagerEmpty.root.isVisible = adapter.itemCount == 0
+                    && refresh is LoadState.NotLoading
+            binding.layoutPagerError.root.isVisible = adapter.itemCount == 0
+                    && refresh is LoadState.Error
+        }
     }
 
     private fun initializeViewListeners() {
@@ -63,6 +78,9 @@ class CharacterListFragment :
         binding.fabCharactersScrollToTop.setOnClickListener {
             binding.recyclerCharacters.stopScroll()
             layoutManager.scrollToPositionWithOffset(0, 0)
+        }
+        binding.layoutPagerError.buttonPagerRetry.setOnClickListener {
+            adapter.retry()
         }
     }
 

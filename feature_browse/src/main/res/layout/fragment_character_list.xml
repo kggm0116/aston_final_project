@@ -23,6 +23,24 @@
             tools:spanCount="2" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <include
+        android:id="@+id/layout_pager_empty"
+        layout="@layout/layout_pager_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/layout_pager_loading"
+        layout="@layout/layout_pager_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/layout_pager_error"
+        layout="@layout/layout_pager_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_open_character_filters"
         style="@style/style_fab"

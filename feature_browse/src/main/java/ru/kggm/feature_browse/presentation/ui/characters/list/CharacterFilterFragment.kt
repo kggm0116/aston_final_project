@@ -5,7 +5,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.ViewModelBottomSheetDialogFragment
+import ru.kggm.core.presentation.ui.fragments.ViewModelBottomSheetDialogFragment
 import ru.kggm.core.presentation.utility.parentFragmentOfType
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.ui.characters.CharactersFragment
