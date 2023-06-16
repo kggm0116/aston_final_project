@@ -3,11 +3,11 @@ package ru.kggm.feature_browse.presentation.ui.characters.list.recycler
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
-import ru.kggm.feature_main.databinding.RecyclerItemCharacterBinding
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
+import ru.kggm.feature_main.databinding.PagerItemCharacterBinding
 
 class CharacterViewHolder(
-    val binding: RecyclerItemCharacterBinding,
+    val binding: PagerItemCharacterBinding,
     private val onCharacterClicked: (CharacterPresentationEntity) -> Unit = { }
 ) : RecyclerView.ViewHolder(binding.root) {
 

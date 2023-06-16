@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 abstract class ViewModelFragment<VB : ViewBinding, VM : ViewModel>(
     private val viewModelClass: Class<VM>,
-) : ViewBindingBottomSheetDialogFragment<VB>() {
+) : ViewBindingFragment<VB>() {
 
     private var _viewModel: VM? = null
     protected val viewModel get() = requireNotNull(_viewModel) { "ViewModel not initialized" }
@@ -36,4 +36,8 @@ abstract class ViewModelFragment<VB : ViewBinding, VM : ViewModel>(
     }
 
     abstract fun initDaggerComponent(dependenciesProvider: DependenciesProvider)
+
+    open fun a() {
+
+    }
 }

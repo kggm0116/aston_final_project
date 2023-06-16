@@ -21,8 +21,7 @@ class CharacterRepositoryImpl @Inject constructor(
     override suspend fun getById(id: Long) = withContext(Dispatchers.IO) {
         when (val databaseEntity = characterDao.getById(id)) {
             null -> {
-                val fetchedEntity = characterService.getById(id).join()
-                    .toDataEntity()
+                val fetchedEntity = characterService.getById(id).toDataEntity()
                 characterDao.insertOrUpdate(fetchedEntity)
                 return@withContext fetchedEntity.toDomainEntity()
             }

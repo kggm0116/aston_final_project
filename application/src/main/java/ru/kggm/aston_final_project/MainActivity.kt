@@ -2,6 +2,7 @@ package ru.kggm.aston_final_project
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.window.OnBackInvokedDispatcher
 import androidx.fragment.app.commit
 import com.google.android.material.navigation.NavigationBarView
 import ru.kggm.aston_final_project.databinding.ActivityMainBinding

@@ -3,27 +3,20 @@ package ru.kggm.feature_browse.presentation.ui.characters.list.recycler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import ru.kggm.feature_main.databinding.RecyclerItemCharacterBinding
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
+import ru.kggm.feature_main.databinding.PagerItemCharacterBinding
 import java.util.*
 
-class CharactersListAdapter
-    : PagingDataAdapter<CharacterPresentationEntity, CharacterViewHolder>(
+class CharacterPagingAdapter : PagingDataAdapter<CharacterPresentationEntity, CharacterViewHolder>(
     CharacterDiffUtil
 ) {
-//    override fun submitList(list: List<CharacterPresentationEntity>?) {
-//        runOnUiThread {
-//            val bufferList = list?.toList()
-//            super.submitList(bufferList)
-//        }
-//    }
 
     var onCharacterClicked: (CharacterPresentationEntity) -> Unit = { }
 
     @Suppress("UNREACHABLE_CODE")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = RecyclerItemCharacterBinding.inflate(
+        val binding = PagerItemCharacterBinding.inflate(
             inflater, parent, false
         )
         return CharacterViewHolder(

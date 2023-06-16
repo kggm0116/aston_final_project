@@ -10,6 +10,7 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onErrorResume
 import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.core.utility.classTag
 import ru.kggm.core.utility.classTagOf
@@ -25,7 +26,7 @@ class CharacterListViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        private const val PAGE_SIZE = 20
+        private const val PAGE_SIZE = 30
     }
 
     init {

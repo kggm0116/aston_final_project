@@ -1,5 +1,6 @@
 package ru.kggm.feature_browse.presentation.ui.characters.details
 
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
@@ -52,9 +53,14 @@ class CharacterDetailsFragment :
         with(character) {
             binding.textViewCharacterName.text = name
         }
+
     }
 
     private fun navigateBack() {
         parentFragmentManager.popBackStack()
+    }
+
+    override fun onBackButtonPressed() {
+        navigateBack()
     }
 }

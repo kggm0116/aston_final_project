@@ -18,9 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            tools:listitem="@layout/recycler_item_character" />
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/pager_item_character"
+            tools:spanCount="2" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -32,5 +32,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_filter_alt_24"
         tools:src="@drawable/baseline_filter_alt_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_characters_scroll_to_top"
+        style="@style/style_fab"
+        android:layout_margin="16dp"
+        android:visibility="invisible"
+        app:fabCustomSize="@dimen/size_fab_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/baseline_arrow_upward_24"
+        tools:src="@drawable/baseline_arrow_upward_24"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

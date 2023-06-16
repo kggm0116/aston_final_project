@@ -7,4 +7,6 @@ abstract class CharacterPagingSource(
 ): PagingSource<Int, CharacterEntity>() {
 
     abstract suspend fun invalidateAndClearCache()
+
+    class CharacterPagerLoadError: Exception()
 }

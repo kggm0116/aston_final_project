@@ -4,10 +4,9 @@ import android.util.Log
 import androidx.paging.PagingState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-import ru.kggm.core.utility.classTag
 import ru.kggm.core.utility.classTagOf
 import ru.kggm.feature_browse.data.database.daos.CharacterDao
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity
@@ -17,6 +16,7 @@ import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.CharacterFilterParameters
 import ru.kggm.feature_browse.domain.entities.CharacterPagingSource
+import java.util.concurrent.CompletionException
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -30,6 +30,7 @@ class CharacterPagingSourceImpl @Inject constructor(
         private const val NETWORK_ITEMS_PER_PAGE = 20
         private const val STARTING_KEY = 0
         private val tag = classTagOf<CharacterPagingSourceImpl>()
+        private const val SIMULATE_DELAY = true
     }
 
     init {
@@ -72,8 +73,13 @@ class CharacterPagingSourceImpl @Inject constructor(
                 val firstPage = fetchRange.first / NETWORK_ITEMS_PER_PAGE + 1
                 val lastPage = ((fetchRange.first + params.loadSize) / NETWORK_ITEMS_PER_PAGE + 1)
                     .coerceAtMost(networkConstants.pageCount)
-
-                fetchFromNetwork(firstPage..lastPage)
+                try {
+                    if (SIMULATE_DELAY) delay(2000)
+                    fetchFromNetwork(firstPage..lastPage)
+                }
+                catch (exception: Throwable) {
+                    return@withContext LoadResult.Error(CharacterPagerLoadError())
+                }
             } else emptyList()
 
             val itemsFromNetwork = fetchedItems
@@ -115,28 +121,23 @@ class CharacterPagingSourceImpl @Inject constructor(
             .first()
     }
 
-    private fun fetchFromNetwork(pages: IntRange): List<CharacterDataEntity> {
+    private suspend fun fetchFromNetwork(pages: IntRange): List<CharacterDataEntity> {
         val fetchedItems = mutableListOf<CharacterDataEntity>()
         for (iPage in pages) {
             if (iPage > networkConstants.pageCount)
                 break
-            try {
-                createNetworkCall(iPage).join()
-                    .also { setNetworkConstants(it) }
-                    .results
-                    .map { it.toDataEntity() }
-                    .let {
-                        fetchedItems.addAll(it)
-                    }
-            }
-            catch (throwable: Throwable) {
-                break
-            }
+            makeNetworkCall(iPage)
+                .also { setNetworkConstants(it) }
+                .results
+                .map { it.toDataEntity() }
+                .let {
+                    fetchedItems.addAll(it)
+                }
         }
         return fetchedItems
     }
 
-    private fun createNetworkCall(pageNumber: Int) = with(filterParameters) {
+    private suspend fun makeNetworkCall(pageNumber: Int) = with(filterParameters) {
         characterService.getCharacterPage(
             pageNumber = pageNumber,
             name = name,
