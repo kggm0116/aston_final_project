@@ -25,13 +25,14 @@ class CharacterViewHolder(
     private fun displayCharacter() {
         with (character) {
             binding.imageCharacter.load(image) { crossfade(true) }
-            binding.textViewCharacterType.text = type
-            binding.textViewCharacterSpecies.text = species
-            binding.textViewCharacterStatus.text = status.toResourceString(context)
-            binding.textViewCharacterGender.text = gender.toResourceString(context)
+            binding.layoutPagerItemCharacter.textViewCharacterName.text = name
+            binding.layoutPagerItemCharacter.textViewCharacterType.text = type
+            binding.layoutPagerItemCharacter.textViewCharacterSpecies.text = species
+            binding.layoutPagerItemCharacter.textViewCharacterStatus.text = status.toResourceString(context)
+            binding.layoutPagerItemCharacter.textViewCharacterGender.text = gender.toResourceString(context)
 
-            binding.textViewCharacterType.isVisible = type.isNotEmpty()
-            binding.textViewCharacterSpecies.isVisible = species.isNotEmpty()
+            binding.layoutPagerItemCharacter.textViewCharacterType.isVisible = type.isNotEmpty()
+            binding.layoutPagerItemCharacter.textViewCharacterSpecies.isVisible = species.isNotEmpty()
         }
     }
 }

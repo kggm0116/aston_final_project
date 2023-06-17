@@ -1,4 +1,4 @@
-package ru.kggm.core.presentation.ui.fragments
+package ru.kggm.core.presentation.ui.fragments.bottom_sheet
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

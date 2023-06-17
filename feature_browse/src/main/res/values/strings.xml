@@ -10,4 +10,11 @@
     <string name="composite_text_character_status">Status: %1$s</string>
     <string name="composite_text_character_type">Type: %1$s</string>
     <string name="composite_text_character_gender">Gender: %1$s</string>
+
+    <string name="text_character_origin">Origin:</string>
+    <string name="text_character_location">Location:</string>
+    <string name="text_character_episodes">Appears in episodes:</string>
+
+    <string name="content_description_icon_filter">Filter icon</string>
+    <string name="content_description_icon_up_arrow">Up arrow</string>
 </resources>

@@ -27,9 +27,10 @@
 
         <include
             android:id="@+id/layout_character_details"
-            layout="@layout/pager_item_character"
+            layout="@layout/layout_character_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

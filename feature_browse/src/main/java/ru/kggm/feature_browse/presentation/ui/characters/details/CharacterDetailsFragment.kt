@@ -1,10 +1,11 @@
 package ru.kggm.feature_browse.presentation.ui.characters.details
 
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.ViewModelFragment
+import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
 import ru.kggm.feature_main.databinding.FragmentCharacterDetailsBinding
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
@@ -47,13 +48,39 @@ class CharacterDetailsFragment :
 
     private suspend fun subscribeToViewModel() {
         viewModel.character.collect { character ->
-            character?.let { display(it) }
+            character?.let { displayCharacter(it) }
         }
     }
 
-    private fun display(character: CharacterPresentationEntity) {
-        with(character) {
-            binding.toolbarCharacterDetails.title = name
+    private fun displayCharacter(character: CharacterPresentationEntity) {
+        with(binding.layoutCharacterDetails) {
+            binding.toolbarCharacterDetails.title = character.name
+            imageCharacter.load(character.image) { crossfade(true) }
+
+            layoutCharacterDetailsTexts.textViewCharacterType.text = requireContext().getString(
+                R.string.composite_text_character_type,
+                character.type
+            )
+            layoutCharacterDetailsTexts.textViewCharacterSpecies.text =
+                requireContext().getString(
+                    R.string.composite_text_character_species,
+                    character.species
+                )
+            layoutCharacterDetailsTexts.textViewCharacterStatus.text =
+                requireContext().getString(
+                    R.string.composite_text_character_status,
+                    character.status.toResourceString(requireContext())
+                )
+            layoutCharacterDetailsTexts.textViewCharacterGender.text =
+                requireContext().getString(
+                    R.string.composite_text_character_gender,
+                    character.gender.toResourceString(requireContext())
+                )
+
+            layoutCharacterDetailsTexts.textViewCharacterType.isVisible =
+                character.type.isNotEmpty()
+            layoutCharacterDetailsTexts.textViewCharacterSpecies.isVisible =
+                character.species.isNotEmpty()
         }
     }
 

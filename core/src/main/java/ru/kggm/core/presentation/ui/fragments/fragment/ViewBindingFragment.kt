@@ -1,4 +1,4 @@
-package ru.kggm.core.presentation.ui.fragments
+package ru.kggm.core.presentation.ui.fragments.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

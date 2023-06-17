@@ -16,8 +16,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_characters"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
             tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             tools:listitem="@layout/pager_item_character"
             tools:spanCount="2" />
@@ -49,7 +48,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_filter_alt_24"
-        tools:src="@drawable/baseline_filter_alt_24" />
+        tools:src="@drawable/baseline_filter_alt_24"
+        android:contentDescription="@string/content_description_icon_filter" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_characters_scroll_to_top"
@@ -61,6 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_arrow_upward_24"
         tools:src="@drawable/baseline_arrow_upward_24"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:contentDescription="@string/content_description_icon_up_arrow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

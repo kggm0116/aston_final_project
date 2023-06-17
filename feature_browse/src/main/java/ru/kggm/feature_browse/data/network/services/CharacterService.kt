@@ -6,7 +6,6 @@ import retrofit2.http.Query
 import ru.kggm.feature_browse.data.network.dtos.CharacterDto
 import ru.kggm.feature_browse.data.network.dtos.CharacterPageResponse
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import java.util.concurrent.CompletableFuture
 
 interface CharacterService {
 

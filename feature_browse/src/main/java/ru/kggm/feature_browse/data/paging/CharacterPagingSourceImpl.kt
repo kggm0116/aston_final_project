@@ -66,6 +66,7 @@ class CharacterPagingSourceImpl @Inject constructor(
             val itemsFromDatabase = fetchFromDatabase(itemRange)
             val firstFetchedItem = itemRange.first + itemsFromDatabase.size
 
+            var networkFetchSuccessful = true
             val fetchedItems = if (itemsFromDatabase.size < itemRange.last - itemRange.first + 1) {
                 val fetchRange = firstFetchedItem until firstFetchedItem + params.loadSize
                 val firstPage = fetchRange.first / NETWORK_ITEMS_PER_PAGE + 1
@@ -76,7 +77,8 @@ class CharacterPagingSourceImpl @Inject constructor(
                     fetchFromNetwork(firstPage..lastPage)
                 }
                 catch (exception: Throwable) {
-                    return@withContext LoadResult.Error(CharacterPagerLoadError())
+                    networkFetchSuccessful = false
+                    emptyList()
                 }
             } else emptyList()
 

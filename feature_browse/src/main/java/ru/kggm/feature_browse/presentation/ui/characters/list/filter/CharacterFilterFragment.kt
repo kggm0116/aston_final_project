@@ -1,16 +1,17 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list.filter
 
+import android.content.DialogInterface
 import android.text.Editable
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.ViewModelBottomSheetDialogFragment
+import ru.kggm.core.presentation.ui.fragments.bottom_sheet.ViewModelBottomSheetDialogFragment
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListViewModel
 import ru.kggm.feature_main.databinding.FragmentCharacterFilterBinding
 
-class CharacterFilterFragment :
+class CharacterFilterFragment(private val onCancel: () -> Unit = { }) :
     ViewModelBottomSheetDialogFragment<FragmentCharacterFilterBinding, CharacterListViewModel>(
         CharacterListViewModel::class.java,
     ) {
@@ -71,5 +72,10 @@ class CharacterFilterFragment :
 
     private fun onTypeTextChanged(editable: Editable) {
         viewModel.setTypeFilter(editable.toString())
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        onCancel()
     }
 }

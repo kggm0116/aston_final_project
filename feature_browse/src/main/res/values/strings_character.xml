@@ -2,10 +2,10 @@
 <resources>
     <string name="string_character_status_alive">Alive</string>
     <string name="string_character_status_dead">Dead</string>
-    <string name="string_character_status_unknown">Unknown</string>
+    <string name="string_character_status_unknown">Unknown status</string>
 
     <string name="string_character_gender_female">Female</string>
     <string name="string_character_gender_male">Male</string>
     <string name="string_character_gender_genderless">Genderless</string>
-    <string name="string_character_gender_unknown">Unknown</string>
+    <string name="string_character_gender_unknown">Unknown gender</string>
 </resources>

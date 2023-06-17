@@ -1,9 +1,9 @@
-package ru.kggm.core.presentation.ui.fragments
+package ru.kggm.core.presentation.ui.fragments.bottom_sheet
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.FrameLayout
@@ -46,7 +46,8 @@ abstract class ViewBindingBottomSheetDialogFragment<VB : ViewBinding> :
                             as FrameLayout
                 val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.peekHeight = 0 // Remove this line to hide a dark background if you manually hide the dialog.
+                behavior.peekHeight =
+                    0 // Remove this line to hide a dark background if you manually hide the dialog.
             }
         })
     }

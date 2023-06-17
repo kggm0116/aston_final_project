@@ -1,16 +1,14 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list
 
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.ViewModelFragment
+import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
 import ru.kggm.feature_main.R
 import ru.kggm.presentation.R as coreR
 import ru.kggm.feature_browse.di.CharacterComponent
@@ -18,6 +16,8 @@ import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
 import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
 import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
+import ru.kggm.core.presentation.utility.animations.Visibility
+import ru.kggm.core.presentation.utility.animations.animateVisibility
 import ru.kggm.feature_browse.presentation.ui.characters.list.filter.CharacterFilterFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharacterPagingAdapter
 import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
@@ -39,6 +39,7 @@ class CharacterListFragment :
 
     override fun onInitialize() {
         initializeRecycler()
+        initializeViews()
         initializeViewListeners()
         binding.refresherCharacters.setOnRefreshListener { onRefreshRecycler() }
         lifecycleScope.launch {
@@ -61,21 +62,46 @@ class CharacterListFragment :
     }
 
     private fun displayLoadStates(states: CombinedLoadStates) {
-        with (states) {
-            binding.recyclerCharacters.isVisible = adapter.itemCount > 0
-            binding.layoutPagerLoading.root.isVisible = adapter.itemCount == 0
-                    && refresh is LoadState.Loading
-            binding.layoutPagerEmpty.root.isVisible = adapter.itemCount == 0
-                    && refresh is LoadState.NotLoading
-            binding.layoutPagerError.root.isVisible = adapter.itemCount == 0
-                    && refresh is LoadState.Error
+        with(states) {
+            binding.recyclerCharacters.animateVisibility(
+                visibility = if (adapter.itemCount > 0)
+                    Visibility.Visible
+                else
+                    Visibility.Invisible
+            )
+            binding.layoutPagerEmpty.root.animateVisibility {
+                adapter.itemCount == 0 && refresh is LoadState.NotLoading
+            }
+            binding.layoutPagerLoading.root.animateVisibility {
+                adapter.itemCount == 0 && refresh is LoadState.Loading
+            }
+            binding.layoutPagerError.root.animateVisibility {
+                adapter.itemCount == 0 && refresh is LoadState.Error
+            }
         }
+    }
+
+    private fun initializeViews() {
+        binding.fabOpenCharacterFilters.animateVisibility(
+            Visibility.Visible,
+            coreR.anim.slide_in_right
+        )
     }
 
     private fun initializeViewListeners() {
         binding.fabOpenCharacterFilters.setOnClickListener {
-            CharacterFilterFragment()
-                .show(parentFragmentManager, null)
+            CharacterFilterFragment(
+                onCancel = {
+                    binding.fabOpenCharacterFilters.animateVisibility(
+                        Visibility.Visible,
+                        coreR.anim.slide_in_right
+                    )
+                }
+            ).show(parentFragmentManager, null)
+            binding.fabOpenCharacterFilters.animateVisibility(
+                Visibility.Gone,
+                coreR.anim.slide_out_right
+            )
         }
         binding.recyclerCharacters.addOnScrollListener(scrollListener)
         binding.fabCharactersScrollToTop.setOnClickListener {
@@ -90,8 +116,21 @@ class CharacterListFragment :
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            binding.fabCharactersScrollToTop.isVisible =
-                layoutManager.findFirstVisibleItemPosition() >= SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT
+            animateScrollToTopFab()
+        }
+    }
+
+    private fun animateScrollToTopFab() {
+        if (layoutManager.findFirstVisibleItemPosition() >= SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT) {
+            binding.fabCharactersScrollToTop.animateVisibility(
+                Visibility.Visible,
+                coreR.anim.slide_in_right
+            )
+        } else {
+            binding.fabCharactersScrollToTop.animateVisibility(
+                Visibility.Gone,
+                coreR.anim.slide_out_right
+            )
         }
     }
 

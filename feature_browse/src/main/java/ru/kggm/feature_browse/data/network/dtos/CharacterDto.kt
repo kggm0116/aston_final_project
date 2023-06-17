@@ -1,6 +1,5 @@
 package ru.kggm.feature_browse.data.network.dtos
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.google.gson.annotations.SerializedName
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
@@ -12,7 +11,9 @@ data class CharacterDto(
     val species: String,
     val type: String,
     val gender: Gender,
-    val image: String
+    val image: String,
+    // origin - Location
+    // location - Location
 ) {
     fun toDataEntity() = CharacterDataEntity(
         id = id,
