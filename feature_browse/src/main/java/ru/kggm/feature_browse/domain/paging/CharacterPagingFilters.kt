@@ -1,6 +1,8 @@
-package ru.kggm.feature_browse.domain.entities
+package ru.kggm.feature_browse.domain.paging
 
-data class CharacterFilterParameters(
+import ru.kggm.feature_browse.domain.entities.CharacterEntity
+
+data class CharacterPagingFilters(
     val name: String? = null,
     val status: CharacterEntity.Status? = null,
     val species: String? = null,
@@ -8,6 +10,6 @@ data class CharacterFilterParameters(
     val gender: CharacterEntity.Gender? = null
 ) {
     companion object {
-        val Default = CharacterFilterParameters()
+        val Default = CharacterPagingFilters()
     }
 }

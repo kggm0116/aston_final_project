@@ -14,11 +14,14 @@ import kotlinx.coroutines.runBlocking
 import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import ru.kggm.feature_browse.domain.entities.CharacterFilterParameters
-import ru.kggm.feature_browse.domain.paging.CharacterPagingSource
+import ru.kggm.feature_browse.domain.paging.CharacterPagingFilters
+import ru.kggm.feature_browse.domain.paging.FilterPagingSource
+import ru.kggm.feature_browse.domain.use_cases.CharacterPagingSource
 import ru.kggm.feature_browse.domain.use_cases.GetCharactersPagingSource
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity.Companion.toPresentationEntity
 import javax.inject.Inject
+
+typealias CharacterPagingSource = FilterPagingSource<CharacterEntity, CharacterPagingFilters>
 
 class CharacterListViewModel @Inject constructor(
     private val getCharactersPagingSource: GetCharactersPagingSource
@@ -32,7 +35,7 @@ class CharacterListViewModel @Inject constructor(
         Log.i(classTag(), "Initialized")
     }
 
-    private val filterParametersFlow = MutableStateFlow(CharacterFilterParameters.Default)
+    private val filterParametersFlow = MutableStateFlow(CharacterPagingFilters.Default)
     val filterParameters = filterParametersFlow.asStateFlow()
 
     fun cycleGender() {
