@@ -2,7 +2,7 @@ package ru.kggm.feature_browse.domain.repositories
 
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.CharacterFilterParameters
-import ru.kggm.feature_browse.domain.entities.CharacterPagingSource
+import ru.kggm.feature_browse.domain.paging.CharacterPagingSource
 
 interface CharacterRepository {
     fun characterPagingSource(filterParameters: CharacterFilterParameters): CharacterPagingSource

@@ -34,7 +34,7 @@ class CharacterDetailsFragment :
 
     override fun onInitialize() {
         viewModel.loadCharacter(characterId)
-        lifecycleScope.launch { subscribeToViewModel() }
+        subscribeToViewModel()
         initializeToolbar()
     }
 
@@ -46,9 +46,11 @@ class CharacterDetailsFragment :
         }
     }
 
-    private suspend fun subscribeToViewModel() {
-        viewModel.character.collect { character ->
-            character?.let { displayCharacter(it) }
+    private fun subscribeToViewModel() {
+        lifecycleScope.launch {
+            viewModel.character.collect { character ->
+                character?.let { displayCharacter(it) }
+            }
         }
     }
 

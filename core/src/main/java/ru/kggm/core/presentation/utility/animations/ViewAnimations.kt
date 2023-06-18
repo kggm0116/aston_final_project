@@ -4,8 +4,6 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.AnimRes
-import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
 
 private const val DURATION_VIEW_ANIMATION_DEFAULT_MS = 200L
 
@@ -23,22 +21,20 @@ fun View.animateVisibility(
     endAction: () -> Unit = { },
     duration: Long = DURATION_VIEW_ANIMATION_DEFAULT_MS
 ) {
-    val viewVisibility = visibility.toViewVisibility()
-    if (this.visibility == viewVisibility)
+    val targetVisibility = visibility.toViewVisibility()
+    if (this.visibility == targetVisibility)
         return
 
-    val isVisible = this.visibility == View.VISIBLE
-    if (isVisible && viewVisibility == View.GONE || !isVisible && viewVisibility == View.VISIBLE) {
-        val alpha = if (isVisible) 1f else 0f
-        this.animate()
-            .alpha(alpha)
-            .setDuration(duration)
-            .withEndAction {
-                this.visibility = viewVisibility
-                endAction()
-            }
-            .start()
-    }
+    val currentlyVisible = this.visibility == View.VISIBLE
+    val alpha = if (currentlyVisible) 0f else 1f
+    this.animate()
+        .alpha(alpha)
+        .setDuration(duration)
+        .withEndAction {
+            this.visibility = targetVisibility
+            endAction()
+        }
+        .start()
 }
 
 fun View.animateVisibility(
@@ -47,22 +43,20 @@ fun View.animateVisibility(
     visibleOrGone: () -> Boolean
 ) {
     val visibility = if (visibleOrGone()) Visibility.Visible else Visibility.Gone
-    val viewVisibility = visibility.toViewVisibility()
-    if (this.visibility == viewVisibility)
+    val targetVisibility = visibility.toViewVisibility()
+    if (this.visibility == targetVisibility)
         return
 
-    val isVisible = this.visibility == View.VISIBLE
-    if (isVisible && viewVisibility == View.GONE || !isVisible && viewVisibility == View.VISIBLE) {
-        val alpha = if (isVisible) 1f else 0f
-        this.animate()
-            .alpha(alpha)
-            .setDuration(duration)
-            .withEndAction {
-                this.visibility = viewVisibility
-                endAction()
-            }
-            .start()
-    }
+    val currentlyVisible = this.visibility == View.VISIBLE
+    val alpha = if (currentlyVisible) 0f else 1f
+    this.animate()
+        .alpha(alpha)
+        .setDuration(duration)
+        .withEndAction {
+            this.visibility = targetVisibility
+            endAction()
+        }
+        .start()
 }
 
 fun View.animateVisibility(
@@ -70,8 +64,8 @@ fun View.animateVisibility(
     @AnimRes animation: Int,
     endAction: () -> Unit = { },
 ) {
-    val viewVisibility = visibility.toViewVisibility()
-    if (this.visibility == viewVisibility)
+    val targetVisibility = visibility.toViewVisibility()
+    if (this.visibility == targetVisibility)
         return
 
     val anim = AnimationUtils.loadAnimation(this.context, animation).apply {
@@ -79,12 +73,12 @@ fun View.animateVisibility(
             override fun onAnimationStart(animation: Animation?) {}
             override fun onAnimationRepeat(animation: Animation?) {}
             override fun onAnimationEnd(animation: Animation?) {
-                this@animateVisibility.visibility = viewVisibility
+                this@animateVisibility.visibility = targetVisibility
                 endAction()
             }
         })
     }
 
     startAnimation(anim)
-    this.visibility = viewVisibility
+    this.visibility = targetVisibility
 }

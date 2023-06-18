@@ -1,6 +1,10 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list
 
+import android.net.ConnectivityManager
+import android.net.Network
+import android.util.Log
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
@@ -9,18 +13,23 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
-import ru.kggm.feature_main.R
-import ru.kggm.presentation.R as coreR
+import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
+import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
+import ru.kggm.core.presentation.utility.animations.Visibility
+import ru.kggm.core.presentation.utility.animations.animateVisibility
+import ru.kggm.core.presentation.utility.network.getIsNetworkConnectionActive
+import ru.kggm.core.presentation.utility.network.registerNetworkCallback
+import ru.kggm.core.presentation.utility.network.unregisterNetworkCallback
+import ru.kggm.core.presentation.utility.runOnUiThread
+import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
-import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
-import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
-import ru.kggm.core.presentation.utility.animations.Visibility
-import ru.kggm.core.presentation.utility.animations.animateVisibility
 import ru.kggm.feature_browse.presentation.ui.characters.list.filter.CharacterFilterFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharacterPagingAdapter
+import ru.kggm.feature_main.R
 import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
+import ru.kggm.presentation.R as coreR
 
 class CharacterListFragment :
     ViewModelFragment<FragmentCharacterListBinding, CharacterListViewModel>(
@@ -41,10 +50,8 @@ class CharacterListFragment :
         initializeRecycler()
         initializeViews()
         initializeViewListeners()
-        binding.refresherCharacters.setOnRefreshListener { onRefreshRecycler() }
-        lifecycleScope.launch {
-            subscribeToViewModel()
-        }
+        subscribeToViewModel()
+        initializeNetworkListeners()
     }
 
     private val adapter by lazy { CharacterPagingAdapter() }
@@ -89,28 +96,42 @@ class CharacterListFragment :
     }
 
     private fun initializeViewListeners() {
-        binding.fabOpenCharacterFilters.setOnClickListener {
-            CharacterFilterFragment(
-                onCancel = {
-                    binding.fabOpenCharacterFilters.animateVisibility(
-                        Visibility.Visible,
-                        coreR.anim.slide_in_right
-                    )
-                }
-            ).show(parentFragmentManager, null)
-            binding.fabOpenCharacterFilters.animateVisibility(
-                Visibility.Gone,
-                coreR.anim.slide_out_right
-            )
+        with (binding) {
+            fabOpenCharacterFilters.setOnClickListener {
+                CharacterFilterFragment(
+                    onCancel = {
+                        fabOpenCharacterFilters.animateVisibility(
+                            Visibility.Visible,
+                            coreR.anim.slide_in_right
+                        )
+                    }
+                ).show(parentFragmentManager, null)
+                fabOpenCharacterFilters.animateVisibility(
+                    Visibility.Gone,
+                    coreR.anim.slide_out_right
+                )
+            }
+            recyclerCharacters.addOnScrollListener(scrollListener)
+            fabCharactersScrollToTop.setOnClickListener {
+                recyclerCharacters.stopScroll()
+                layoutManager.scrollToPositionWithOffset(0, 0)
+            }
+            layoutPagerError.buttonPagerRetry.setOnClickListener {
+                adapter.retry()
+            }
+            refresherCharacters.setOnRefreshListener { onRefreshRecycler() }
         }
-        binding.recyclerCharacters.addOnScrollListener(scrollListener)
-        binding.fabCharactersScrollToTop.setOnClickListener {
-            binding.recyclerCharacters.stopScroll()
-            layoutManager.scrollToPositionWithOffset(0, 0)
-        }
-        binding.layoutPagerError.buttonPagerRetry.setOnClickListener {
-            adapter.retry()
-        }
+    }
+
+    private fun initializeNetworkListeners() {
+        if (!getIsNetworkConnectionActive())
+            viewModel.onNetworkLost()
+        registerNetworkCallback(networkCallback)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterNetworkCallback(networkCallback)
     }
 
     private val scrollListener = object : RecyclerView.OnScrollListener() {
@@ -134,9 +155,59 @@ class CharacterListFragment :
         }
     }
 
-    private suspend fun subscribeToViewModel() {
-        viewModel.characterPagingData.collect {
-            adapter.submitData(it)
+    private fun subscribeToViewModel() {
+        lifecycleScope.launch {
+            launch {
+                viewModel.characterPagingData.collect {
+                    adapter.submitData(it)
+                }
+            }
+            launch {
+                var isInitialNetworkStateSet = false
+                viewModel.networkState.collect { state ->
+                    runOnUiThread {
+                        if (!isInitialNetworkStateSet) {
+                            isInitialNetworkStateSet = true
+                            setNetworkLayoutsVisibility(state)
+                        } else {
+                            animateNetworkLayoutsVisibility(state)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun setNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) {
+        binding.layoutNetworkLost.root.isVisible =
+            state == CharacterListViewModel.NetworkState.Lost
+        binding.layoutNetworkRestored.root.isVisible =
+            state == CharacterListViewModel.NetworkState.Restored
+    }
+
+    private fun animateNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) {
+        if (state == CharacterListViewModel.NetworkState.Lost) {
+            binding.layoutNetworkLost.root.animateVisibility(
+                Visibility.Visible,
+                coreR.anim.slide_in_top
+            )
+        } else {
+            binding.layoutNetworkLost.root.animateVisibility(
+                Visibility.Gone,
+                coreR.anim.slide_out_top
+            )
+        }
+        if (state == CharacterListViewModel.NetworkState.Restored) {
+            binding.layoutNetworkRestored.root.animateVisibility(
+                Visibility.Visible,
+                coreR.anim.slide_in_top
+            )
+        } else {
+            binding.layoutNetworkRestored.root.animateVisibility(
+                Visibility.Gone,
+                coreR.anim.slide_out_top
+            )
         }
     }
 
@@ -159,5 +230,28 @@ class CharacterListFragment :
     private fun onRefreshRecycler() {
         viewModel.refreshPagingData()
         binding.refresherCharacters.isRefreshing = false
+        viewModel.onDataRefreshed()
+    }
+
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            onNetworkAvailable()
+        }
+
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            onNetworkLost()
+        }
+    }
+
+    private fun onNetworkAvailable() {
+        Log.i(classTag(), "Network available")
+        viewModel.onNetworkRestored()
+    }
+
+    private fun onNetworkLost() {
+        Log.i(classTag(), "Network lost")
+        viewModel.onNetworkLost()
     }
 }

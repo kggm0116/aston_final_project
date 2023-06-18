@@ -25,7 +25,7 @@ class CharacterFilterFragment(private val onCancel: () -> Unit = { }) :
 
     override fun onInitialize() {
         initializeViewListeners()
-        lifecycleScope.launch { subscribeToViewModel() }
+        subscribeToViewModel()
     }
 
     private fun initializeViewListeners() {
@@ -37,14 +37,16 @@ class CharacterFilterFragment(private val onCancel: () -> Unit = { }) :
         binding.buttonApplyCharacterFilter.setOnClickListener { onApplyFiltersClick() }
     }
 
-    private suspend fun subscribeToViewModel() {
-        viewModel.filterParameters.collect { parameters ->
-            with (parameters) {
-                binding.buttonFilterCharacterGender.text = gender?.toString() ?: "Any"
-                binding.buttonFilterCharacterStatus.text = status?.toString() ?: "Any"
-                binding.inputTextCharacterName.setText(name)
-                binding.inputTextCharacterSpecies.setText(species)
-                binding.inputTextCharacterType.setText(type)
+    private fun subscribeToViewModel() {
+        lifecycleScope.launch {
+            viewModel.filterParameters.collect { parameters ->
+                with (parameters) {
+                    binding.buttonFilterCharacterGender.text = gender?.toString() ?: "Any"
+                    binding.buttonFilterCharacterStatus.text = status?.toString() ?: "Any"
+                    binding.inputTextCharacterName.setText(name)
+                    binding.inputTextCharacterSpecies.setText(species)
+                    binding.inputTextCharacterType.setText(type)
+                }
             }
         }
     }

@@ -18,7 +18,6 @@ package ru.kggm.core.presentation.ui.paging
 
 import android.util.Log
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import ru.kggm.core.utility.classTag

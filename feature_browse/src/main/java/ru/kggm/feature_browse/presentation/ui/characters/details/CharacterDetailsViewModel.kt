@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.core.utility.classTag
-import ru.kggm.core.utility.classTagOf
 import ru.kggm.feature_browse.domain.use_cases.GetCharacterById
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity.Companion.toPresentationEntity

@@ -15,45 +15,63 @@ import ru.kggm.feature_browse.data.network.dtos.CharacterPageResponse
 import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.CharacterFilterParameters
+import ru.kggm.feature_browse.domain.paging.BasePagingSource
 import ru.kggm.feature_browse.domain.paging.CharacterPagingSource
 import javax.inject.Inject
 import kotlin.math.max
 
-class CharacterPagingSourceImpl(
+abstract class BasePagingSourceImpl<TData : Any, TOut : Any>(
     filterParameters: CharacterFilterParameters,
     private val characterService: CharacterService,
     private val characterDao: CharacterDao,
-) : CharacterPagingSource(filterParameters) {
+) : BasePagingSource<TOut>(filterParameters) {
+
+    abstract fun getItemsPerNetworkPage(): Int
 
     companion object {
-        private const val NETWORK_ITEMS_PER_PAGE = 20
         private const val STARTING_KEY = 0
-        private val tag = classTagOf<CharacterPagingSourceImpl>()
         private const val SIMULATE_DELAY = true
     }
 
-    init {
-        Log.i(tag, "Initialized with filter params: $filterParameters")
-    }
+    abstract suspend fun onClearCache()
 
     override suspend fun clearCache() {
         withContext(Dispatchers.IO) {
-            characterDao.deleteAll()
-            Log.i(tag, "Cleared cache")
+            onClearCache()
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, CharacterEntity>) = 0
+    private data class NetworkConstants(val pageCount: Int, val entityCount: Int)
 
-    private data class NetworkConstants(val pageCount: Int, val characterCount: Int)
+    override fun getRefreshKey(state: PagingState<Int, TOut>) = 0
 
     private var networkConstants = NetworkConstants(Int.MAX_VALUE, Int.MAX_VALUE)
     private fun setNetworkConstants(response: CharacterPageResponse) {
         networkConstants = NetworkConstants(
             pageCount = response.info.pageCount,
-            characterCount = response.info.characterCount
+            entityCount = response.info.characterCount
         )
     }
+
+    //
+
+//    companion object {
+//        private const val NETWORK_ITEMS_PER_PAGE = 20
+//        private const val STARTING_KEY = 0
+//        private val tag = classTagOf<BasePagingSourceImpl>()
+//        private const val SIMULATE_DELAY = true
+//    }
+
+//    override suspend fun clearCache() {
+//        withContext(Dispatchers.IO) {
+//            characterDao.deleteAll()
+//            Log.i(tag, "Cleared cache")
+//        }
+//    }
+
+//    override fun getRefreshKey(state: PagingState<Int, CharacterEntity>) = 0
+
+
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterEntity> =
         withContext(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->

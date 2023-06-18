@@ -10,11 +10,12 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.CharacterFilterParameters
-import ru.kggm.feature_browse.domain.entities.CharacterPagingSource
+import ru.kggm.feature_browse.domain.paging.CharacterPagingSource
 import ru.kggm.feature_browse.domain.use_cases.GetCharactersPagingSource
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity.Companion.toPresentationEntity
 import javax.inject.Inject
@@ -92,8 +93,8 @@ class CharacterListViewModel @Inject constructor(
     private var characterPagingSource: CharacterPagingSource? = null
     private fun createPagingSource(): CharacterPagingSource {
         return getCharactersPagingSource(filterParametersFlow.value).also {
-            if (characterPagingSource == null)
-                safeLaunch { it.clearCache() }
+//            if (characterPagingSource == null)
+//                safeLaunch { it.clearCache() }
             characterPagingSource = it
         }
     }
@@ -125,4 +126,23 @@ class CharacterListViewModel @Inject constructor(
             data.map { it.toPresentationEntity() }
         }
         .cachedIn(viewModelScope)
+
+    enum class NetworkState { Normal, Lost, Restored }
+    private val networkStateFlow = MutableStateFlow(NetworkState.Normal)
+    val networkState = networkStateFlow.asStateFlow()
+
+    fun onNetworkLost() {
+        if (networkStateFlow.value != NetworkState.Lost)
+            runBlocking { networkStateFlow.emit(NetworkState.Lost) }
+    }
+
+    fun onNetworkRestored() {
+        if (networkStateFlow.value == NetworkState.Lost)
+            runBlocking { networkStateFlow.emit(NetworkState.Restored) }
+    }
+
+    fun onDataRefreshed() {
+        if (networkStateFlow.value == NetworkState.Restored)
+            runBlocking { networkStateFlow.emit(NetworkState.Normal) }
+    }
 }

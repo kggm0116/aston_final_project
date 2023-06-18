@@ -8,10 +8,14 @@
 
     <include
         android:id="@+id/layout_pager_footer_loading"
-        layout="@layout/layout_pager_footer_loading" />
+        layout="@layout/layout_pager_footer_loading"
+        android:layout_height="@dimen/dimen_pager_footer_loading_height"
+        android:layout_width="match_parent" />
 
     <include
         android:id="@+id/layout_pager_footer_error"
-        layout="@layout/layout_pager_footer_error" />
+        layout="@layout/layout_pager_footer_error"
+        android:layout_height="@dimen/dimen_pager_footer_loading_height"
+        android:layout_width="match_parent"/>
 
 </LinearLayout>
