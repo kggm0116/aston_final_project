@@ -7,7 +7,8 @@ data class CharacterPagingFilters(
     val status: CharacterEntity.Status? = null,
     val species: String? = null,
     val type: String? = null,
-    val gender: CharacterEntity.Gender? = null
+    val gender: CharacterEntity.Gender? = null,
+    val ids: List<Int>? = null
 ) {
     companion object {
         val Default = CharacterPagingFilters()

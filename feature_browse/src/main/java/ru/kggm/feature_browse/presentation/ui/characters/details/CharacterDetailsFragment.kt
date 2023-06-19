@@ -1,6 +1,8 @@
 package ru.kggm.feature_browse.presentation.ui.characters.details
 
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import kotlinx.coroutines.launch
@@ -9,24 +11,27 @@ import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
 import ru.kggm.feature_main.databinding.FragmentCharacterDetailsBinding
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
+import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListFragment
+import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListViewModel
 import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
 import ru.kggm.feature_main.R
+import ru.kggm.feature_main.databinding.NewFragmentCharacterDetailsBinding
 
 class CharacterDetailsFragment :
-    ViewModelFragment<FragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
+    ViewModelFragment<NewFragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
         CharacterDetailsViewModel::class.java,
-    ) {
+) {
 
     companion object {
         const val ARG_CHARACTER_ID = "ARG_CHARACTER_ID"
     }
 
-    override fun createBinding() = FragmentCharacterDetailsBinding.inflate(layoutInflater)
+    override fun createBinding() = NewFragmentCharacterDetailsBinding.inflate(layoutInflater)
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
         CharacterComponent.init(requireContext(), dependenciesProvider).inject(this)
     }
 
-    override fun getViewModelOwner() = this
+    override fun viewModelOwner() = this
 
     private val characterId by lazy {
         requireNotNull(arguments?.getLong(ARG_CHARACTER_ID)) { "Could not retrieve character id" }
@@ -49,39 +54,47 @@ class CharacterDetailsFragment :
     private fun subscribeToViewModel() {
         lifecycleScope.launch {
             viewModel.character.collect { character ->
-                character?.let { displayCharacter(it) }
+                character?.let {
+                    displayCharacter(it)
+                    val episodeFragment = EpisodeListFragment().apply {
+                        arguments = bundleOf(EpisodeListFragment.ARG_EPISODE_IDS to it.episodeIds)
+                    }
+                    childFragmentManager.commit {
+                        replace(R.id.fragment_container_character_episodes, episodeFragment)
+                    }
+                }
             }
         }
     }
 
     private fun displayCharacter(character: CharacterPresentationEntity) {
-        with(binding.layoutCharacterDetails) {
-            binding.toolbarCharacterDetails.title = character.name
-            imageCharacter.load(character.image) { crossfade(true) }
+        with (binding.newLayoutCharacterInfoFull) {
+//            binding.toolbarCharacterDetails.title = character.name
+            binding.imageCharacter.load(character.image) { crossfade(true) }
 
-            layoutCharacterDetailsTexts.textViewCharacterType.text = requireContext().getString(
+            textViewCharacterType.text = requireContext().getString(
                 R.string.composite_text_character_type,
                 character.type
             )
-            layoutCharacterDetailsTexts.textViewCharacterSpecies.text =
+            textViewCharacterSpecies.text =
                 requireContext().getString(
                     R.string.composite_text_character_species,
                     character.species
                 )
-            layoutCharacterDetailsTexts.textViewCharacterStatus.text =
+            textViewCharacterStatus.text =
                 requireContext().getString(
                     R.string.composite_text_character_status,
                     character.status.toResourceString(requireContext())
                 )
-            layoutCharacterDetailsTexts.textViewCharacterGender.text =
+            textViewCharacterGender.text =
                 requireContext().getString(
                     R.string.composite_text_character_gender,
                     character.gender.toResourceString(requireContext())
                 )
 
-            layoutCharacterDetailsTexts.textViewCharacterType.isVisible =
+            textViewCharacterType.isVisible =
                 character.type.isNotEmpty()
-            layoutCharacterDetailsTexts.textViewCharacterSpecies.isVisible =
+            textViewCharacterSpecies.isVisible =
                 character.species.isNotEmpty()
         }
     }
@@ -90,7 +103,7 @@ class CharacterDetailsFragment :
         parentFragmentManager.popBackStack()
     }
 
-    override fun onBackButtonPressed() {
+    override val onBackButtonPressed = {
         navigateBack()
     }
 }

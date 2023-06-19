@@ -1,4 +1,4 @@
-package ru.kggm.feature_browse.presentation.ui.locations.list.recycler
+package ru.kggm.feature_browse.presentation.ui.locations.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

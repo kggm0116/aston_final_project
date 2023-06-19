@@ -34,6 +34,14 @@ class EpisodeListViewModel @Inject constructor(
     private val filterParametersFlow = MutableStateFlow(EpisodePagingFilters.Default)
     val filterParameters = filterParametersFlow.asStateFlow()
 
+    fun setIds(ids: List<Int>?) {
+        filterParametersFlow.value.run {
+            copy(ids = ids).let { newParameters ->
+                filterParametersFlow.tryEmit(newParameters)
+            }
+        }
+    }
+
     fun setNameFilter(text: String) {
         filterParametersFlow.value.run {
             copy(nameQuery = text.ifEmpty { null }).let { newParameters ->

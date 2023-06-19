@@ -61,6 +61,7 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, 
                 emptyList()
             } catch (throwable: Throwable) {
                 Log.e(logTag, "Unexpected error during network call:\n${throwable.stackTraceToString()}")
+                networkCallSuccessful = false
                 emptyList()
             }
 

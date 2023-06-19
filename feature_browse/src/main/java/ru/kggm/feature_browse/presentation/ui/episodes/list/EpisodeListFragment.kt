@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -25,9 +26,10 @@ import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.di.EpisodeComponent
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
+import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.episodes.details.EpisodeDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.episodes.list.filter.EpisodeFilterFragment
-import ru.kggm.feature_browse.presentation.ui.episodes.list.recycler.EpisodePagingAdapter
+import ru.kggm.feature_browse.presentation.ui.episodes.recycler.EpisodePagingAdapter
 import ru.kggm.feature_main.R
 import ru.kggm.feature_main.databinding.FragmentEpisodeListBinding
 import ru.kggm.presentation.R as coreR
@@ -38,18 +40,29 @@ class EpisodeListFragment :
     ) {
     companion object {
         const val SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT = 10
+        const val ARG_EPISODE_IDS = "ARG_EPISODE_IDS"
     }
 
+    private val episodeIds by lazy {
+        arguments?.getIntegerArrayList(ARG_EPISODE_IDS)?.toList()
+    }
+
+    private val showsLimitedIds get() = episodeIds != null
+
     override fun createBinding() = FragmentEpisodeListBinding.inflate(layoutInflater)
-    override fun getViewModelOwner() = requireActivity()
+    override fun viewModelOwner(): ViewModelStoreOwner = if (showsLimitedIds) {
+        requireParentFragment()
+    } else {
+        requireActivity()
+    }
 
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
         EpisodeComponent.init(requireContext(), dependenciesProvider).inject(this)
     }
 
     override fun onInitialize() {
+        viewModel.setIds(episodeIds)
         initializeRecycler()
-        initializeViews()
         initializeViewListeners()
         subscribeToViewModel()
         initializeNetworkListeners()
@@ -60,8 +73,8 @@ class EpisodeListFragment :
     private fun initializeRecycler() {
         layoutManager = FooterOptimizedGridLayoutManager(requireContext(), 2, adapter)
         binding.recyclerEpisodes.layoutManager = layoutManager
-        binding.recyclerEpisodes.adapter =
-            adapter.withLoadStateFooter(CommonLoadStateAdapter { adapter.retry() })
+        binding.recyclerEpisodes.adapter = adapter
+            .withLoadStateFooter(CommonLoadStateAdapter { adapter.retry() })
 
         adapter.onEpisodeClicked = { onEpisodeClicked(it) }
         lifecycleScope.launch {
@@ -89,29 +102,9 @@ class EpisodeListFragment :
         }
     }
 
-    private fun initializeViews() {
-        binding.fabOpenEpisodeFilters.animateVisibility(
-            Visibility.Visible,
-            coreR.anim.slide_in_right
-        )
-    }
-
     private fun initializeViewListeners() {
         with (binding) {
-            fabOpenEpisodeFilters.setDebouncedClickListener {
-                fabOpenEpisodeFilters.animateVisibility(
-                    Visibility.Gone,
-                    coreR.anim.slide_out_right
-                )
-                EpisodeFilterFragment(
-                    onClosed = {
-                        fabOpenEpisodeFilters.animateVisibility(
-                            Visibility.Visible,
-                            coreR.anim.slide_in_right
-                        )
-                    }
-                ).show(parentFragmentManager, null)
-            }
+            initializeFilter()
             recyclerEpisodes.addOnScrollListener(scrollListener)
             fabEpisodesScrollToTop.setDebouncedClickListener {
                 recyclerEpisodes.stopScroll()
@@ -121,6 +114,27 @@ class EpisodeListFragment :
                 adapter.retry()
             }
             refresherEpisodes.setOnRefreshListener { onRefreshRecycler() }
+        }
+    }
+
+    private fun initializeFilter() {
+        if (showsLimitedIds) {
+            binding.fabOpenEpisodeFilters.isVisible = false
+        } else {
+            binding.fabOpenEpisodeFilters.setDebouncedClickListener {
+                binding.fabOpenEpisodeFilters.animateVisibility(
+                    Visibility.Gone,
+                    coreR.anim.slide_out_right
+                )
+                EpisodeFilterFragment(
+                    onClosed = {
+                        binding.fabOpenEpisodeFilters.animateVisibility(
+                            Visibility.Visible,
+                            coreR.anim.slide_in_right
+                        )
+                    }
+                ).show(parentFragmentManager, null)
+            }
         }
     }
 

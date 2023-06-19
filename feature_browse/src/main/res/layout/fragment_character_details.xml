@@ -17,13 +17,11 @@
         tools:paddingHorizontal="156dp"
         tools:title="TOOLBAR" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_character_details">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_character_details"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <include
             android:id="@+id/layout_character_details"
@@ -31,6 +29,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

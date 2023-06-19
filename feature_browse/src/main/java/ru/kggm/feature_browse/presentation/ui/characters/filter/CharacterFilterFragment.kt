@@ -1,4 +1,4 @@
-package ru.kggm.feature_browse.presentation.ui.characters.list.filter
+package ru.kggm.feature_browse.presentation.ui.characters.filter
 
 import android.content.DialogInterface
 import android.text.Editable
@@ -10,15 +10,16 @@ import ru.kggm.core.presentation.ui.fragments.bottom_sheet.ViewModelBottomSheetD
 import ru.kggm.core.presentation.utility.runOnUiThread
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.di.CharacterComponent
+import ru.kggm.feature_browse.domain.paging.filters.CharacterPagingFilters
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListViewModel
-import ru.kggm.feature_main.databinding.FragmentCharacterFilterBinding
+import ru.kggm.feature_main.databinding.NewFragmentCharacterFilterBinding
 
 class CharacterFilterFragment(private val onClosed: () -> Unit = { }) :
-    ViewModelBottomSheetDialogFragment<FragmentCharacterFilterBinding, CharacterListViewModel>(
+    ViewModelBottomSheetDialogFragment<NewFragmentCharacterFilterBinding, CharacterListViewModel>(
         CharacterListViewModel::class.java,
     ) {
 
-    override fun createBinding() = FragmentCharacterFilterBinding.inflate(layoutInflater)
+    override fun createBinding() = NewFragmentCharacterFilterBinding.inflate(layoutInflater)
     override fun getViewModelOwner() = requireActivity()
 
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
@@ -30,29 +31,29 @@ class CharacterFilterFragment(private val onClosed: () -> Unit = { }) :
         subscribeToViewModel()
     }
 
-    private fun initializeViewListeners() {
-        binding.inputTextCharacterName.addTextChangedListener { onNameTextChanged(it!!) }
-        binding.inputTextCharacterSpecies.addTextChangedListener { onSpeciesTextChanged(it!!) }
-        binding.inputTextCharacterType.addTextChangedListener { onTypeTextChanged(it!!) }
-        binding.buttonFilterCharacterGender.setDebouncedClickListener { onGenderButtonClick() }
-        binding.buttonFilterCharacterStatus.setDebouncedClickListener { onStatusButtonClick() }
-        binding.buttonApplyCharacterFilter.setDebouncedClickListener { onApplyFiltersClick() }
+    private fun initializeViewListeners() = with (binding) {
+        inputTextCharacterName.addTextChangedListener { onNameTextChanged(it!!) }
+        inputTextCharacterSpecies.addTextChangedListener { onSpeciesTextChanged(it!!) }
+        inputTextCharacterType.addTextChangedListener { onTypeTextChanged(it!!) }
+        buttonFilterCharacterGender.setDebouncedClickListener { onGenderButtonClick() }
+        buttonFilterCharacterStatus.setDebouncedClickListener { onStatusButtonClick() }
+        buttonApplyCharacterFilter.setDebouncedClickListener { onApplyFiltersClick() }
     }
 
     private fun subscribeToViewModel() {
         lifecycleScope.launch {
             viewModel.filterParameters.collect { parameters ->
-                with (parameters) {
-                    runOnUiThread {
-                        binding.buttonFilterCharacterGender.text = gender?.toString() ?: "Any"
-                        binding.buttonFilterCharacterStatus.text = status?.toString() ?: "Any"
-                        binding.inputTextCharacterName.setTextKeepState(nameQuery ?: "")
-                        binding.inputTextCharacterSpecies.setTextKeepState(species ?: "")
-                        binding.inputTextCharacterType.setTextKeepState(type ?: "")
-                    }
-                }
+                runOnUiThread { setFilters(parameters) }
             }
         }
+    }
+
+    private fun setFilters(filters: CharacterPagingFilters) = with (binding) {
+        binding.buttonFilterCharacterGender.text = filters.gender?.toString() ?: "Any"
+        binding.buttonFilterCharacterStatus.text = filters.status?.toString() ?: "Any"
+        binding.inputTextCharacterName.setTextKeepState(filters.nameQuery ?: "")
+        binding.inputTextCharacterSpecies.setTextKeepState(filters.species ?: "")
+        binding.inputTextCharacterType.setTextKeepState(filters.type ?: "")
     }
 
     private fun onGenderButtonClick() {

@@ -23,7 +23,7 @@ class EpisodeDetailsFragment :
         EpisodeComponent.init(requireContext(), dependenciesProvider).inject(this)
     }
 
-    override fun getViewModelOwner() = this
+    override fun viewModelOwner() = this
 
     private val episodeId by lazy {
         requireNotNull(arguments?.getLong(ARG_EPISODE_ID)) { "Could not retrieve episode id" }
@@ -64,9 +64,5 @@ class EpisodeDetailsFragment :
 
     private fun navigateBack() {
         parentFragmentManager.popBackStack()
-    }
-
-    override fun onBackButtonPressed() {
-        navigateBack()
     }
 }

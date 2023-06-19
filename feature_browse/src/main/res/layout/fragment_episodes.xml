@@ -8,6 +8,7 @@
         android:id="@+id/fragment_container_episodes"
         android:name="ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_episode_list"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

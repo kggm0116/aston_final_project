@@ -1,0 +1,104 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_character_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_character_name"
+        app:layout_constraintBottom_toTopOf="@id/input_layout_character_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_text_character_name"
+            style="@style/style_text_input_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Name" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_character_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_character_type"
+        app:layout_constraintBottom_toTopOf="@id/input_layout_character_species"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input_layout_character_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_text_character_type"
+            style="@style/style_text_input_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Type" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_character_species"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_character_species"
+        app:layout_constraintBottom_toTopOf="@id/button_filter_character_status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input_layout_character_type">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_text_character_species"
+            style="@style/style_text_input_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Species" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_info_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="input_layout_character_name, input_layout_character_species, input_layout_character_type"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_filter_character_status"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/label_filter_character_status"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="3:1"
+        app:layout_constraintEnd_toStartOf="@id/button_apply_character_filter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier_info_list" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_apply_character_filter"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/label_apply_filter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="3:1"
+        app:layout_constraintEnd_toStartOf="@id/button_filter_character_gender"
+        app:layout_constraintStart_toEndOf="@id/button_filter_character_status"
+        app:layout_constraintTop_toBottomOf="@id/barrier_info_list" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_filter_character_gender"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/label_filter_character_gender"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="3:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_apply_character_filter"
+        app:layout_constraintTop_toBottomOf="@id/barrier_info_list" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@
         android:id="@+id/fragment_container_locations"
         android:name="ru.kggm.feature_browse.presentation.ui.locations.list.LocationListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_location_list"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

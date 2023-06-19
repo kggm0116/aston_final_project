@@ -13,7 +13,7 @@ abstract class ViewBindingFragment<VB : ViewBinding> : Fragment() {
     private var _binding: VB? = null
     protected val binding get() = requireNotNull(_binding) { "Binding not initialized" }
 
-    abstract fun onInitialize()
+    open fun onInitialize() { }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,16 +33,28 @@ abstract class ViewBindingFragment<VB : ViewBinding> : Fragment() {
 
     abstract fun createBinding(): VB
 
-    open fun onBackButtonPressed() = Unit
+    open val onBackButtonPressed: (() -> Unit)? = null
+
+    private var backPressedCallback: OnBackPressedCallback? = null
 
     private fun setBackButtonHandler() {
+        if (onBackButtonPressed == null)
+            return
+
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackButtonPressed?.invoke()
+            }
+        }
+
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    onBackButtonPressed()
-                }
-            }
+            backPressedCallback!!
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        backPressedCallback?.remove()
     }
 }

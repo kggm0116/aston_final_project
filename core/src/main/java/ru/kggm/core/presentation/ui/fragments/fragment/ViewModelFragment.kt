@@ -19,7 +19,7 @@ abstract class ViewModelFragment<VB : ViewBinding, VM : ViewModel>(
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    abstract fun getViewModelOwner(): ViewModelStoreOwner
+    abstract fun viewModelOwner(): ViewModelStoreOwner
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -27,7 +27,7 @@ abstract class ViewModelFragment<VB : ViewBinding, VM : ViewModel>(
             (requireActivity().applicationContext as DependenciesProviderApplication)
                 .getDependenciesProvider()
         )
-        _viewModel = ViewModelProvider(getViewModelOwner(), viewModelFactory)[viewModelClass]
+        _viewModel = ViewModelProvider(viewModelOwner(), viewModelFactory)[viewModelClass]
     }
 
     abstract fun initDaggerComponent(dependenciesProvider: DependenciesProvider)

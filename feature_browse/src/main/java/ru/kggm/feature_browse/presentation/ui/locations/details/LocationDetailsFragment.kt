@@ -22,7 +22,7 @@ class LocationDetailsFragment :
         LocationComponent.init(requireContext(), dependenciesProvider).inject(this)
     }
 
-    override fun getViewModelOwner() = this
+    override fun viewModelOwner() = this
 
     private val locationId by lazy {
         requireNotNull(arguments?.getLong(ARG_LOCATION_ID)) { "Could not retrieve location id" }
@@ -61,9 +61,5 @@ class LocationDetailsFragment :
 
     private fun navigateBack() {
         parentFragmentManager.popBackStack()
-    }
-
-    override fun onBackButtonPressed() {
-        navigateBack()
     }
 }

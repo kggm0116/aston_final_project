@@ -1,11 +1,14 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list
 
+import android.animation.LayoutTransition
 import android.net.ConnectivityManager
 import android.net.Network
+import android.transition.Scene
 import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -15,8 +18,6 @@ import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
 import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
 import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
-import ru.kggm.core.presentation.utility.animations.Visibility
-import ru.kggm.core.presentation.utility.animations.animateVisibility
 import ru.kggm.core.presentation.utility.network.getIsNetworkConnectionActive
 import ru.kggm.core.presentation.utility.network.registerNetworkCallback
 import ru.kggm.core.presentation.utility.network.unregisterNetworkCallback
@@ -26,23 +27,33 @@ import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.characters.list.filter.CharacterFilterFragment
-import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharacterPagingAdapter
-import ru.kggm.feature_browse.presentation.ui.episodes.list.recycler.EpisodePagingAdapter
+import ru.kggm.feature_browse.presentation.ui.characters.filter.CharacterFilterFragment
+import ru.kggm.feature_browse.presentation.ui.characters.recycler.CharacterPagingAdapter
 import ru.kggm.feature_main.R
-import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
+import ru.kggm.feature_main.databinding.NewFragmentCharacterListBinding
 import ru.kggm.presentation.R as coreR
 
 class CharacterListFragment :
-    ViewModelFragment<FragmentCharacterListBinding, CharacterListViewModel>(
+    ViewModelFragment<NewFragmentCharacterListBinding, CharacterListViewModel>(
         CharacterListViewModel::class.java,
     ) {
     companion object {
         const val SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT = 10
+        const val ARG_CHARACTER_IDS = "ARG_CHARACTER_IDS"
     }
 
-    override fun createBinding() = FragmentCharacterListBinding.inflate(layoutInflater)
-    override fun getViewModelOwner() = requireActivity()
+    private val characterIds by lazy {
+        arguments?.getIntArray(ARG_CHARACTER_IDS)?.toList()
+    }
+
+    private val showsLimitedIds get() = characterIds != null
+
+    override fun createBinding() = NewFragmentCharacterListBinding.inflate(layoutInflater)
+    override fun viewModelOwner(): ViewModelStoreOwner = if (showsLimitedIds) {
+        requireParentFragment()
+    } else {
+        requireActivity()
+    }
 
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
         CharacterComponent.init(requireContext(), dependenciesProvider).inject(this)
@@ -50,7 +61,6 @@ class CharacterListFragment :
 
     override fun onInitialize() {
         initializeRecycler()
-        initializeViews()
         initializeViewListeners()
         subscribeToViewModel()
         initializeNetworkListeners()
@@ -70,58 +80,41 @@ class CharacterListFragment :
         }
     }
 
-    private fun displayLoadStates(states: CombinedLoadStates) {
-        with(states) {
-            binding.recyclerCharacters.animateVisibility(
-                visibility = if (adapter.itemCount > 0)
-                    Visibility.Visible
-                else
-                    Visibility.Invisible
-            )
-            binding.layoutPagerEmpty.root.animateVisibility {
-                adapter.itemCount == 0 && refresh is LoadState.NotLoading
-            }
-            binding.layoutPagerLoading.root.animateVisibility {
-                adapter.itemCount == 0 && refresh is LoadState.Loading
-            }
-            binding.layoutPagerError.root.animateVisibility {
-                adapter.itemCount == 0 && refresh is LoadState.Error
-            }
+    private fun displayLoadStates(states: CombinedLoadStates) = with(binding) {
+        recyclerCharacters.isVisible = adapter.itemCount > 0
+        layoutPagerEmpty.root.isVisible =
+            adapter.itemCount == 0 && states.refresh is LoadState.NotLoading
+        layoutPagerLoading.root.isVisible =
+            adapter.itemCount == 0 && states.refresh is LoadState.Loading
+        layoutPagerError.root.isVisible =
+            adapter.itemCount == 0 && states.refresh is LoadState.Error
+    }
+
+    private fun initializeViewListeners() = with(binding) {
+        initializeFilter()
+        recyclerCharacters.addOnScrollListener(scrollListener)
+        fabCharactersScrollToTop.setDebouncedClickListener {
+            recyclerCharacters.stopScroll()
+            layoutManager.scrollToPositionWithOffset(0, 0)
         }
+        layoutPagerError.buttonPagerRetry.setDebouncedClickListener {
+            adapter.retry()
+        }
+        refresherCharacters.setOnRefreshListener { onRefreshRecycler() }
     }
 
-    private fun initializeViews() {
-        binding.fabOpenCharacterFilters.animateVisibility(
-            Visibility.Visible,
-            coreR.anim.slide_in_right
-        )
-    }
-
-    private fun initializeViewListeners() {
-        with (binding) {
-            fabOpenCharacterFilters.setDebouncedClickListener {
-                fabOpenCharacterFilters.animateVisibility(
-                    Visibility.Gone,
-                    coreR.anim.slide_out_right
-                )
+    private fun initializeFilter() {
+        if (showsLimitedIds) {
+            binding.fabOpenCharacterFilters.isVisible = false
+        } else {
+            binding.fabOpenCharacterFilters.setDebouncedClickListener {
+                binding.fabOpenCharacterFilters.isVisible = false
                 CharacterFilterFragment(
                     onClosed = {
-                        fabOpenCharacterFilters.animateVisibility(
-                            Visibility.Visible,
-                            coreR.anim.slide_in_right
-                        )
+                        binding.fabOpenCharacterFilters.isVisible = true
                     }
                 ).show(parentFragmentManager, null)
             }
-            recyclerCharacters.addOnScrollListener(scrollListener)
-            fabCharactersScrollToTop.setDebouncedClickListener {
-                recyclerCharacters.stopScroll()
-                layoutManager.scrollToPositionWithOffset(0, 0)
-            }
-            layoutPagerError.buttonPagerRetry.setDebouncedClickListener {
-                adapter.retry()
-            }
-            refresherCharacters.setOnRefreshListener { onRefreshRecycler() }
         }
     }
 
@@ -157,7 +150,10 @@ class CharacterListFragment :
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterNetworkCallback(networkCallback)
+        try {
+            unregisterNetworkCallback(networkCallback)
+        } catch (_: Throwable) {
+        }
     }
 
     private val scrollListener = object : RecyclerView.OnScrollListener() {
@@ -168,17 +164,8 @@ class CharacterListFragment :
     }
 
     private fun animateScrollToTopFab() {
-        if (layoutManager.findFirstVisibleItemPosition() >= SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT) {
-            binding.fabCharactersScrollToTop.animateVisibility(
-                Visibility.Visible,
-                coreR.anim.slide_in_right
-            )
-        } else {
-            binding.fabCharactersScrollToTop.animateVisibility(
-                Visibility.Gone,
-                coreR.anim.slide_out_right
-            )
-        }
+        binding.fabCharactersScrollToTop.isVisible =
+            layoutManager.findFirstVisibleItemPosition() >= SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT
     }
 
     private fun setNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) {
@@ -188,30 +175,13 @@ class CharacterListFragment :
             state == CharacterListViewModel.NetworkState.Restored
     }
 
-    private fun animateNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) {
-        if (state == CharacterListViewModel.NetworkState.Lost) {
-            binding.layoutNetworkLost.root.animateVisibility(
-                Visibility.Visible,
-                coreR.anim.slide_in_top
-            )
-        } else {
-            binding.layoutNetworkLost.root.animateVisibility(
-                Visibility.Gone,
-                coreR.anim.slide_out_top
-            )
+    private fun animateNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) =
+        with(binding) {
+            layoutNetworkLost.root.isVisible =
+                state == CharacterListViewModel.NetworkState.Lost
+            layoutNetworkRestored.root.isVisible =
+                state == CharacterListViewModel.NetworkState.Restored
         }
-        if (state == CharacterListViewModel.NetworkState.Restored) {
-            binding.layoutNetworkRestored.root.animateVisibility(
-                Visibility.Visible,
-                coreR.anim.slide_in_top
-            )
-        } else {
-            binding.layoutNetworkRestored.root.animateVisibility(
-                Visibility.Gone,
-                coreR.anim.slide_out_top
-            )
-        }
-    }
 
     private fun onCharacterClicked(character: CharacterPresentationEntity) {
         val fragment = CharacterDetailsFragment().apply {
@@ -224,7 +194,7 @@ class CharacterListFragment :
                 coreR.anim.slide_in_left,
                 coreR.anim.slide_out_right
             )
-            add(R.id.fragment_container_characters, fragment)
+            replace(R.id.fragment_container_characters, fragment)
             addToBackStack(null)
         }
     }
@@ -254,5 +224,9 @@ class CharacterListFragment :
     private fun onNetworkLost() {
         Log.i(classTag(), "Network lost")
         viewModel.onNetworkLost()
+    }
+
+    private fun setBackButtonListener() {
+        requireActivity().onBackPressedDispatcher
     }
 }

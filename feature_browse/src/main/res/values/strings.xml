@@ -10,6 +10,8 @@
     <string name="composite_text_character_status">Status: %1$s</string>
     <string name="composite_text_character_type">Type: %1$s</string>
     <string name="composite_text_character_gender">Gender: %1$s</string>
+    <string name="composite_text_character_origin">Origin: %1$s</string>
+    <string name="composite_text_character_location">Location: %1$s</string>
     <string name="composite_text_episode_air_date">Aired on: %1$s</string>
 
     <string name="text_character_origin">Origin:</string>

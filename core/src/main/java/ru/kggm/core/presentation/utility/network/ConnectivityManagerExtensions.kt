@@ -3,8 +3,10 @@ package ru.kggm.core.presentation.utility.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import ru.kggm.core.utility.classTag
 
 private fun Context.getConnectivityManager() = ContextCompat.getSystemService(
     this,

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -27,8 +28,9 @@ import ru.kggm.feature_browse.di.LocationComponent
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.locations.details.LocationDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.locations.list.filter.LocationFilterFragment
-import ru.kggm.feature_browse.presentation.ui.locations.list.recycler.LocationPagingAdapter
+import ru.kggm.feature_browse.presentation.ui.locations.recycler.LocationPagingAdapter
 import ru.kggm.feature_main.R
+import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
 import ru.kggm.feature_main.databinding.FragmentLocationListBinding
 import ru.kggm.presentation.R as coreR
 
@@ -38,10 +40,19 @@ class LocationListFragment :
     ) {
     companion object {
         const val SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT = 10
+        const val ARG_LOCATION_IDS = "ARG_LOCATION_IDS"
+    }
+
+    private val locationIds by lazy {
+        arguments?.getIntArray(ARG_LOCATION_IDS)?.toList()
     }
 
     override fun createBinding() = FragmentLocationListBinding.inflate(layoutInflater)
-    override fun getViewModelOwner() = requireActivity()
+    override fun viewModelOwner(): ViewModelStoreOwner = if (locationIds == null) {
+        requireActivity()
+    } else {
+        requireParentFragment()
+    }
 
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
         LocationComponent.init(requireContext(), dependenciesProvider).inject(this)

@@ -1,4 +1,4 @@
-package ru.kggm.feature_browse.presentation.ui.characters.list.recycler
+package ru.kggm.feature_browse.presentation.ui.characters.recycler
 
 import androidx.recyclerview.widget.DiffUtil
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity

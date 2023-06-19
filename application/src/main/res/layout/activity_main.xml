@@ -8,9 +8,10 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_activity_main"
-        android:name="ru.kggm.feature_browse.presentation.ui.characters.CharactersFragment"
+        android:name="ru.kggm.feature_browse.presentation.ui.characters.CharacterTabFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="fill"
         android:layout_marginBottom="@dimen/size_nav_bar" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
