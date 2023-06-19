@@ -6,12 +6,14 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.kggm.core.presentation.di.ViewModelKey
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListViewModel
+import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListViewModel
+import ru.kggm.feature_browse.presentation.ui.locations.list.LocationListViewModel
 
 @Module
-interface CharacterListModelModule {
+interface LocationListViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(CharacterListViewModel::class)
-    fun bindCharactersViewModel(viewModel: CharacterListViewModel): ViewModel
+    @ViewModelKey(LocationListViewModel::class)
+    fun bindCharactersViewModel(viewModel: LocationListViewModel): ViewModel
 }

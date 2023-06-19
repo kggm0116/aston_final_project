@@ -5,17 +5,17 @@ import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.data.database.daos.CharacterDao
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity.Companion.toDomainEntity
-import ru.kggm.feature_browse.data.network.dtos.page_response.CharacterPageResponse
+import ru.kggm.feature_browse.data.network.dtos.page.CharacterPageDto
 import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import ru.kggm.feature_browse.domain.paging.CharacterPagingFilters
+import ru.kggm.feature_browse.domain.paging.filters.CharacterPagingFilters
 
 class CharacterPagingSourceImpl(
-    filterParameters: CharacterPagingFilters,
+    filters: CharacterPagingFilters,
     private val characterService: CharacterService,
     private val characterDao: CharacterDao,
-) : FilterPagingSourceImpl<CharacterDataEntity, CharacterPagingFilters, CharacterPageResponse, CharacterEntity>(
-    filterParameters
+) : FilterPagingSourceImpl<CharacterDataEntity, CharacterPagingFilters, CharacterPageDto, CharacterEntity>(
+    filters
 ) {
 
     override val logTag = classTag()
@@ -24,7 +24,7 @@ class CharacterPagingSourceImpl(
         characterDao.deleteAll()
     }
 
-    override fun getNetworkConstraints(response: CharacterPageResponse) = NetworkConstants(
+    override fun getNetworkConstraints(response: CharacterPageDto) = NetworkConstants(
         pageCount = response.info.pageCount,
         itemCount = response.info.itemCount
     )
@@ -48,6 +48,9 @@ class CharacterPagingSourceImpl(
             species = filters.species,
             gender = filters.gender
         )
+            .also {
+                println()
+            }
 
     override suspend fun cacheItems(items: List<CharacterDataEntity>) {
         characterDao.insertOrUpdate(items)
@@ -55,7 +58,7 @@ class CharacterPagingSourceImpl(
 
     override fun mapData(item: CharacterDataEntity) = item.toDomainEntity()
 
-    override fun mapNetworkPage(page: CharacterPageResponse) = page.results
+    override fun mapNetworkPage(page: CharacterPageDto) = page.results
         .filter { dto ->
             filters.nameQuery?.let { query ->
                 dto.name.contains(query, ignoreCase = true)
@@ -63,5 +66,5 @@ class CharacterPagingSourceImpl(
         }
         .map { it.toDataEntity() }
 
-    override val itemsSortComparator = compareBy<CharacterDataEntity> { it.id }
+    override val itemComparator = compareBy<CharacterDataEntity> { it.id }
 }

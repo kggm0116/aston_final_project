@@ -6,7 +6,7 @@ import ru.kggm.feature_browse.data.database.daos.CharacterDao
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity.Companion.toDomainEntity
 import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.data.paging.CharacterPagingSourceImpl
-import ru.kggm.feature_browse.domain.paging.CharacterPagingFilters
+import ru.kggm.feature_browse.domain.paging.filters.CharacterPagingFilters
 import ru.kggm.feature_browse.domain.repositories.CharacterRepository
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class CharacterRepositoryImpl @Inject constructor(
     private val characterService: CharacterService,
     private val characterDao: CharacterDao
 ): CharacterRepository {
-    override fun characterPagingSource(
+    override fun pagingSource(
         filterParameters: CharacterPagingFilters
     ) = CharacterPagingSourceImpl(
         filterParameters,

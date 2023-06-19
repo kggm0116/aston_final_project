@@ -16,7 +16,7 @@ data class EpisodeDataEntity(
     @ColumnInfo(name = COL_NAME)
     val name: String,
     @ColumnInfo(name = COL_AIR_DATE)
-    val airDate: LocalDate,
+    val airDate: String,
     @ColumnInfo(name = COL_CODE)
     val code: String,
     @ColumnInfo(name = COL_CHARACTERS)

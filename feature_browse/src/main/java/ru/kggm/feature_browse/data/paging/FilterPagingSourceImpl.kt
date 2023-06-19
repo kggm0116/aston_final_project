@@ -2,9 +2,11 @@ package ru.kggm.feature_browse.data.paging
 
 import android.util.Log
 import androidx.paging.PagingState
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import ru.kggm.feature_browse.domain.paging.FilterPagingSource
 import kotlin.math.max
 
@@ -26,7 +28,7 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, 
     abstract suspend fun fetchFromDatabase(range: IntRange): List<TData>
     abstract suspend fun fetchNetworkPage(pageNumber: Int): TPage
     abstract suspend fun cacheItems(items: List<TData>)
-    abstract val itemsSortComparator: Comparator<TData>
+    abstract val itemComparator: Comparator<TData>
     abstract fun mapData(item: TData): TOut
     abstract fun mapNetworkPage(page: TPage): List<TData>
 
@@ -53,9 +55,12 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, 
             val itemsFromNetwork = try {
                 delay(SIMULATED_DELAY_MS)
                 fetchItemsFromNetwork(itemRange)
-            } catch (throwable: Throwable) {
-                Log.i(logTag, "Network error: ${throwable.message}")
+            } catch (httpException: HttpException) {
+                Log.i(logTag, "Network error: ${httpException.message}")
                 networkCallSuccessful = false
+                emptyList()
+            } catch (throwable: Throwable) {
+                Log.e(logTag, "Unexpected error during network call:\n${throwable.stackTraceToString()}")
                 emptyList()
             }
 
@@ -68,7 +73,7 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, 
             cacheItems(itemsFromNetwork)
 
             val combinedItems = (itemsFromDatabase + itemsFromNetwork)
-                .sortedWith(itemsSortComparator)
+                .sortedWith(itemComparator)
             Log.i(logTag, "Loaded ${itemsFromDatabase.size} from cache, ${itemsFromNetwork.size} from network")
 
             if (combinedItems.isEmpty() && !networkCallSuccessful)

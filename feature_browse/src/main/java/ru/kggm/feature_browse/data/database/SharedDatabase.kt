@@ -4,7 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ru.kggm.feature_browse.data.database.converters.IntListConverter
-import ru.kggm.feature_browse.data.database.converters.LocalDateConverter
 import ru.kggm.feature_browse.data.database.daos.CharacterDao
 import ru.kggm.feature_browse.data.database.daos.EpisodeDao
 import ru.kggm.feature_browse.data.database.daos.LocationDao
@@ -24,7 +23,6 @@ import ru.kggm.feature_browse.data.entities.LocationDataEntity
 )
 @TypeConverters(
     IntListConverter::class,
-    LocalDateConverter::class
 )
 abstract class SharedDatabase: RoomDatabase() {
 

@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
+import ru.kggm.feature_browse.presentation.ui.episodes.list.recycler.EpisodeDiffUtil
+import ru.kggm.feature_browse.presentation.ui.episodes.list.recycler.EpisodeViewHolder
 import ru.kggm.feature_main.databinding.PagerItemCharacterBinding
 
 class CharacterPagingAdapter : PagingDataAdapter<CharacterPresentationEntity, CharacterViewHolder>(

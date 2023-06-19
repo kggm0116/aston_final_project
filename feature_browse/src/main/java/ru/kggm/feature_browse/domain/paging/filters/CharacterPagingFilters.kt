@@ -1,4 +1,4 @@
-package ru.kggm.feature_browse.domain.paging
+package ru.kggm.feature_browse.domain.paging.filters
 
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 

@@ -8,6 +8,8 @@ import com.google.android.material.navigation.NavigationBarView
 import ru.kggm.aston_final_project.databinding.ActivityMainBinding
 import ru.kggm.feature_browse.presentation.ui.characters.CharactersFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
+import ru.kggm.feature_browse.presentation.ui.episodes.EpisodesFragment
+import ru.kggm.feature_browse.presentation.ui.locations.LocationsFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -36,14 +38,14 @@ class MainActivity : AppCompatActivity() {
 
             R.id.nav_item_fragment_episodes -> {
                 supportFragmentManager.commit {
-                    replace(R.id.fragment_container_activity_main, CharactersFragment())
+                    replace(R.id.fragment_container_activity_main, EpisodesFragment())
                 }
                 true
             }
 
             R.id.nav_item_fragment_locations -> {
                 supportFragmentManager.commit {
-                    replace(R.id.fragment_container_activity_main, CharactersFragment())
+                    replace(R.id.fragment_container_activity_main, LocationsFragment())
                 }
                 true
             }

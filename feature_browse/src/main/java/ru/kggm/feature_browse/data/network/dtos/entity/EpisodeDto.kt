@@ -1,23 +1,26 @@
 package ru.kggm.feature_browse.data.network.dtos.entity
 
 import com.google.gson.annotations.SerializedName
-import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.entities.EpisodeDataEntity
-import ru.kggm.feature_browse.domain.entities.CharacterEntity
+import ru.kggm.feature_browse.data.network.services.CharacterService.Companion.getCharacterId
+import java.net.URL
 import java.time.LocalDate
 
 data class EpisodeDto(
     val id: Int,
     val name: String,
-    val airDate: LocalDate,
+    @SerializedName("air_date")
+    val airDate: String,
+    @SerializedName("episode")
     val code: String,
-    val characterIds: List<Int>
+    @SerializedName("characters")
+    val characterUrls: List<String>,
 ) {
     fun toDataEntity() = EpisodeDataEntity(
         id = id,
         name = name,
         airDate = airDate,
         code = code,
-        characterIds = characterIds
+        characterIds = characterUrls.map { it.getCharacterId() }
     )
 }

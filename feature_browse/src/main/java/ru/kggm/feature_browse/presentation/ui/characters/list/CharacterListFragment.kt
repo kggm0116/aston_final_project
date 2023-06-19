@@ -28,6 +28,7 @@ import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.filter.CharacterFilterFragment
 import ru.kggm.feature_browse.presentation.ui.characters.list.recycler.CharacterPagingAdapter
+import ru.kggm.feature_browse.presentation.ui.episodes.list.recycler.EpisodePagingAdapter
 import ru.kggm.feature_main.R
 import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
 import ru.kggm.presentation.R as coreR
@@ -37,7 +38,7 @@ class CharacterListFragment :
         CharacterListViewModel::class.java,
     ) {
     companion object {
-        const val SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT = 20
+        const val SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT = 10
     }
 
     override fun createBinding() = FragmentCharacterListBinding.inflate(layoutInflater)
@@ -99,6 +100,10 @@ class CharacterListFragment :
     private fun initializeViewListeners() {
         with (binding) {
             fabOpenCharacterFilters.setDebouncedClickListener {
+                fabOpenCharacterFilters.animateVisibility(
+                    Visibility.Gone,
+                    coreR.anim.slide_out_right
+                )
                 CharacterFilterFragment(
                     onClosed = {
                         fabOpenCharacterFilters.animateVisibility(
@@ -107,10 +112,6 @@ class CharacterListFragment :
                         )
                     }
                 ).show(parentFragmentManager, null)
-                fabOpenCharacterFilters.animateVisibility(
-                    Visibility.Gone,
-                    coreR.anim.slide_out_right
-                )
             }
             recyclerCharacters.addOnScrollListener(scrollListener)
             fabCharactersScrollToTop.setDebouncedClickListener {

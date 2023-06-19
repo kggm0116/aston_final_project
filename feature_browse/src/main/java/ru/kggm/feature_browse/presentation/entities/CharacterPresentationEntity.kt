@@ -9,6 +9,9 @@ data class CharacterPresentationEntity(
     val species: String,
     val type: String,
     val gender: CharacterEntity.Gender,
+    val locationId: Int?,
+    val originId: Int?,
+    val episodeIds: List<Int>,
     val image: String
 ) {
     companion object {
@@ -19,6 +22,9 @@ data class CharacterPresentationEntity(
             species = species,
             type = type,
             gender = gender,
+            locationId = locationId,
+            originId = originId,
+            episodeIds = episodeIds,
             image = image
         )
     }

@@ -6,7 +6,7 @@ import java.time.LocalDate
 data class EpisodeEntity(
     val id: Int,
     val name: String,
-    val airDate: LocalDate,
+    val airDate: String,
     val code: String,
     val characterIds: List<Int>
 )

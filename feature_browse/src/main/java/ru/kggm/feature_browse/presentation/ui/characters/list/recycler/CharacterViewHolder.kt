@@ -6,7 +6,6 @@ import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
-import ru.kggm.feature_main.R
 import ru.kggm.feature_main.databinding.PagerItemCharacterBinding
 
 class CharacterViewHolder(

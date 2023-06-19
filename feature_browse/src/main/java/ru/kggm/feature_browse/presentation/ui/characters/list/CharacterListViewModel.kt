@@ -14,15 +14,14 @@ import kotlinx.coroutines.runBlocking
 import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import ru.kggm.feature_browse.domain.paging.CharacterPagingFilters
-import ru.kggm.feature_browse.domain.paging.FilterPagingSource
-import ru.kggm.feature_browse.domain.use_cases.CharacterPagingSource
-import ru.kggm.feature_browse.domain.use_cases.GetCharactersPagingSource
+import ru.kggm.feature_browse.domain.paging.filters.CharacterPagingFilters
+import ru.kggm.feature_browse.domain.repositories.CharacterPagingSource
+import ru.kggm.feature_browse.domain.use_cases.GetCharacterPagingSource
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity.Companion.toPresentationEntity
 import javax.inject.Inject
 
 class CharacterListViewModel @Inject constructor(
-    private val getCharactersPagingSource: GetCharactersPagingSource
+    private val getCharacterPagingSource: GetCharacterPagingSource
 ) : ViewModel() {
 
     companion object {
@@ -88,21 +87,17 @@ class CharacterListViewModel @Inject constructor(
     }
 
     fun applyFilters() {
-        updateFilters()
-    }
-
-    private var characterPagingSource: CharacterPagingSource? = null
-    private fun createPagingSource(): CharacterPagingSource {
-        return getCharactersPagingSource(filterParametersFlow.value).also {
-            characterPagingSource = it
-        }
-    }
-
-    private fun updateFilters() {
         safeLaunch {
             characterPagingSource?.apply {
                 invalidate()
             }
+        }
+    }
+
+    private var characterPagingSource: CharacterPagingSource? = null
+    private fun createPagingSource(): CharacterPagingSource {
+        return getCharacterPagingSource(filterParameters.value).also {
+            characterPagingSource = it
         }
     }
 
