@@ -15,11 +15,11 @@ interface CharacterDao : BaseDao<CharacterDataEntity> {
 
     @Query(
         "SELECT * FROM ${SharedDatabase.TABLE_CHARACTER} WHERE " +
-                "(:name IS NULL OR ${CharacterDataEntity.COL_NAME}=:name) AND " +
-                "(:status IS NULL OR ${CharacterDataEntity.COL_STATUS}=:status) AND " +
-                "(:type IS NULL OR ${CharacterDataEntity.COL_TYPE}=:type) AND " +
-                "(:species IS NULL OR ${CharacterDataEntity.COL_SPECIES}=:species) AND " +
-                "(:gender IS NULL OR ${CharacterDataEntity.COL_GENDER}=:gender) " +
+                "(:name IS NULL OR ${CharacterDataEntity.COL_NAME} LIKE '%'||:name||'%') AND " +
+                "(:status IS NULL OR ${CharacterDataEntity.COL_STATUS} = :status) AND " +
+                "(:type IS NULL OR ${CharacterDataEntity.COL_TYPE} = :type) AND " +
+                "(:species IS NULL OR ${CharacterDataEntity.COL_SPECIES} = :species) AND " +
+                "(:gender IS NULL OR ${CharacterDataEntity.COL_GENDER} = :gender) " +
                 "LIMIT :take OFFSET :skip"
     )
     fun getRangeFiltered(

@@ -20,6 +20,7 @@ import android.util.Log
 import android.view.View
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
+import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.core.utility.classTag
 import ru.kggm.presentation.databinding.PagerFooterLoadStateBinding
 
@@ -44,6 +45,6 @@ class CommonLoadStateViewHolder(
                 binding.layoutPagerFooterError.root.visibility = View.GONE
             }
         }
-        binding.layoutPagerFooterError.buttonPagerFooterRetry.setOnClickListener { onRetry() }
+        binding.layoutPagerFooterError.buttonPagerFooterRetry.setDebouncedClickListener { onRetry() }
     }
 }

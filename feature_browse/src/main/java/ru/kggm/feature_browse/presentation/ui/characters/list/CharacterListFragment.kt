@@ -21,6 +21,7 @@ import ru.kggm.core.presentation.utility.network.getIsNetworkConnectionActive
 import ru.kggm.core.presentation.utility.network.registerNetworkCallback
 import ru.kggm.core.presentation.utility.network.unregisterNetworkCallback
 import ru.kggm.core.presentation.utility.runOnUiThread
+import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
@@ -97,9 +98,9 @@ class CharacterListFragment :
 
     private fun initializeViewListeners() {
         with (binding) {
-            fabOpenCharacterFilters.setOnClickListener {
+            fabOpenCharacterFilters.setDebouncedClickListener {
                 CharacterFilterFragment(
-                    onCancel = {
+                    onClosed = {
                         fabOpenCharacterFilters.animateVisibility(
                             Visibility.Visible,
                             coreR.anim.slide_in_right
@@ -112,14 +113,38 @@ class CharacterListFragment :
                 )
             }
             recyclerCharacters.addOnScrollListener(scrollListener)
-            fabCharactersScrollToTop.setOnClickListener {
+            fabCharactersScrollToTop.setDebouncedClickListener {
                 recyclerCharacters.stopScroll()
                 layoutManager.scrollToPositionWithOffset(0, 0)
             }
-            layoutPagerError.buttonPagerRetry.setOnClickListener {
+            layoutPagerError.buttonPagerRetry.setDebouncedClickListener {
                 adapter.retry()
             }
             refresherCharacters.setOnRefreshListener { onRefreshRecycler() }
+        }
+    }
+
+    private fun subscribeToViewModel() {
+        lifecycleScope.launch {
+            launch {
+                viewModel.characterPagingData.collect {
+                    adapter.submitData(it)
+                    binding.refresherCharacters.isRefreshing = false
+                }
+            }
+            launch {
+                var isInitialNetworkStateSet = false
+                viewModel.networkState.collect { state ->
+                    runOnUiThread {
+                        if (!isInitialNetworkStateSet) {
+                            isInitialNetworkStateSet = true
+                            setNetworkLayoutsVisibility(state)
+                        } else {
+                            animateNetworkLayoutsVisibility(state)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -154,30 +179,6 @@ class CharacterListFragment :
             )
         }
     }
-
-    private fun subscribeToViewModel() {
-        lifecycleScope.launch {
-            launch {
-                viewModel.characterPagingData.collect {
-                    adapter.submitData(it)
-                }
-            }
-            launch {
-                var isInitialNetworkStateSet = false
-                viewModel.networkState.collect { state ->
-                    runOnUiThread {
-                        if (!isInitialNetworkStateSet) {
-                            isInitialNetworkStateSet = true
-                            setNetworkLayoutsVisibility(state)
-                        } else {
-                            animateNetworkLayoutsVisibility(state)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 
     private fun setNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) {
         binding.layoutNetworkLost.root.isVisible =
@@ -229,7 +230,6 @@ class CharacterListFragment :
 
     private fun onRefreshRecycler() {
         viewModel.refreshPagingData()
-        binding.refresherCharacters.isRefreshing = false
         viewModel.onDataRefreshed()
     }
 

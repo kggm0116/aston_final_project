@@ -7,11 +7,13 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.bottom_sheet.ViewModelBottomSheetDialogFragment
+import ru.kggm.core.presentation.utility.runOnUiThread
+import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListViewModel
 import ru.kggm.feature_main.databinding.FragmentCharacterFilterBinding
 
-class CharacterFilterFragment(private val onCancel: () -> Unit = { }) :
+class CharacterFilterFragment(private val onClosed: () -> Unit = { }) :
     ViewModelBottomSheetDialogFragment<FragmentCharacterFilterBinding, CharacterListViewModel>(
         CharacterListViewModel::class.java,
     ) {
@@ -32,20 +34,22 @@ class CharacterFilterFragment(private val onCancel: () -> Unit = { }) :
         binding.inputTextCharacterName.addTextChangedListener { onNameTextChanged(it!!) }
         binding.inputTextCharacterSpecies.addTextChangedListener { onSpeciesTextChanged(it!!) }
         binding.inputTextCharacterType.addTextChangedListener { onTypeTextChanged(it!!) }
-        binding.buttonFilterCharacterGender.setOnClickListener { onGenderButtonClick() }
-        binding.buttonFilterCharacterStatus.setOnClickListener { onStatusButtonClick() }
-        binding.buttonApplyCharacterFilter.setOnClickListener { onApplyFiltersClick() }
+        binding.buttonFilterCharacterGender.setDebouncedClickListener { onGenderButtonClick() }
+        binding.buttonFilterCharacterStatus.setDebouncedClickListener { onStatusButtonClick() }
+        binding.buttonApplyCharacterFilter.setDebouncedClickListener { onApplyFiltersClick() }
     }
 
     private fun subscribeToViewModel() {
         lifecycleScope.launch {
             viewModel.filterParameters.collect { parameters ->
                 with (parameters) {
-                    binding.buttonFilterCharacterGender.text = gender?.toString() ?: "Any"
-                    binding.buttonFilterCharacterStatus.text = status?.toString() ?: "Any"
-                    binding.inputTextCharacterName.setText(name)
-                    binding.inputTextCharacterSpecies.setText(species)
-                    binding.inputTextCharacterType.setText(type)
+                    runOnUiThread {
+                        binding.buttonFilterCharacterGender.text = gender?.toString() ?: "Any"
+                        binding.buttonFilterCharacterStatus.text = status?.toString() ?: "Any"
+                        binding.inputTextCharacterName.setTextKeepState(nameQuery ?: "")
+                        binding.inputTextCharacterSpecies.setTextKeepState(species ?: "")
+                        binding.inputTextCharacterType.setTextKeepState(type ?: "")
+                    }
                 }
             }
         }
@@ -61,6 +65,7 @@ class CharacterFilterFragment(private val onCancel: () -> Unit = { }) :
 
     private fun onApplyFiltersClick() {
         viewModel.applyFilters()
+        onClosed()
         this.dismiss()
     }
 
@@ -78,6 +83,6 @@ class CharacterFilterFragment(private val onCancel: () -> Unit = { }) :
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        onCancel()
+        onClosed()
     }
 }

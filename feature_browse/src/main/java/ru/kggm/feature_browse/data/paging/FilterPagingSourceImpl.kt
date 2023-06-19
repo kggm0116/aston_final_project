@@ -8,13 +8,13 @@ import kotlinx.coroutines.withContext
 import ru.kggm.feature_browse.domain.paging.FilterPagingSource
 import kotlin.math.max
 
-abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TResponse : Any, TOut : Any>(
+abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, TOut : Any>(
     filterParameters: TFilters
 ) : FilterPagingSource<TOut, TFilters>(filterParameters) {
 
     companion object {
         private const val STARTING_KEY = 0
-        private const val SIMULATE_DELAY = true
+        private const val SIMULATED_DELAY_MS = 500L
     }
 
     open val logTag = "BasePagingSourceImpl"
@@ -22,12 +22,13 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TResponse : A
     abstract val itemsPerNetworkPage: Int
 
     abstract suspend fun onClearCache()
-    abstract fun getNetworkConstraints(response: TResponse): NetworkConstants
-    abstract suspend fun fetchFromDatabase(range: IntRange, filters: TFilters): List<TData>
-    abstract suspend fun makeNetworkCall(pageNumber: Int): TResponse
+    abstract fun getNetworkConstraints(response: TPage): NetworkConstants
+    abstract suspend fun fetchFromDatabase(range: IntRange): List<TData>
+    abstract suspend fun fetchNetworkPage(pageNumber: Int): TPage
     abstract suspend fun cacheItems(items: List<TData>)
+    abstract val itemsSortComparator: Comparator<TData>
     abstract fun mapData(item: TData): TOut
-    abstract fun mapResponse(response: TResponse): List<TData>
+    abstract fun mapNetworkPage(page: TPage): List<TData>
 
     data class NetworkConstants(val pageCount: Int, val itemCount: Int)
 
@@ -36,6 +37,7 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TResponse : A
     final override fun getRefreshKey(state: PagingState<Int, TOut>) = 0
 
     final override suspend fun clearCache() {
+        Log.i(logTag, "Clearing cache")
         withContext(Dispatchers.IO) {
             onClearCache()
         }
@@ -47,34 +49,31 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TResponse : A
             val itemRange = firstItem until firstItem + params.loadSize
             Log.i(logTag, "Loading items ${itemRange.first}..${itemRange.last}")
 
-            val itemsFromDatabase = fetchFromDatabase(itemRange, filters)
-            val firstFetchedItem = itemRange.first + itemsFromDatabase.size
 
-            var networkError = false
-            val allItemsFromNetwork =
-                if (itemsFromDatabase.size < itemRange.last - itemRange.first + 1) {
-                    val fetchRange = firstFetchedItem until firstFetchedItem + params.loadSize
-                    val firstPage = fetchRange.first / itemsPerNetworkPage + 1
-                    val lastPage =
-                        ((fetchRange.first + params.loadSize) / itemsPerNetworkPage + 1)
-                            .coerceAtMost(networkConstants.pageCount)
-                    try {
-                        if (SIMULATE_DELAY) delay(500)
-                        fetchFromNetwork(firstPage..lastPage)
-                    } catch (exception: Throwable) {
-                        networkError = true
-                        emptyList()
-                    }
-                } else emptyList()
+            var networkCallSuccessful = true
+            val itemsFromNetwork = try {
+//                val fetchRange = (itemRange.first + itemsFromDatabase.size)..itemRange.last
+                delay(SIMULATED_DELAY_MS)
+                fetchItemsFromNetwork(itemRange)
+            } catch (throwable: Throwable) {
+                Log.i(logTag, "Network error: ${throwable.message}")
+                networkCallSuccessful = false
+                emptyList()
+            }
 
-            val itemsFromNetwork = allItemsFromNetwork
-                .drop(firstItem % itemsPerNetworkPage)
-                .take(params.loadSize)
+            val itemsFromDatabase = if (!networkCallSuccessful) {
+                fetchFromDatabase(itemRange)
+            } else {
+                emptyList()
+            }
+
             cacheItems(itemsFromNetwork)
 
-            val combinedItems = itemsFromDatabase + itemsFromNetwork
+            val combinedItems = (itemsFromDatabase + itemsFromNetwork)
+                .sortedWith(itemsSortComparator)
+            Log.i(logTag, "Loaded ${itemsFromDatabase.size} from cache, ${itemsFromNetwork.size} from network")
 
-            if (combinedItems.isEmpty() && networkError)
+            if (combinedItems.isEmpty() && !networkCallSuccessful)
                 return@withContext LoadResult.Error(Error("No network access and no cached items"))
 
             return@withContext if (combinedItems.isEmpty()) {
@@ -100,21 +99,23 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TResponse : A
             }
         }
 
-    private suspend fun fetchFromNetwork(
-        range: IntRange
+    private suspend fun fetchItemsFromNetwork(
+        itemRange: IntRange
     ): List<TData> {
         val fetchedItems = mutableListOf<TData>()
-        for (iPage in range) {
-            if (iPage > networkConstants.pageCount)
+        val itemCount = itemRange.last - itemRange.first + 1
+        var iPage = itemRange.first / itemsPerNetworkPage + 1
+        while (fetchedItems.size < itemCount) {
+            if (iPage >= networkConstants.pageCount)
                 break
-            makeNetworkCall(iPage)
-                .also { getNetworkConstraints(it) }
+            fetchNetworkPage(iPage++)
+                .also { networkConstants = getNetworkConstraints(it) }
                 .let { response ->
-                    mapResponse(response).let { items ->
+                    mapNetworkPage(response).let { items ->
                         fetchedItems.addAll(items)
                     }
                 }
         }
-        return fetchedItems
+        return fetchedItems.take(itemCount)
     }
 }

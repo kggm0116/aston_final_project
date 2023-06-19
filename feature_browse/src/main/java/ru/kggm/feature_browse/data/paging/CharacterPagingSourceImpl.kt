@@ -29,33 +29,39 @@ class CharacterPagingSourceImpl(
         itemCount = response.info.characterCount
     )
 
-    override suspend fun fetchFromDatabase(range: IntRange, filters: CharacterPagingFilters) =
+    override suspend fun fetchFromDatabase(range: IntRange) =
         characterDao.getRangeFiltered(
             skip = range.first,
             take = range.last - range.first + 1,
-            name = filters.name,
+            name = filters.nameQuery,
             status = filters.status,
             type = filters.type,
             species = filters.species,
             gender = filters.gender
         ).first()
 
-    override suspend fun makeNetworkCall(pageNumber: Int) = with(filters) {
+    override suspend fun fetchNetworkPage(pageNumber: Int) =
         characterService.getCharacterPage(
             pageNumber = pageNumber,
-            name = name,
-            status = status,
-            type = type,
-            species = species,
-            gender = gender
+            status = filters.status,
+            type = filters.type,
+            species = filters.species,
+            gender = filters.gender
         )
-    }
 
     override suspend fun cacheItems(items: List<CharacterDataEntity>) {
         characterDao.insertOrUpdate(items)
     }
 
     override fun mapData(item: CharacterDataEntity) = item.toDomainEntity()
-    override fun mapResponse(response: CharacterPageResponse) = response.results
+
+    override fun mapNetworkPage(page: CharacterPageResponse) = page.results
+        .filter { dto ->
+            filters.nameQuery?.let { query ->
+                dto.name.contains(query, ignoreCase = true)
+            } ?: true
+        }
         .map { it.toDataEntity() }
+
+    override val itemsSortComparator = compareBy<CharacterDataEntity> { it.id }
 }

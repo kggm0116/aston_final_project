@@ -28,7 +28,7 @@ class CharacterListViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        private const val PAGE_SIZE = 30
+        private const val PAGE_SIZE = 10
     }
 
     init {
@@ -67,7 +67,7 @@ class CharacterListViewModel @Inject constructor(
 
     fun setNameFilter(text: String) {
         filterParametersFlow.value.run {
-            copy(name = text.ifEmpty { null }).let { newParameters ->
+            copy(nameQuery = text.ifEmpty { null }).let { newParameters ->
                 filterParametersFlow.tryEmit(newParameters)
             }
         }
@@ -96,8 +96,6 @@ class CharacterListViewModel @Inject constructor(
     private var characterPagingSource: CharacterPagingSource? = null
     private fun createPagingSource(): CharacterPagingSource {
         return getCharactersPagingSource(filterParametersFlow.value).also {
-//            if (characterPagingSource == null)
-//                safeLaunch { it.clearCache() }
             characterPagingSource = it
         }
     }
@@ -105,7 +103,6 @@ class CharacterListViewModel @Inject constructor(
     private fun updateFilters() {
         safeLaunch {
             characterPagingSource?.apply {
-                clearCache()
                 invalidate()
             }
         }
@@ -114,7 +111,8 @@ class CharacterListViewModel @Inject constructor(
     fun refreshPagingData() {
         safeLaunch {
             characterPagingSource?.apply {
-                clearCache()
+                if (networkState.value != NetworkState.Lost)
+                    clearCache()
                 invalidate()
             }
         }

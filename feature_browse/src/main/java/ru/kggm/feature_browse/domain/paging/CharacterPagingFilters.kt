@@ -3,7 +3,7 @@ package ru.kggm.feature_browse.domain.paging
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 
 data class CharacterPagingFilters(
-    val name: String? = null,
+    val nameQuery: String? = null,
     val status: CharacterEntity.Status? = null,
     val species: String? = null,
     val type: String? = null,
