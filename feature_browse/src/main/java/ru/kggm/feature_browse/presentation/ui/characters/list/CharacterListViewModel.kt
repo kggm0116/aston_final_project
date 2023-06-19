@@ -21,8 +21,6 @@ import ru.kggm.feature_browse.domain.use_cases.GetCharactersPagingSource
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity.Companion.toPresentationEntity
 import javax.inject.Inject
 
-typealias CharacterPagingSource = FilterPagingSource<CharacterEntity, CharacterPagingFilters>
-
 class CharacterListViewModel @Inject constructor(
     private val getCharactersPagingSource: GetCharactersPagingSource
 ) : ViewModel() {

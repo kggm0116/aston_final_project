@@ -5,7 +5,7 @@ import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.data.database.daos.CharacterDao
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity.Companion.toDomainEntity
-import ru.kggm.feature_browse.data.network.dtos.CharacterPageResponse
+import ru.kggm.feature_browse.data.network.dtos.page_response.CharacterPageResponse
 import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.paging.CharacterPagingFilters
@@ -26,7 +26,7 @@ class CharacterPagingSourceImpl(
 
     override fun getNetworkConstraints(response: CharacterPageResponse) = NetworkConstants(
         pageCount = response.info.pageCount,
-        itemCount = response.info.characterCount
+        itemCount = response.info.itemCount
     )
 
     override suspend fun fetchFromDatabase(range: IntRange) =
@@ -41,7 +41,7 @@ class CharacterPagingSourceImpl(
         ).first()
 
     override suspend fun fetchNetworkPage(pageNumber: Int) =
-        characterService.getCharacterPage(
+        characterService.getPage(
             pageNumber = pageNumber,
             status = filters.status,
             type = filters.type,

@@ -3,7 +3,7 @@ package ru.kggm.feature_browse.domain.entities
 import com.google.gson.annotations.SerializedName
 
 data class CharacterEntity(
-    val id: Long,
+    val id: Int,
     val name: String,
     val status: Status,
     val species: String,

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetCharacterById @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
-    suspend operator fun invoke(id: Long) = withContext(Dispatchers.IO) {
+    suspend operator fun invoke(id: Int) = withContext(Dispatchers.IO) {
         characterRepository.getById(id)
     }
 }

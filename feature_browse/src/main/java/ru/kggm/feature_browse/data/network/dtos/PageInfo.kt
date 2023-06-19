@@ -2,9 +2,9 @@ package ru.kggm.feature_browse.data.network.dtos
 
 import com.google.gson.annotations.SerializedName
 
-data class CharacterPageInfo(
+data class PageInfo(
     @SerializedName("count")
-    val characterCount: Int,
+    val itemCount: Int,
     @SerializedName("pages")
     val pageCount: Int
 )

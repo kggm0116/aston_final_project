@@ -1,11 +1,11 @@
-package ru.kggm.feature_browse.data.network.dtos
+package ru.kggm.feature_browse.data.network.dtos.entity
 
 import com.google.gson.annotations.SerializedName
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 
 data class CharacterDto(
-    val id: Long,
+    val id: Int,
     val name: String,
     val status: Status,
     val species: String,

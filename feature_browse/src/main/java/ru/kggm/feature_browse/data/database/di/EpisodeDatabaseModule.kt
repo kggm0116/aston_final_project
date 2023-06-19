@@ -6,9 +6,11 @@ import dagger.Module
 import dagger.Provides
 import ru.kggm.feature_browse.data.database.SharedDatabase
 import ru.kggm.feature_browse.data.database.daos.CharacterDao
+import ru.kggm.feature_browse.data.database.daos.EpisodeDao
+import ru.kggm.feature_browse.data.database.daos.LocationDao
 
 @Module
-object CharacterDatabaseModule {
+object EpisodeDatabaseModule {
     @Provides
-    fun provideCharacterDao(database: SharedDatabase): CharacterDao = database.characterDao()
+    fun provideLEpisodeDao(database: SharedDatabase): EpisodeDao = database.episodeDao()
 }

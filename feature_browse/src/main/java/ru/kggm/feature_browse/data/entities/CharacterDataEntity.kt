@@ -9,7 +9,7 @@ import ru.kggm.feature_browse.domain.entities.CharacterEntity
 @Entity(tableName = SharedDatabase.TABLE_CHARACTER)
 data class CharacterDataEntity(
     @PrimaryKey @ColumnInfo(name = COL_ID)
-    val id: Long,
+    val id: Int,
     @ColumnInfo(name = COL_NAME)
     val name: String,
     @ColumnInfo(name = COL_STATUS)
@@ -33,7 +33,7 @@ data class CharacterDataEntity(
         const val COL_IMAGE = "image"
 
         fun CharacterDataEntity.toDomainEntity() = CharacterEntity(
-            id = id,
+            id = id.toInt(),
             name = name,
             status = status,
             species = species,

@@ -5,19 +5,19 @@ import dagger.BindsInstance
 import dagger.Component
 
 @Component(
-    modules = [CharacterDatabaseModule::class]
+    modules = [SharedDatabaseModule::class]
 )
-interface CharacterDatabaseComponent {
+interface SharedDatabaseComponent {
     @Component.Factory
     interface Factory {
         fun create(
             @BindsInstance context: Context
-        ): CharacterDatabaseComponent
+        ): SharedDatabaseComponent
     }
 
     companion object {
-        fun init(context: Context): CharacterDatabaseComponent {
-            return DaggerCharacterDatabaseComponent.factory()
+        fun init(context: Context): SharedDatabaseComponent {
+            return DaggerSharedDatabaseComponent.factory()
                 .create(context)
         }
     }

@@ -6,20 +6,32 @@ import kotlinx.coroutines.flow.Flow
 import ru.kggm.core.data.database.daos.BaseDao
 import ru.kggm.feature_browse.data.database.SharedDatabase
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity
+import ru.kggm.feature_browse.data.entities.LocationDataEntity
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 
 @Dao
 interface CharacterDao : BaseDao<CharacterDataEntity> {
-    @Query("SELECT * FROM ${SharedDatabase.TABLE_CHARACTER}")
+
+    companion object {
+        private const val CHARACTER = SharedDatabase.TABLE_CHARACTER
+        private const val ID = CharacterDataEntity.COL_ID
+        private const val NAME = CharacterDataEntity.COL_NAME
+        private const val STATUS = CharacterDataEntity.COL_STATUS
+        private const val TYPE = CharacterDataEntity.COL_TYPE
+        private const val SPECIES = CharacterDataEntity.COL_SPECIES
+        private const val GENDER = CharacterDataEntity.COL_GENDER
+    }
+
+    @Query("SELECT * FROM $CHARACTER")
     fun getAll(): Flow<List<CharacterDataEntity>>
 
     @Query(
-        "SELECT * FROM ${SharedDatabase.TABLE_CHARACTER} WHERE " +
-                "(:name IS NULL OR ${CharacterDataEntity.COL_NAME} LIKE '%'||:name||'%') AND " +
-                "(:status IS NULL OR ${CharacterDataEntity.COL_STATUS} = :status) AND " +
-                "(:type IS NULL OR ${CharacterDataEntity.COL_TYPE} = :type) AND " +
-                "(:species IS NULL OR ${CharacterDataEntity.COL_SPECIES} = :species) AND " +
-                "(:gender IS NULL OR ${CharacterDataEntity.COL_GENDER} = :gender) " +
+        "SELECT * FROM $CHARACTER WHERE " +
+                "(:name IS NULL OR $NAME LIKE '%'||:name||'%') AND " +
+                "(:status IS NULL OR $STATUS = :status) AND " +
+                "(:type IS NULL OR $TYPE = :type) AND " +
+                "(:species IS NULL OR $SPECIES = :species) AND " +
+                "(:gender IS NULL OR $GENDER = :gender) " +
                 "LIMIT :take OFFSET :skip"
     )
     fun getRangeFiltered(
@@ -32,9 +44,9 @@ interface CharacterDao : BaseDao<CharacterDataEntity> {
         gender: CharacterEntity.Gender?,
     ): Flow<List<CharacterDataEntity>>
 
-    @Query("SELECT * FROM ${SharedDatabase.TABLE_CHARACTER} WHERE ${CharacterDataEntity.COL_ID} = :id")
-    suspend fun getById(id: Long): CharacterDataEntity?
+    @Query("SELECT * FROM $CHARACTER WHERE $ID = :id")
+    suspend fun getById(id: Int): CharacterDataEntity?
 
-    @Query("DELETE FROM ${SharedDatabase.TABLE_CHARACTER}")
+    @Query("DELETE FROM $CHARACTER")
     suspend fun deleteAll()
 }

@@ -25,7 +25,7 @@ class CharacterDetailsViewModel @Inject constructor(
     }
 
     fun loadCharacter(id: Long) = safeLaunch {
-        getCharacterById(id).let {
+        getCharacterById(id.toInt()).let {
             characterFlow.tryEmit(it.toPresentationEntity())
         }
     }

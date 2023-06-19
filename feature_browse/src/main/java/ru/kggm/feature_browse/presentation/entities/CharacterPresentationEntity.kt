@@ -13,7 +13,7 @@ data class CharacterPresentationEntity(
 ) {
     companion object {
         fun CharacterEntity.toPresentationEntity() = CharacterPresentationEntity(
-            id = id,
+            id = id.toLong(),
             name = name,
             status = status,
             species = species,

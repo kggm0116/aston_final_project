@@ -8,7 +8,14 @@ import ru.kggm.feature_browse.data.database.SharedDatabase
 import ru.kggm.feature_browse.data.database.daos.CharacterDao
 
 @Module
-object CharacterDatabaseModule {
+object SharedDatabaseModule {
+
     @Provides
-    fun provideCharacterDao(database: SharedDatabase): CharacterDao = database.characterDao()
+    fun provideDatabase(context: Context): SharedDatabase = Room.databaseBuilder(
+        context.applicationContext,
+        SharedDatabase::class.java,
+        SharedDatabase.NAME
+    )
+        .fallbackToDestructiveMigration()
+        .build()
 }

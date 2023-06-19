@@ -3,8 +3,8 @@ package ru.kggm.feature_browse.data.network.services
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.kggm.feature_browse.data.network.dtos.CharacterDto
-import ru.kggm.feature_browse.data.network.dtos.CharacterPageResponse
+import ru.kggm.feature_browse.data.network.dtos.entity.CharacterDto
+import ru.kggm.feature_browse.data.network.dtos.page_response.CharacterPageResponse
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 
 interface BaseService {

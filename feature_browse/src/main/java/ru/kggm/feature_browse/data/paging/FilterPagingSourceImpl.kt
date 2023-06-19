@@ -49,10 +49,8 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, 
             val itemRange = firstItem until firstItem + params.loadSize
             Log.i(logTag, "Loading items ${itemRange.first}..${itemRange.last}")
 
-
             var networkCallSuccessful = true
             val itemsFromNetwork = try {
-//                val fetchRange = (itemRange.first + itemsFromDatabase.size)..itemRange.last
                 delay(SIMULATED_DELAY_MS)
                 fetchItemsFromNetwork(itemRange)
             } catch (throwable: Throwable) {
