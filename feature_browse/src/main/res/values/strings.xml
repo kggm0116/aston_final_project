@@ -1,4 +1,9 @@
 <resources>
+
+    <string name="title_nav_bar_item_characters">Characters</string>
+    <string name="title_nav_bar_item_locations">Locations</string>
+    <string name="title_nav_bar_item_episodes">Episodes</string>
+
     <string name="hint_character_name">Name</string>
     <string name="hint_character_type">Type</string>
     <string name="hint_character_species">Species</string>

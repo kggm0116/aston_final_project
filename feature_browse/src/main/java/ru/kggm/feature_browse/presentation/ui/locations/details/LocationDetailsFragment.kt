@@ -1,5 +1,7 @@
 package ru.kggm.feature_browse.presentation.ui.locations.details
 
+import androidx.core.os.bundleOf
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
@@ -7,6 +9,8 @@ import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
 import ru.kggm.feature_main.databinding.FragmentLocationDetailsBinding
 import ru.kggm.feature_browse.di.LocationComponent
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
+import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
+import ru.kggm.feature_main.R
 
 class LocationDetailsFragment :
     ViewModelFragment<FragmentLocationDetailsBinding, LocationDetailsViewModel>(
@@ -45,7 +49,18 @@ class LocationDetailsFragment :
     private fun subscribeToViewModel() {
         lifecycleScope.launch {
             viewModel.location.collect { location ->
-                location?.let { displayLocation(it) }
+                location?.let {
+                    displayLocation(it)
+                    val characterFragment = CharacterListFragment().apply {
+                        arguments = bundleOf(
+                            CharacterListFragment.ARG_CHARACTER_IDS to it.residentIds
+                        )
+                    }
+                    childFragmentManager.commit {
+                        replace(R.id.fragment_container_residents, characterFragment)
+                        addToBackStack(null)
+                    }
+                }
             }
         }
     }

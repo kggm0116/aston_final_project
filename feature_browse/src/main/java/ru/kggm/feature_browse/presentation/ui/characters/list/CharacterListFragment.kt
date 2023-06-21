@@ -111,7 +111,8 @@ class CharacterListFragment :
             layoutManager.scrollToPositionWithOffset(0, 0)
         }
         binding.content.layoutError.buttonRetry.setDebouncedClickListener {
-            adapter.retry()
+//            adapter.retry()
+            viewModel.refreshPagingData()
         }
         binding.content.refresher.setOnRefreshListener { onRefreshRecycler() }
     }
@@ -200,21 +201,20 @@ class CharacterListFragment :
         val fragment = CharacterDetailsFragment().apply {
             arguments = bundleOf(CharacterDetailsFragment.ARG_CHARACTER_ID to character.id)
         }
-        parentFragmentManager.commit {
+        requireActivity().supportFragmentManager.commit {
             setCustomAnimations(
                 coreR.anim.slide_in_right,
                 coreR.anim.slide_out_left,
                 coreR.anim.slide_in_left,
                 coreR.anim.slide_out_right
             )
-            replace(R.id.fragment_container_characters, fragment)
+            replace(R.id.fragment_container_browse, fragment)
             addToBackStack(null)
         }
     }
 
     private fun onRefreshRecycler() {
         viewModel.refreshPagingData()
-        viewModel.onDataRefreshed()
     }
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -237,9 +237,5 @@ class CharacterListFragment :
     private fun onNetworkLost() {
         Log.i(classTag(), "Network lost")
         viewModel.onNetworkLost()
-    }
-
-    private fun setBackButtonListener() {
-        requireActivity().onBackPressedDispatcher
     }
 }

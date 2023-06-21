@@ -227,14 +227,14 @@ class LocationListFragment :
         val fragment = LocationDetailsFragment().apply {
             arguments = bundleOf(LocationDetailsFragment.ARG_LOCATION_ID to location.id)
         }
-        parentFragmentManager.commit {
+        requireActivity().supportFragmentManager.commit {
             setCustomAnimations(
                 coreR.anim.slide_in_right,
                 coreR.anim.slide_out_left,
                 coreR.anim.slide_in_left,
                 coreR.anim.slide_out_right
             )
-            add(R.id.fragment_container_locations, fragment)
+            replace(R.id.fragment_container_browse, fragment)
             addToBackStack(null)
         }
     }

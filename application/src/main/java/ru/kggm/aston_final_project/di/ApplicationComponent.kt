@@ -10,7 +10,6 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-//    modules = [NetworkModule::class, MainRepositoryModule::class],
     dependencies = [NetworkProvider::class]
 )
 interface ApplicationComponent : DependenciesProvider {

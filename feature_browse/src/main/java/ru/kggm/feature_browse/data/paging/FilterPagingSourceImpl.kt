@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.domain.paging.FilterPagingSource
 import kotlin.math.max
 
@@ -44,7 +45,9 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TOut : Any>(
     }
 
     final override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TOut> =
-        withContext(Dispatchers.IO) {
+        withContext(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
+            Log.e(classTag(), "Paging load error:\n${e.stackTraceToString()}")
+        }) {
             val firstItem = params.key ?: STARTING_KEY
             val itemRange = firstItem until firstItem + params.loadSize
             Log.i(logTag, "Loading items ${itemRange.first}..${itemRange.last}")

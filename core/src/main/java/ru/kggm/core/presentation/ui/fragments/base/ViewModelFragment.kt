@@ -1,6 +1,10 @@
 package ru.kggm.core.presentation.ui.fragments.base
 
 import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -28,6 +32,14 @@ abstract class ViewModelFragment<VB : ViewBinding, VM : ViewModel>(
                 .getDependenciesProvider()
         )
         _viewModel = ViewModelProvider(viewModelOwner(), viewModelFactory)[viewModelClass]
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     abstract fun initDaggerComponent(dependenciesProvider: DependenciesProvider)

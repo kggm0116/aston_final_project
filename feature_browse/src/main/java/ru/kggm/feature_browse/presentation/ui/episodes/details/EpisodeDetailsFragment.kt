@@ -1,5 +1,7 @@
 package ru.kggm.feature_browse.presentation.ui.episodes.details
 
+import androidx.core.os.bundleOf
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
@@ -7,6 +9,7 @@ import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
 import ru.kggm.feature_main.databinding.FragmentEpisodeDetailsBinding
 import ru.kggm.feature_browse.di.EpisodeComponent
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
+import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
 import ru.kggm.feature_main.R
 
 class EpisodeDetailsFragment :
@@ -46,7 +49,18 @@ class EpisodeDetailsFragment :
     private fun subscribeToViewModel() {
         lifecycleScope.launch {
             viewModel.episode.collect { episode ->
-                episode?.let { displayEpisode(it) }
+                episode?.let {
+                    displayEpisode(it)
+                    val characterFragment = CharacterListFragment().apply {
+                        arguments = bundleOf(
+                            CharacterListFragment.ARG_CHARACTER_IDS to it.characterIds
+                        )
+                    }
+                    childFragmentManager.commit {
+                        replace(R.id.fragment_container_featured_characters, characterFragment)
+                        addToBackStack(null)
+                    }
+                }
             }
         }
     }

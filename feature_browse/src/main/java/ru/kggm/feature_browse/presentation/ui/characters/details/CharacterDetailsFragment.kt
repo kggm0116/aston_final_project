@@ -1,5 +1,13 @@
 package ru.kggm.feature_browse.presentation.ui.characters.details
 
+import android.graphics.Color
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.util.Log
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
@@ -8,6 +16,8 @@ import coil.load
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
+import ru.kggm.core.presentation.utility.toClickableSpan
+import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListFragment
@@ -58,7 +68,8 @@ class CharacterDetailsFragment :
                         arguments = bundleOf(EpisodeListFragment.ARG_EPISODE_IDS to it.episodeIds)
                     }
                     childFragmentManager.commit {
-                        replace(R.id.fragment_container_character_episodes, episodeFragment)
+                        replace(R.id.fragment_container_episodes, episodeFragment)
+                        addToBackStack(null)
                     }
                 }
             }
@@ -69,30 +80,55 @@ class CharacterDetailsFragment :
         binding.toolbar.title = character.name
         binding.image.load(character.image) { crossfade(true) }
 
+        binding.info.textViewLocation.movementMethod = LinkMovementMethod.getInstance()
+
         binding.info.textViewType.text = requireContext().getString(
             R.string.composite_text_character_type,
             character.type
         )
-        binding.info.textViewSpecies.text =
-            requireContext().getString(
-                R.string.composite_text_character_species,
-                character.species
+        binding.info.textViewSpecies.text = requireContext().getString(
+            R.string.composite_text_character_species,
+            character.species.toClickableSpan(
+                styling = {
+                    color = Color.RED
+                    isUnderlineText = true
+                },
+                onClick = {
+                    Log.i(classTag(), "Span clicked")
+                }
             )
-        binding.info.textViewStatus.text =
-            requireContext().getString(
-                R.string.composite_text_character_status,
-                character.status.toResourceString(requireContext())
-            )
-        binding.info.textViewGender.text =
-            requireContext().getString(
-                R.string.composite_text_character_gender,
-                character.gender.toResourceString(requireContext())
-            )
+        )
+        binding.info.textViewStatus.text = requireContext().getString(
+            R.string.composite_text_character_status,
+            character.status.toResourceString(requireContext())
+        )
+        binding.info.textViewGender.text = requireContext().getString(
+            R.string.composite_text_character_gender,
+            character.gender.toResourceString(requireContext())
+        )
 
         binding.info.textViewType.isVisible =
             character.type.isNotEmpty()
         binding.info.textViewSpecies.isVisible =
             character.species.isNotEmpty()
+    }
+
+    private fun getLocationSpan() {
+        val text = "Click here to learn more about "
+        val clickableText = "Kotlin"
+        val spannable = SpannableString(text + clickableText)
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(view: View) {
+                // Handle click here
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = Color.BLUE // Set the color of the clickable text
+                ds.isUnderlineText = false // Remove the underline from the clickable text
+            }
+        }
+        spannable.setSpan(clickableSpan, text.length, text.length + clickableText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 
     private fun navigateBack() {

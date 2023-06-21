@@ -7,12 +7,12 @@ import java.io.Serializable
 
 abstract class ListConverter<T: Serializable> {
     @TypeConverter
-    fun intListToString(value: List<T>): String {
+    fun intListToString(value: List<T>?): String? {
         return Gson().toJson(value)
     }
 
     @TypeConverter
-    fun stringToIntList(value: String): List<T> {
+    fun stringToIntList(value: String?): List<T>? {
         return Gson().fromJson(value, object : TypeToken<List<T>>() {}.type)
     }
 }

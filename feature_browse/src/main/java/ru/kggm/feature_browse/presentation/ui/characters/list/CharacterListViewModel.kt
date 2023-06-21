@@ -1,6 +1,7 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -122,6 +123,8 @@ class CharacterListViewModel @Inject constructor(
                     clearCache()
                 invalidate()
             }
+            if (networkStateFlow.value == NetworkState.Restored)
+                networkStateFlow.tryEmit(NetworkState.Normal)
         }
     }
 
@@ -147,10 +150,5 @@ class CharacterListViewModel @Inject constructor(
     fun onNetworkRestored() {
         if (networkStateFlow.value == NetworkState.Lost)
             runBlocking { networkStateFlow.emit(NetworkState.Restored) }
-    }
-
-    fun onDataRefreshed() {
-        if (networkStateFlow.value == NetworkState.Restored)
-            runBlocking { networkStateFlow.emit(NetworkState.Normal) }
     }
 }

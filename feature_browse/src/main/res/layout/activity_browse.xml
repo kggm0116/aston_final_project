@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ru.kggm.aston_final_project.MainActivity">
+    android:layout_height="match_parent">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_activity_main"
-        android:name="ru.kggm.feature_browse.presentation.ui.characters.CharacterTabFragment"
+        android:id="@+id/fragment_container_browse"
+        android:name="ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="fill"
@@ -20,6 +19,6 @@
         android:layout_height="@dimen/size_nav_bar"
         android:layout_gravity="bottom"
         app:itemHorizontalTranslationEnabled="false"
-        app:menu="@menu/images_bottom_nav_menu" />
+        app:menu="@menu/menu_bottom_nav" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

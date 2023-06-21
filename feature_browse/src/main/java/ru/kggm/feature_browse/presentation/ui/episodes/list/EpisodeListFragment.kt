@@ -227,14 +227,14 @@ class EpisodeListFragment :
         val fragment = EpisodeDetailsFragment().apply {
             arguments = bundleOf(EpisodeDetailsFragment.ARG_EPISODE_ID to episode.id)
         }
-        parentFragmentManager.commit {
+        requireActivity().supportFragmentManager.commit {
             setCustomAnimations(
                 coreR.anim.slide_in_right,
                 coreR.anim.slide_out_left,
                 coreR.anim.slide_in_left,
                 coreR.anim.slide_out_right
             )
-            replace(R.id.fragment_container_episodes, fragment)
+            replace(R.id.fragment_container_browse, fragment)
             addToBackStack(null)
         }
     }
