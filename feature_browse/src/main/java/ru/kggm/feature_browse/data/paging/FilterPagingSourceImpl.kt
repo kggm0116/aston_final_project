@@ -31,10 +31,6 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TOut : Any>(
     abstract val itemComparator: Comparator<TData>
     abstract fun mapData(item: TData): TOut
 
-    data class NetworkConstants(val pageCount: Int, val itemCount: Int)
-
-    private var networkConstants = NetworkConstants(Int.MAX_VALUE, Int.MAX_VALUE)
-
     final override fun getRefreshKey(state: PagingState<Int, TOut>) = 0
 
     final override suspend fun clearCache() {
@@ -45,9 +41,7 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TOut : Any>(
     }
 
     final override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TOut> =
-        withContext(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            Log.e(classTag(), "Paging load error:\n${e.stackTraceToString()}")
-        }) {
+        withContext(Dispatchers.IO) {
             val firstItem = params.key ?: STARTING_KEY
             val itemRange = firstItem until firstItem + params.loadSize
             Log.i(logTag, "Loading items ${itemRange.first}..${itemRange.last}")
@@ -98,8 +92,7 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TOut : Any>(
                             else -> prevKey
                         }
                     },
-                    nextKey = (itemRange.last + 1)
-                        .takeIf { it < (networkConstants.itemCount) }
+                    nextKey = (itemRange.last + 1).takeIf { networkCallSuccessful }
                 )
             }
         }

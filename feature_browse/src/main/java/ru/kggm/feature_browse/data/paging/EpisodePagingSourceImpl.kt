@@ -28,18 +28,37 @@ class EpisodePagingSourceImpl(
         episodeDao.deleteAll()
     }
 
-    override suspend fun fetchFromDatabase(range: IntRange) =
-        episodeDao.getRangeFiltered(
-            skip = range.first,
-            take = range.last - range.first + 1,
-            ids = filters.ids,
-            name = filters.nameQuery,
-            code = filters.code
-        ).first()
+    override suspend fun fetchFromDatabase(range: IntRange) = episodeDao.getRangeFiltered(
+        skip = range.first,
+        take = range.last - range.first + 1,
+        ids = filters.ids,
+        name = filters.nameQuery,
+        code = filters.code
+    ).first()
 
     override suspend fun fetchFromNetwork(
         itemRange: IntRange
     ): List<EpisodeDataEntity> {
+        return if (filters.ids != null) {
+            fetchFromNetworkById(itemRange)
+        } else {
+            fetchFromNetworkByPage(itemRange)
+        }
+    }
+
+    private suspend fun fetchFromNetworkById(itemRange: IntRange): List<EpisodeDataEntity> {
+        val remainingIds = filters.ids!!
+            .drop(itemRange.first)
+            .take(itemRange.last - itemRange.first)
+        return if (remainingIds.none()) {
+            emptyList()
+        } else {
+            episodeService.getById(remainingIds)
+                .map { it.toDataEntity() }
+        }
+    }
+
+    private suspend fun fetchFromNetworkByPage(itemRange: IntRange): List<EpisodeDataEntity> {
         val fetchedItems = mutableListOf<EpisodeDataEntity>()
         val itemCount = itemRange.last - itemRange.first + 1
         var pageCount = Int.MAX_VALUE
@@ -47,6 +66,7 @@ class EpisodePagingSourceImpl(
         while (fetchedItems.size < itemCount) {
             if (iPage >= pageCount)
                 break
+
             fetchNetworkPage(iPage++)
                 .also { pageCount = it.info.pageCount }
                 .let { response ->

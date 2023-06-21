@@ -41,6 +41,10 @@ class LocationPagingSourceImpl(
     override suspend fun fetchFromNetwork(
         itemRange: IntRange
     ): List<LocationDataEntity> {
+        filters.ids?.let { ids ->
+            return locationService.getById(ids).map { it.toDataEntity() }
+        }
+
         val fetchedItems = mutableListOf<LocationDataEntity>()
         val itemCount = itemRange.last - itemRange.first + 1
         var pageCount = Int.MAX_VALUE

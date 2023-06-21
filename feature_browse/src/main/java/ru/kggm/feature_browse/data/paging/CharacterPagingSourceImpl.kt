@@ -42,6 +42,10 @@ class CharacterPagingSourceImpl(
     override suspend fun fetchFromNetwork(
         itemRange: IntRange
     ): List<CharacterDataEntity> {
+        filters.ids?.let { ids ->
+            return characterService.getById(ids).map { it.toDataEntity() }
+        }
+
         val fetchedItems = mutableListOf<CharacterDataEntity>()
         val itemCount = itemRange.last - itemRange.first + 1
         var pageCount = Int.MAX_VALUE
