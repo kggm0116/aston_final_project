@@ -1,17 +1,14 @@
 package ru.kggm.feature_browse.presentation.ui.locations.recycler
 
-import androidx.core.view.isVisible
-import coil.load
 import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
-import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
-import ru.kggm.feature_main.databinding.PagerItemLocationBinding
+import ru.kggm.feature_main.databinding.LayoutLocationItemBinding
 
 class LocationViewHolder(
-    private val binding: PagerItemLocationBinding,
+    private val binding: LayoutLocationItemBinding,
     private val onLocationClicked: (LocationPresentationEntity) -> Unit = { }
-) : BaseViewHolder<PagerItemLocationBinding>(binding) {
+) : BaseViewHolder<LayoutLocationItemBinding>(binding) {
 
     lateinit var location: LocationPresentationEntity
 
@@ -23,9 +20,9 @@ class LocationViewHolder(
     
     private fun displayLocation() {
         with (location) {
-            binding.textViewLocationName.text = name
-            binding.textViewLocationType.text = type
-            binding.textViewLocationDimension.text = dimension
+            binding.info.textViewLocationName.text = name
+            binding.info.textViewType.text = type
+            binding.info.textViewDimension.text = dimension
         }
     }
 }

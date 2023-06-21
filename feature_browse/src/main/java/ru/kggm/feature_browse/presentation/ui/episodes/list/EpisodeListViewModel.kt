@@ -35,10 +35,16 @@ class EpisodeListViewModel @Inject constructor(
     val filterParameters = filterParametersFlow.asStateFlow()
 
     fun setIds(ids: List<Int>?) {
-        filterParametersFlow.value.run {
-            copy(ids = ids).let { newParameters ->
-                filterParametersFlow.tryEmit(newParameters)
+        if (ids == filterParametersFlow.value.ids)
+            return
+
+        safeLaunch {
+            filterParametersFlow.value.run {
+                copy(ids = ids).let { newParameters ->
+                    filterParametersFlow.tryEmit(newParameters)
+                }
             }
+            episodePagingSource?.invalidate()
         }
     }
 
@@ -60,22 +66,22 @@ class EpisodeListViewModel @Inject constructor(
 
     fun applyFilters() {
         safeLaunch {
-            characterPagingSource?.apply {
+            episodePagingSource?.apply {
                 invalidate()
             }
         }
     }
 
-    private var characterPagingSource: EpisodePagingSource? = null
+    private var episodePagingSource: EpisodePagingSource? = null
     private fun createPagingSource(): EpisodePagingSource {
         return getEpisodePagingSource(filterParameters.value).also {
-            characterPagingSource = it
+            episodePagingSource = it
         }
     }
 
     fun refreshPagingData() {
         safeLaunch {
-            characterPagingSource?.apply {
+            episodePagingSource?.apply {
                 if (networkState.value != NetworkState.Lost)
                     clearCache()
                 invalidate()

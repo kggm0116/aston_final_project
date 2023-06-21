@@ -31,7 +31,7 @@ class EpisodeRepositoryImpl @Inject constructor(
     override suspend fun getById(id: Int) = withContext(Dispatchers.IO) {
         when (val databaseEntity = EpisodeDao.getById(id)) {
             null -> {
-                val fetchedEntity = EpisodeService.getById(id).toDataEntity()
+                val fetchedEntity = EpisodeService.getById(listOf(id)).first().toDataEntity()
                 EpisodeDao.insertOrUpdate(fetchedEntity)
                 return@withContext fetchedEntity.toDomainEntity()
             }

@@ -35,6 +35,20 @@ class CharacterListViewModel @Inject constructor(
     private val filterParametersFlow = MutableStateFlow(CharacterPagingFilters.Default)
     val filterParameters = filterParametersFlow.asStateFlow()
 
+    fun setIds(ids: List<Int>?) {
+        if (ids == filterParametersFlow.value.ids)
+            return
+
+        safeLaunch {
+            filterParametersFlow.value.run {
+                copy(ids = ids).let { newParameters ->
+                    filterParametersFlow.emit(newParameters)
+                }
+            }
+            characterPagingSource!!.invalidate()
+        }
+    }
+
     fun cycleGender() {
         filterParametersFlow.value.run {
             copy(gender = when (gender) {

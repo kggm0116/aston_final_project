@@ -12,14 +12,14 @@ import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.domain.paging.filters.CharacterPagingFilters
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListViewModel
-import ru.kggm.feature_main.databinding.NewFragmentCharacterFilterBinding
+import ru.kggm.feature_main.databinding.FragmentCharacterFilterBinding
 
 class CharacterFilterFragment(private val onClosed: () -> Unit = { }) :
-    ViewModelBottomSheetDialogFragment<NewFragmentCharacterFilterBinding, CharacterListViewModel>(
+    ViewModelBottomSheetDialogFragment<FragmentCharacterFilterBinding, CharacterListViewModel>(
         CharacterListViewModel::class.java,
-    ) {
+) {
 
-    override fun createBinding() = NewFragmentCharacterFilterBinding.inflate(layoutInflater)
+    override fun createBinding() = FragmentCharacterFilterBinding.inflate(layoutInflater)
     override fun getViewModelOwner() = requireActivity()
 
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
@@ -31,24 +31,24 @@ class CharacterFilterFragment(private val onClosed: () -> Unit = { }) :
         subscribeToViewModel()
     }
 
-    private fun initializeViewListeners() = with (binding) {
-        inputTextCharacterName.addTextChangedListener { onNameTextChanged(it!!) }
-        inputTextCharacterSpecies.addTextChangedListener { onSpeciesTextChanged(it!!) }
-        inputTextCharacterType.addTextChangedListener { onTypeTextChanged(it!!) }
-        buttonFilterCharacterGender.setDebouncedClickListener { onGenderButtonClick() }
-        buttonFilterCharacterStatus.setDebouncedClickListener { onStatusButtonClick() }
-        buttonApplyCharacterFilter.setDebouncedClickListener { onApplyFiltersClick() }
+    private fun initializeViewListeners() {
+        binding.inputTextCharacterName.addTextChangedListener { onNameTextChanged(it!!) }
+        binding.inputTextCharacterSpecies.addTextChangedListener { onSpeciesTextChanged(it!!) }
+        binding.inputTextCharacterType.addTextChangedListener { onTypeTextChanged(it!!) }
+        binding.buttonFilterCharacterGender.setDebouncedClickListener { onGenderButtonClick() }
+        binding.buttonFilterCharacterStatus.setDebouncedClickListener { onStatusButtonClick() }
+        binding.buttonApplyCharacterFilter.setDebouncedClickListener { onApplyFiltersClick() }
     }
 
     private fun subscribeToViewModel() {
         lifecycleScope.launch {
-            viewModel.filterParameters.collect { parameters ->
-                runOnUiThread { setFilters(parameters) }
+            viewModel.filterParameters.collect { filters ->
+                runOnUiThread { setFilters(filters) }
             }
         }
     }
 
-    private fun setFilters(filters: CharacterPagingFilters) = with (binding) {
+    private fun setFilters(filters: CharacterPagingFilters) {
         binding.buttonFilterCharacterGender.text = filters.gender?.toString() ?: "Any"
         binding.buttonFilterCharacterStatus.text = filters.status?.toString() ?: "Any"
         binding.inputTextCharacterName.setTextKeepState(filters.nameQuery ?: "")

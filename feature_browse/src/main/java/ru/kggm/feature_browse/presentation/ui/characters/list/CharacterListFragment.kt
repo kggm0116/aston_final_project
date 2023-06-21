@@ -1,9 +1,8 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list
 
-import android.animation.LayoutTransition
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
-import android.transition.Scene
 import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -15,7 +14,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
+import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
 import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
 import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
 import ru.kggm.core.presentation.utility.network.getIsNetworkConnectionActive
@@ -28,13 +27,15 @@ import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.characters.filter.CharacterFilterFragment
+import ru.kggm.core.presentation.ui.recycler.GridItemDecoration
+import ru.kggm.core.presentation.utility.getColorAttr
 import ru.kggm.feature_browse.presentation.ui.characters.recycler.CharacterPagingAdapter
 import ru.kggm.feature_main.R
-import ru.kggm.feature_main.databinding.NewFragmentCharacterListBinding
+import ru.kggm.feature_main.databinding.LayoutListBinding
 import ru.kggm.presentation.R as coreR
 
 class CharacterListFragment :
-    ViewModelFragment<NewFragmentCharacterListBinding, CharacterListViewModel>(
+    ViewModelFragment<LayoutListBinding, CharacterListViewModel>(
         CharacterListViewModel::class.java,
     ) {
     companion object {
@@ -48,7 +49,7 @@ class CharacterListFragment :
 
     private val showsLimitedIds get() = characterIds != null
 
-    override fun createBinding() = NewFragmentCharacterListBinding.inflate(layoutInflater)
+    override fun createBinding() = LayoutListBinding.inflate(layoutInflater)
     override fun viewModelOwner(): ViewModelStoreOwner = if (showsLimitedIds) {
         requireParentFragment()
     } else {
@@ -60,6 +61,7 @@ class CharacterListFragment :
     }
 
     override fun onInitialize() {
+        viewModel.setIds(characterIds)
         initializeRecycler()
         initializeViewListeners()
         subscribeToViewModel()
@@ -70,48 +72,60 @@ class CharacterListFragment :
     private lateinit var layoutManager: FooterOptimizedGridLayoutManager
     private fun initializeRecycler() {
         layoutManager = FooterOptimizedGridLayoutManager(requireContext(), 2, adapter)
-        binding.recyclerCharacters.layoutManager = layoutManager
-        binding.recyclerCharacters.adapter =
+        binding.content.recycler.layoutManager = layoutManager
+        binding.content.recycler.adapter =
             adapter.withLoadStateFooter(CommonLoadStateAdapter { adapter.retry() })
-
+        binding.content.recycler.addItemDecoration(itemDecoration)
         adapter.onCharacterClicked = { onCharacterClicked(it) }
         lifecycleScope.launch {
             adapter.loadStateFlow.collect { displayLoadStates(it) }
         }
     }
 
-    private fun displayLoadStates(states: CombinedLoadStates) = with(binding) {
-        recyclerCharacters.isVisible = adapter.itemCount > 0
-        layoutPagerEmpty.root.isVisible =
+    private val itemDecoration by lazy {
+        GridItemDecoration(
+            context = requireContext(),
+            backgrounColor = requireContext().getColorAttr(
+                com.google.android.material.R.attr.colorSecondary
+            ),
+            marginDp = 16f,
+            cornerRadiusDp = 32f
+        )
+    }
+
+    private fun displayLoadStates(states: CombinedLoadStates) {
+        binding.content.recycler.isVisible = adapter.itemCount > 0
+        binding.content.layoutEmpty.root.isVisible =
             adapter.itemCount == 0 && states.refresh is LoadState.NotLoading
-        layoutPagerLoading.root.isVisible =
+        binding.content.layoutLoading.root.isVisible =
             adapter.itemCount == 0 && states.refresh is LoadState.Loading
-        layoutPagerError.root.isVisible =
+        binding.content.layoutError.root.isVisible =
             adapter.itemCount == 0 && states.refresh is LoadState.Error
     }
 
-    private fun initializeViewListeners() = with(binding) {
+    private fun initializeViewListeners() {
         initializeFilter()
-        recyclerCharacters.addOnScrollListener(scrollListener)
-        fabCharactersScrollToTop.setDebouncedClickListener {
-            recyclerCharacters.stopScroll()
+        binding.content.recycler.addOnScrollListener(scrollListener)
+        binding.overlay.fabScrollToTop.setDebouncedClickListener {
+            binding.content.recycler.stopScroll()
             layoutManager.scrollToPositionWithOffset(0, 0)
         }
-        layoutPagerError.buttonPagerRetry.setDebouncedClickListener {
+        binding.content.layoutError.buttonRetry.setDebouncedClickListener {
             adapter.retry()
         }
-        refresherCharacters.setOnRefreshListener { onRefreshRecycler() }
+        binding.content.refresher.setOnRefreshListener { onRefreshRecycler() }
     }
+
 
     private fun initializeFilter() {
         if (showsLimitedIds) {
-            binding.fabOpenCharacterFilters.isVisible = false
+            binding.overlay.fabOpenFilters.isVisible = false
         } else {
-            binding.fabOpenCharacterFilters.setDebouncedClickListener {
-                binding.fabOpenCharacterFilters.isVisible = false
+            binding.overlay.fabOpenFilters.setDebouncedClickListener {
+                binding.overlay.fabOpenFilters.isVisible = false
                 CharacterFilterFragment(
                     onClosed = {
-                        binding.fabOpenCharacterFilters.isVisible = true
+                        binding.overlay.fabOpenFilters.isVisible = true
                     }
                 ).show(parentFragmentManager, null)
             }
@@ -123,7 +137,7 @@ class CharacterListFragment :
             launch {
                 viewModel.characterPagingData.collect {
                     adapter.submitData(it)
-                    binding.refresherCharacters.isRefreshing = false
+                    binding.content.refresher.isRefreshing = false
                 }
             }
             launch {
@@ -164,24 +178,23 @@ class CharacterListFragment :
     }
 
     private fun animateScrollToTopFab() {
-        binding.fabCharactersScrollToTop.isVisible =
+        binding.overlay.fabScrollToTop.isVisible =
             layoutManager.findFirstVisibleItemPosition() >= SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT
     }
 
     private fun setNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) {
-        binding.layoutNetworkLost.root.isVisible =
+        binding.networkStatus.layoutNetworkLost.root.isVisible =
             state == CharacterListViewModel.NetworkState.Lost
-        binding.layoutNetworkRestored.root.isVisible =
+        binding.networkStatus.layoutNetworkRestored.root.isVisible =
             state == CharacterListViewModel.NetworkState.Restored
     }
 
-    private fun animateNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) =
-        with(binding) {
-            layoutNetworkLost.root.isVisible =
-                state == CharacterListViewModel.NetworkState.Lost
-            layoutNetworkRestored.root.isVisible =
-                state == CharacterListViewModel.NetworkState.Restored
-        }
+    private fun animateNetworkLayoutsVisibility(state: CharacterListViewModel.NetworkState) {
+        binding.networkStatus.layoutNetworkLost.root.isVisible =
+            state == CharacterListViewModel.NetworkState.Lost
+        binding.networkStatus.layoutNetworkRestored.root.isVisible =
+            state == CharacterListViewModel.NetworkState.Restored
+    }
 
     private fun onCharacterClicked(character: CharacterPresentationEntity) {
         val fragment = CharacterDetailsFragment().apply {

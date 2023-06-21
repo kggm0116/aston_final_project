@@ -31,7 +31,7 @@ class LocationRepositoryImpl @Inject constructor(
     override suspend fun getById(id: Int) = withContext(Dispatchers.IO) {
         when (val databaseEntity = locationDao.getById(id)) {
             null -> {
-                val fetchedEntity = locationService.getById(id).toDataEntity()
+                val fetchedEntity = locationService.getById(listOf(id)).first().toDataEntity()
                 locationDao.insertOrUpdate(fetchedEntity)
                 return@withContext fetchedEntity.toDomainEntity()
             }

@@ -3,12 +3,12 @@ package ru.kggm.feature_browse.presentation.ui.episodes.recycler
 import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
-import ru.kggm.feature_main.databinding.PagerItemEpisodeBinding
+import ru.kggm.feature_main.databinding.LayoutEpisodeItemBinding
 
 class EpisodeViewHolder(
-    private val binding: PagerItemEpisodeBinding,
+    private val binding: LayoutEpisodeItemBinding,
     private val onEpisodeClicked: (EpisodePresentationEntity) -> Unit = { }
-) : BaseViewHolder<PagerItemEpisodeBinding>(binding) {
+) : BaseViewHolder<LayoutEpisodeItemBinding>(binding) {
 
     lateinit var episode: EpisodePresentationEntity
 
@@ -20,9 +20,9 @@ class EpisodeViewHolder(
     
     private fun displayEpisode() {
         with (episode) {
-            binding.textViewEpisodeName.text = name
-            binding.textViewEpisodeCode.text = code
-            binding.textViewEpisodeDate.text = airDate.toString()
+            binding.info.textViewEpisodeName.text = name
+            binding.info.textViewCode.text = code
+            binding.info.textViewAirDate.text = airDate
         }
     }
 }

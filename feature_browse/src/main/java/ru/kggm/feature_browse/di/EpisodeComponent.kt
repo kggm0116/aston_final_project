@@ -8,16 +8,11 @@ import ru.kggm.core.presentation.di.ViewModelFactoryModule
 import ru.kggm.feature_browse.data.database.di.EpisodeDatabaseModule
 import ru.kggm.feature_browse.data.database.di.SharedDatabaseModule
 import ru.kggm.feature_browse.data.network.di.EpisodeNetworkModule
-import ru.kggm.feature_browse.presentation.di.CharacterDetailsViewModelModule
-import ru.kggm.feature_browse.presentation.di.CharacterListViewModelModule
 import ru.kggm.feature_browse.presentation.di.EpisodeDetailsViewModelModule
 import ru.kggm.feature_browse.presentation.di.EpisodeListViewModelModule
-import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.characters.filter.CharacterFilterFragment
-import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
 import ru.kggm.feature_browse.presentation.ui.episodes.details.EpisodeDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListFragment
-import ru.kggm.feature_browse.presentation.ui.episodes.list.filter.EpisodeFilterFragment
+import ru.kggm.feature_browse.presentation.ui.episodes.filter.EpisodeFilterFragment
 import javax.inject.Singleton
 
 @Singleton

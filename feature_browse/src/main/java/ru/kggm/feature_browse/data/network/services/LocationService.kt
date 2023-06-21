@@ -19,8 +19,8 @@ interface LocationService {
         @Query("dimension") dimension: String? = null,
     ): LocationPageDto
 
-    @GET("location/{id}")
-    suspend fun getById(@Path("id") id: Int): LocationDto
+    @GET("location/{ids}")
+    suspend fun getById(@Path("ids") id: List<Int>): List<LocationDto>
 
     companion object {
         private val locationIdRegex by lazy { Regex("https://rickandmortyapi.com/api/location/(?<id>\\d++)$") }

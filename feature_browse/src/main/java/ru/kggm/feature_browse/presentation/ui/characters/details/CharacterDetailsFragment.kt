@@ -7,18 +7,16 @@ import androidx.lifecycle.lifecycleScope
 import coil.load
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
-import ru.kggm.feature_main.databinding.FragmentCharacterDetailsBinding
+import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListFragment
-import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListViewModel
 import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
 import ru.kggm.feature_main.R
-import ru.kggm.feature_main.databinding.NewFragmentCharacterDetailsBinding
+import ru.kggm.feature_main.databinding.FragmentCharacterDetailsBinding
 
 class CharacterDetailsFragment :
-    ViewModelFragment<NewFragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
+    ViewModelFragment<FragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
         CharacterDetailsViewModel::class.java,
 ) {
 
@@ -26,7 +24,7 @@ class CharacterDetailsFragment :
         const val ARG_CHARACTER_ID = "ARG_CHARACTER_ID"
     }
 
-    override fun createBinding() = NewFragmentCharacterDetailsBinding.inflate(layoutInflater)
+    override fun createBinding() = FragmentCharacterDetailsBinding.inflate(layoutInflater)
     override fun initDaggerComponent(dependenciesProvider: DependenciesProvider) {
         CharacterComponent.init(requireContext(), dependenciesProvider).inject(this)
     }
@@ -44,7 +42,7 @@ class CharacterDetailsFragment :
     }
 
     private fun initializeToolbar() {
-        binding.toolbarCharacterDetails.apply {
+        binding.toolbar.apply {
             setNavigationIcon(ru.kggm.presentation.R.drawable.baseline_arrow_back_24)
             setNavigationOnClickListener { navigateBack() }
             menu.clear()
@@ -68,35 +66,33 @@ class CharacterDetailsFragment :
     }
 
     private fun displayCharacter(character: CharacterPresentationEntity) {
-        with (binding.newLayoutCharacterInfoFull) {
-//            binding.toolbarCharacterDetails.title = character.name
-            binding.imageCharacter.load(character.image) { crossfade(true) }
+        binding.toolbar.title = character.name
+        binding.image.load(character.image) { crossfade(true) }
 
-            textViewCharacterType.text = requireContext().getString(
-                R.string.composite_text_character_type,
-                character.type
+        binding.info.textViewType.text = requireContext().getString(
+            R.string.composite_text_character_type,
+            character.type
+        )
+        binding.info.textViewSpecies.text =
+            requireContext().getString(
+                R.string.composite_text_character_species,
+                character.species
             )
-            textViewCharacterSpecies.text =
-                requireContext().getString(
-                    R.string.composite_text_character_species,
-                    character.species
-                )
-            textViewCharacterStatus.text =
-                requireContext().getString(
-                    R.string.composite_text_character_status,
-                    character.status.toResourceString(requireContext())
-                )
-            textViewCharacterGender.text =
-                requireContext().getString(
-                    R.string.composite_text_character_gender,
-                    character.gender.toResourceString(requireContext())
-                )
+        binding.info.textViewStatus.text =
+            requireContext().getString(
+                R.string.composite_text_character_status,
+                character.status.toResourceString(requireContext())
+            )
+        binding.info.textViewGender.text =
+            requireContext().getString(
+                R.string.composite_text_character_gender,
+                character.gender.toResourceString(requireContext())
+            )
 
-            textViewCharacterType.isVisible =
-                character.type.isNotEmpty()
-            textViewCharacterSpecies.isVisible =
-                character.species.isNotEmpty()
-        }
+        binding.info.textViewType.isVisible =
+            character.type.isNotEmpty()
+        binding.info.textViewSpecies.isVisible =
+            character.species.isNotEmpty()
     }
 
     private fun navigateBack() {

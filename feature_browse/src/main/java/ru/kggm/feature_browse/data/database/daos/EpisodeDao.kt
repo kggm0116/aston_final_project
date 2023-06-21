@@ -28,6 +28,7 @@ interface EpisodeDao : BaseDao<EpisodeDataEntity> {
 
     @Query(
         "SELECT * FROM $EPISODE WHERE " +
+                "(:ids IS NULL OR $ID IN (:ids)) AND " +
                 "(:name IS NULL OR $NAME LIKE '%'||:name||'%') AND " +
                 "(:code IS NULL OR $CODE = :code) " +
                 "LIMIT :take OFFSET :skip"
@@ -35,6 +36,7 @@ interface EpisodeDao : BaseDao<EpisodeDataEntity> {
     fun getRangeFiltered(
         skip: Int,
         take: Int,
+        ids: List<Int>?,
         name: String?,
         code: String?,
     ): Flow<List<EpisodeDataEntity>>

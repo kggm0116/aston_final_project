@@ -10,7 +10,7 @@ import retrofit2.HttpException
 import ru.kggm.feature_browse.domain.paging.FilterPagingSource
 import kotlin.math.max
 
-abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, TOut : Any>(
+abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TOut : Any>(
     filterParameters: TFilters
 ) : FilterPagingSource<TOut, TFilters>(filterParameters) {
 
@@ -21,16 +21,14 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, 
 
     open val logTag = "BasePagingSourceImpl"
 
-    abstract val itemsPerNetworkPage: Int
-
-    abstract suspend fun onClearCache()
-    abstract fun getNetworkConstraints(response: TPage): NetworkConstants
+    abstract suspend fun fetchFromNetwork(itemRange: IntRange): List<TData>
     abstract suspend fun fetchFromDatabase(range: IntRange): List<TData>
-    abstract suspend fun fetchNetworkPage(pageNumber: Int): TPage
+
     abstract suspend fun cacheItems(items: List<TData>)
+    abstract suspend fun onClearCache()
+
     abstract val itemComparator: Comparator<TData>
     abstract fun mapData(item: TData): TOut
-    abstract fun mapNetworkPage(page: TPage): List<TData>
 
     data class NetworkConstants(val pageCount: Int, val itemCount: Int)
 
@@ -54,7 +52,7 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, 
             var networkCallSuccessful = true
             val itemsFromNetwork = try {
                 delay(SIMULATED_DELAY_MS)
-                fetchItemsFromNetwork(itemRange)
+                fetchFromNetwork(itemRange)
             } catch (httpException: HttpException) {
                 Log.i(logTag, "Network error: ${httpException.message}")
                 networkCallSuccessful = false
@@ -102,24 +100,4 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TPage : Any, 
                 )
             }
         }
-
-    private suspend fun fetchItemsFromNetwork(
-        itemRange: IntRange
-    ): List<TData> {
-        val fetchedItems = mutableListOf<TData>()
-        val itemCount = itemRange.last - itemRange.first + 1
-        var iPage = itemRange.first / itemsPerNetworkPage + 1
-        while (fetchedItems.size < itemCount) {
-            if (iPage >= networkConstants.pageCount)
-                break
-            fetchNetworkPage(iPage++)
-                .also { networkConstants = getNetworkConstraints(it) }
-                .let { response ->
-                    mapNetworkPage(response).let { items ->
-                        fetchedItems.addAll(items)
-                    }
-                }
-        }
-        return fetchedItems.take(itemCount)
-    }
 }

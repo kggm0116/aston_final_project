@@ -19,8 +19,8 @@ interface EpisodeService {
         @Query("code") code: String? = null
     ): EpisodePageDto
 
-    @GET("episode/{id}")
-    suspend fun getById(@Path("id") id: Int): EpisodeDto
+    @GET("episode/{ids}")
+    suspend fun getById(@Path("ids") id: List<Int>): List<EpisodeDto>
 
     companion object {
         private val episodeIdRegex by lazy { Regex("https://rickandmortyapi.com/api/episode/(?<id>\\d++)$") }

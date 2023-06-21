@@ -13,7 +13,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
+import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
 import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
 import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
 import ru.kggm.core.presentation.utility.animations.Visibility
@@ -27,15 +27,14 @@ import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.di.LocationComponent
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.locations.details.LocationDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.locations.list.filter.LocationFilterFragment
+import ru.kggm.feature_browse.presentation.ui.locations.filter.LocationFilterFragment
 import ru.kggm.feature_browse.presentation.ui.locations.recycler.LocationPagingAdapter
 import ru.kggm.feature_main.R
-import ru.kggm.feature_main.databinding.FragmentCharacterListBinding
-import ru.kggm.feature_main.databinding.FragmentLocationListBinding
+import ru.kggm.feature_main.databinding.LayoutListBinding
 import ru.kggm.presentation.R as coreR
 
 class LocationListFragment :
-    ViewModelFragment<FragmentLocationListBinding, LocationListViewModel>(
+    ViewModelFragment<LayoutListBinding, LocationListViewModel>(
         LocationListViewModel::class.java,
     ) {
     companion object {
@@ -47,7 +46,7 @@ class LocationListFragment :
         arguments?.getIntArray(ARG_LOCATION_IDS)?.toList()
     }
 
-    override fun createBinding() = FragmentLocationListBinding.inflate(layoutInflater)
+    override fun createBinding() = LayoutListBinding.inflate(layoutInflater)
     override fun viewModelOwner(): ViewModelStoreOwner = if (locationIds == null) {
         requireActivity()
     } else {
@@ -59,6 +58,7 @@ class LocationListFragment :
     }
 
     override fun onInitialize() {
+        viewModel.setIds(locationIds)
         initializeRecycler()
         initializeViews()
         initializeViewListeners()
@@ -70,8 +70,8 @@ class LocationListFragment :
     private lateinit var layoutManager: FooterOptimizedGridLayoutManager
     private fun initializeRecycler() {
         layoutManager = FooterOptimizedGridLayoutManager(requireContext(), 2, adapter)
-        binding.recyclerLocations.layoutManager = layoutManager
-        binding.recyclerLocations.adapter =
+        binding.content.recycler.layoutManager = layoutManager
+        binding.content.recycler.adapter =
             adapter.withLoadStateFooter(CommonLoadStateAdapter { adapter.retry() })
 
         adapter.onLocationClicked = { onLocationClicked(it) }
@@ -82,26 +82,26 @@ class LocationListFragment :
 
     private fun displayLoadStates(states: CombinedLoadStates) {
         with(states) {
-            binding.recyclerLocations.animateVisibility(
+            binding.content.recycler.animateVisibility(
                 visibility = if (adapter.itemCount > 0)
                     Visibility.Visible
                 else
                     Visibility.Invisible
             )
-            binding.layoutPagerEmpty.root.animateVisibility {
+            binding.content.layoutEmpty.root.animateVisibility {
                 adapter.itemCount == 0 && refresh is LoadState.NotLoading
             }
-            binding.layoutPagerLoading.root.animateVisibility {
+            binding.content.layoutLoading.root.animateVisibility {
                 adapter.itemCount == 0 && refresh is LoadState.Loading
             }
-            binding.layoutPagerError.root.animateVisibility {
+            binding.content.layoutError.root.animateVisibility {
                 adapter.itemCount == 0 && refresh is LoadState.Error
             }
         }
     }
 
     private fun initializeViews() {
-        binding.fabOpenLocationFilters.animateVisibility(
+        binding.overlay.fabOpenFilters.animateVisibility(
             Visibility.Visible,
             coreR.anim.slide_in_right
         )
@@ -109,29 +109,29 @@ class LocationListFragment :
 
     private fun initializeViewListeners() {
         with (binding) {
-            fabOpenLocationFilters.setDebouncedClickListener {
-                fabOpenLocationFilters.animateVisibility(
+            binding.overlay.fabOpenFilters.setDebouncedClickListener {
+                binding.overlay.fabOpenFilters.animateVisibility(
                     Visibility.Gone,
                     coreR.anim.slide_out_right
                 )
                 LocationFilterFragment(
                     onClosed = {
-                        fabOpenLocationFilters.animateVisibility(
+                        binding.overlay.fabOpenFilters.animateVisibility(
                             Visibility.Visible,
                             coreR.anim.slide_in_right
                         )
                     }
                 ).show(parentFragmentManager, null)
             }
-            recyclerLocations.addOnScrollListener(scrollListener)
-            fabLocationsScrollToTop.setDebouncedClickListener {
-                recyclerLocations.stopScroll()
+            content.recycler.addOnScrollListener(scrollListener)
+            binding.overlay.fabScrollToTop.setDebouncedClickListener {
+                content.recycler.stopScroll()
                 layoutManager.scrollToPositionWithOffset(0, 0)
             }
-            layoutPagerError.buttonPagerRetry.setDebouncedClickListener {
+            binding.content.layoutError.buttonRetry.setDebouncedClickListener {
                 adapter.retry()
             }
-            refresherLocations.setOnRefreshListener { onRefreshRecycler() }
+            binding.content.refresher.setOnRefreshListener { onRefreshRecycler() }
         }
     }
 
@@ -140,7 +140,7 @@ class LocationListFragment :
             launch {
                 viewModel.locationPagingData.collect {
                     adapter.submitData(it)
-                    binding.refresherLocations.isRefreshing = false
+                    binding.content.refresher.isRefreshing = false
                 }
             }
             launch {
@@ -179,12 +179,12 @@ class LocationListFragment :
 
     private fun animateScrollToTopFab() {
         if (layoutManager.findFirstVisibleItemPosition() >= SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT) {
-            binding.fabLocationsScrollToTop.animateVisibility(
+            binding.overlay.fabScrollToTop.animateVisibility(
                 Visibility.Visible,
                 coreR.anim.slide_in_right
             )
         } else {
-            binding.fabLocationsScrollToTop.animateVisibility(
+            binding.overlay.fabScrollToTop.animateVisibility(
                 Visibility.Gone,
                 coreR.anim.slide_out_right
             )
@@ -192,31 +192,31 @@ class LocationListFragment :
     }
 
     private fun setNetworkLayoutsVisibility(state: LocationListViewModel.NetworkState) {
-        binding.layoutNetworkLost.root.isVisible =
+        binding.content.recycler.isVisible =
             state == LocationListViewModel.NetworkState.Lost
-        binding.layoutNetworkRestored.root.isVisible =
+        binding.content.layoutEmpty.root.isVisible =
             state == LocationListViewModel.NetworkState.Restored
     }
 
     private fun animateNetworkLayoutsVisibility(state: LocationListViewModel.NetworkState) {
         if (state == LocationListViewModel.NetworkState.Lost) {
-            binding.layoutNetworkLost.root.animateVisibility(
+            binding.content.recycler.animateVisibility(
                 Visibility.Visible,
                 coreR.anim.slide_in_top
             )
         } else {
-            binding.layoutNetworkLost.root.animateVisibility(
+            binding.content.recycler.animateVisibility(
                 Visibility.Gone,
                 coreR.anim.slide_out_top
             )
         }
         if (state == LocationListViewModel.NetworkState.Restored) {
-            binding.layoutNetworkRestored.root.animateVisibility(
+            binding.networkStatus.layoutNetworkRestored.root.animateVisibility(
                 Visibility.Visible,
                 coreR.anim.slide_in_top
             )
         } else {
-            binding.layoutNetworkRestored.root.animateVisibility(
+            binding.networkStatus.layoutNetworkRestored.root.animateVisibility(
                 Visibility.Gone,
                 coreR.anim.slide_out_top
             )

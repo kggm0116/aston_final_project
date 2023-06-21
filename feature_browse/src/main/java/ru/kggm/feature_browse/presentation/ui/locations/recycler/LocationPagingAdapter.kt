@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
-import ru.kggm.feature_main.databinding.PagerItemLocationBinding
+import ru.kggm.feature_main.databinding.LayoutLocationItemBinding
 
 class LocationPagingAdapter : PagingDataAdapter<LocationPresentationEntity, LocationViewHolder>(
     LocationDiffUtil
@@ -14,7 +14,7 @@ class LocationPagingAdapter : PagingDataAdapter<LocationPresentationEntity, Loca
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = PagerItemLocationBinding.inflate(inflater, parent, false)
+        val binding = LayoutLocationItemBinding.inflate(inflater, parent, false)
         return LocationViewHolder(
             binding = binding,
             onLocationClicked = onLocationClicked,

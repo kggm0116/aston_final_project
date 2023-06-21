@@ -8,9 +8,7 @@
         android:id="@+id/input_layout_episode_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginVertical="16dp"
-        android:hint="@string/hint_character_name"
+        android:hint="@string/hint_episode_name"
         app:layout_constraintBottom_toTopOf="@id/input_layout_episode_code"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,17 +19,15 @@
             style="@style/style_text_input_filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Name" />
+            tools:text="@string/hint_episode_name" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_episode_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginVertical="16dp"
-        android:hint="@string/hint_character_type"
-        app:layout_constraintBottom_toTopOf="@id/button_apply_episode_filter"
+        android:hint="@string/hint_episode_code"
+        app:layout_constraintBottom_toTopOf="@id/barrier_info_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/input_layout_episode_name">
@@ -41,19 +37,27 @@
             style="@style/style_text_input_filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Type" />
+            tools:text="@string/hint_episode_code" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_info_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="input_layout_episode_name, input_layout_episode_code" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_apply_episode_filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/input_layout_episode_code"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/label_apply_filter"
+        app:layout_constraintWidth_percent=".33"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/label_apply_filter" />
-
+        app:layout_constraintDimensionRatio="3:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier_info_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

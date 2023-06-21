@@ -8,16 +8,11 @@ import ru.kggm.core.presentation.di.ViewModelFactoryModule
 import ru.kggm.feature_browse.data.database.di.LocationDatabaseModule
 import ru.kggm.feature_browse.data.database.di.SharedDatabaseModule
 import ru.kggm.feature_browse.data.network.di.LocationNetworkModule
-import ru.kggm.feature_browse.presentation.di.CharacterDetailsViewModelModule
-import ru.kggm.feature_browse.presentation.di.CharacterListViewModelModule
 import ru.kggm.feature_browse.presentation.di.LocationDetailsViewModelModule
 import ru.kggm.feature_browse.presentation.di.LocationListViewModelModule
-import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.characters.filter.CharacterFilterFragment
-import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
 import ru.kggm.feature_browse.presentation.ui.locations.details.LocationDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.locations.list.LocationListFragment
-import ru.kggm.feature_browse.presentation.ui.locations.list.filter.LocationFilterFragment
+import ru.kggm.feature_browse.presentation.ui.locations.filter.LocationFilterFragment
 import javax.inject.Singleton
 
 @Singleton

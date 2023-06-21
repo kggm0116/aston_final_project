@@ -22,8 +22,8 @@ interface CharacterService {
         @Query("gender") gender: CharacterEntity.Gender? = null,
     ): CharacterPageDto
 
-    @GET("character/{id}")
-    suspend fun getById(@Path("id") id: Int): CharacterDto
+    @GET("character/{ids}")
+    suspend fun getById(@Path("ids") ids: List<Int>): List<CharacterDto>
 
     companion object {
         private val characterIdRegex by lazy {

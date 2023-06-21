@@ -1,39 +1,38 @@
 package ru.kggm.feature_browse.presentation.ui.characters.recycler
 
 import androidx.core.view.isVisible
+import coil.Coil
+import coil.imageLoader
 import coil.load
+import coil.request.ImageRequest
 import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
-import ru.kggm.feature_main.databinding.NewItemCharacterBinding
-import ru.kggm.feature_main.databinding.PagerItemCharacterBinding
+import ru.kggm.feature_main.databinding.LayoutCharacterItemBinding
 
 class CharacterViewHolder(
-    private val binding: NewItemCharacterBinding,
+    private val binding: LayoutCharacterItemBinding,
     private val onCharacterClicked: (CharacterPresentationEntity) -> Unit = { }
-) : BaseViewHolder<NewItemCharacterBinding>(binding) {
+) : BaseViewHolder<LayoutCharacterItemBinding>(binding) {
 
-    lateinit var character: CharacterPresentationEntity
+    private lateinit var character: CharacterPresentationEntity
 
     fun bind(character: CharacterPresentationEntity) {
         this.character = character
         binding.root.setDebouncedClickListener { onCharacterClicked(character) }
         displayCharacter()
     }
-    
+
     private fun displayCharacter() {
         with (character) {
-            binding.imageCharacter.load(image) { crossfade(true) }
-            binding.newLayoutCharacterInfoShort.textViewCharacterName.text = name
-            binding.newLayoutCharacterInfoShort.textViewCharacterSpecies.text = species
-            binding.newLayoutCharacterInfoShort.textViewCharacterStatus.text = status.toResourceString(context)
-            binding.newLayoutCharacterInfoShort.textViewCharacterGender.text = gender.toResourceString(context)
-
-            binding.newLayoutCharacterInfoShort.textViewCharacterSpecies.isVisible = species.isNotEmpty()
+            binding.image.load(image) { crossfade(true) }
+            binding.info.textViewName.text = name
+            binding.info.textViewStatus.text = status.toResourceString(context)
+            binding.info.textViewSpecies.text = species
+            binding.info.textViewGender.text = gender.toResourceString(context)
         }
     }
 }
-
 
 

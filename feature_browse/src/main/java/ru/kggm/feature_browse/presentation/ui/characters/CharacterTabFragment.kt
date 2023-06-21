@@ -1,8 +1,8 @@
 package ru.kggm.feature_browse.presentation.ui.characters
 
-import ru.kggm.core.presentation.ui.fragments.fragment.ViewBindingFragment
-import ru.kggm.feature_main.databinding.NewFragmentCharacterTabBinding
+import ru.kggm.core.presentation.ui.fragments.base.ViewBindingFragment
+import ru.kggm.feature_main.databinding.FragmentCharacterTabBinding
 
-class CharacterTabFragment : ViewBindingFragment<NewFragmentCharacterTabBinding>() {
-    override fun createBinding() = NewFragmentCharacterTabBinding.inflate(layoutInflater)
+class CharacterTabFragment : ViewBindingFragment<FragmentCharacterTabBinding>() {
+    override fun createBinding() = FragmentCharacterTabBinding.inflate(layoutInflater)
 }

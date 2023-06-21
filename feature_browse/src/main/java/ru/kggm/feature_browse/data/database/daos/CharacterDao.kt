@@ -27,6 +27,7 @@ interface CharacterDao : BaseDao<CharacterDataEntity> {
 
     @Query(
         "SELECT * FROM $CHARACTER WHERE " +
+                "(:ids IS NULL OR $ID IN (:ids)) AND " +
                 "(:name IS NULL OR $NAME LIKE '%'||:name||'%') AND " +
                 "(:status IS NULL OR $STATUS = :status) AND " +
                 "(:type IS NULL OR $TYPE = :type) AND " +
@@ -37,6 +38,7 @@ interface CharacterDao : BaseDao<CharacterDataEntity> {
     fun getRangeFiltered(
         skip: Int,
         take: Int,
+        ids: List<Int>?,
         name: String?,
         status: CharacterEntity.Status?,
         type: String?,

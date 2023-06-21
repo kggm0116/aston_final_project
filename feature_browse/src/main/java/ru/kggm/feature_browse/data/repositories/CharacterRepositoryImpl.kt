@@ -14,6 +14,7 @@ class CharacterRepositoryImpl @Inject constructor(
     private val characterService: CharacterService,
     private val characterDao: CharacterDao
 ): CharacterRepository {
+
     override fun pagingSource(
         filterParameters: CharacterPagingFilters
     ) = CharacterPagingSourceImpl(
@@ -25,7 +26,7 @@ class CharacterRepositoryImpl @Inject constructor(
     override suspend fun getById(id: Int) = withContext(Dispatchers.IO) {
         when (val databaseEntity = characterDao.getById(id)) {
             null -> {
-                val fetchedEntity = characterService.getById(id).toDataEntity()
+                val fetchedEntity = characterService.getById(listOf(id)).first().toDataEntity()
                 characterDao.insertOrUpdate(fetchedEntity)
                 return@withContext fetchedEntity.toDomainEntity()
             }

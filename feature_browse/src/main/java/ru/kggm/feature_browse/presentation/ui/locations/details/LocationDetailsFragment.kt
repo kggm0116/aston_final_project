@@ -3,7 +3,7 @@ package ru.kggm.feature_browse.presentation.ui.locations.details
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
+import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
 import ru.kggm.feature_main.databinding.FragmentLocationDetailsBinding
 import ru.kggm.feature_browse.di.LocationComponent
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
@@ -35,7 +35,7 @@ class LocationDetailsFragment :
     }
 
     private fun initializeToolbar() {
-        binding.toolbarLocationDetails.apply {
+        binding.toolbar.apply {
             setNavigationIcon(ru.kggm.presentation.R.drawable.baseline_arrow_back_24)
             setNavigationOnClickListener { navigateBack() }
             menu.clear()
@@ -51,12 +51,10 @@ class LocationDetailsFragment :
     }
 
     private fun displayLocation(location: LocationPresentationEntity) {
-        with(binding.layoutLocationDetails) {
-            binding.toolbarLocationDetails.title = location.name
+        binding.toolbar.title = location.name
 
-            textViewLocationType.text = location.type
-            textViewLocationDimension.text = location.dimension
-        }
+        binding.info.textViewType.text = location.type
+        binding.info.textViewDimension.text = location.dimension
     }
 
     private fun navigateBack() {

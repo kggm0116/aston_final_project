@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
-import ru.kggm.feature_main.databinding.PagerItemEpisodeBinding
+import ru.kggm.feature_main.databinding.LayoutEpisodeItemBinding
 
 class EpisodePagingAdapter : PagingDataAdapter<EpisodePresentationEntity, EpisodeViewHolder>(
     EpisodeDiffUtil
@@ -14,7 +14,7 @@ class EpisodePagingAdapter : PagingDataAdapter<EpisodePresentationEntity, Episod
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = PagerItemEpisodeBinding.inflate(inflater, parent, false)
+        val binding = LayoutEpisodeItemBinding.inflate(inflater, parent, false)
         return EpisodeViewHolder(
             binding = binding,
             onEpisodeClicked = onEpisodeClicked,

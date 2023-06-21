@@ -13,7 +13,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
+import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
 import ru.kggm.core.presentation.ui.paging.CommonLoadStateAdapter
 import ru.kggm.core.presentation.ui.paging.FooterOptimizedGridLayoutManager
 import ru.kggm.core.presentation.utility.animations.Visibility
@@ -26,16 +26,15 @@ import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.di.EpisodeComponent
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
-import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.episodes.details.EpisodeDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.episodes.list.filter.EpisodeFilterFragment
+import ru.kggm.feature_browse.presentation.ui.episodes.filter.EpisodeFilterFragment
 import ru.kggm.feature_browse.presentation.ui.episodes.recycler.EpisodePagingAdapter
 import ru.kggm.feature_main.R
-import ru.kggm.feature_main.databinding.FragmentEpisodeListBinding
+import ru.kggm.feature_main.databinding.LayoutListBinding
 import ru.kggm.presentation.R as coreR
 
 class EpisodeListFragment :
-    ViewModelFragment<FragmentEpisodeListBinding, EpisodeListViewModel>(
+    ViewModelFragment<LayoutListBinding, EpisodeListViewModel>(
         EpisodeListViewModel::class.java,
     ) {
     companion object {
@@ -49,7 +48,7 @@ class EpisodeListFragment :
 
     private val showsLimitedIds get() = episodeIds != null
 
-    override fun createBinding() = FragmentEpisodeListBinding.inflate(layoutInflater)
+    override fun createBinding() = LayoutListBinding.inflate(layoutInflater)
     override fun viewModelOwner(): ViewModelStoreOwner = if (showsLimitedIds) {
         requireParentFragment()
     } else {
@@ -72,8 +71,8 @@ class EpisodeListFragment :
     private lateinit var layoutManager: FooterOptimizedGridLayoutManager
     private fun initializeRecycler() {
         layoutManager = FooterOptimizedGridLayoutManager(requireContext(), 2, adapter)
-        binding.recyclerEpisodes.layoutManager = layoutManager
-        binding.recyclerEpisodes.adapter = adapter
+        binding.content.recycler.layoutManager = layoutManager
+        binding.content.recycler.adapter = adapter
             .withLoadStateFooter(CommonLoadStateAdapter { adapter.retry() })
 
         adapter.onEpisodeClicked = { onEpisodeClicked(it) }
@@ -84,51 +83,49 @@ class EpisodeListFragment :
 
     private fun displayLoadStates(states: CombinedLoadStates) {
         with(states) {
-            binding.recyclerEpisodes.animateVisibility(
+            binding.content.recycler.animateVisibility(
                 visibility = if (adapter.itemCount > 0)
                     Visibility.Visible
                 else
                     Visibility.Invisible
             )
-            binding.layoutPagerEmpty.root.animateVisibility {
+            binding.content.layoutEmpty.root.animateVisibility {
                 adapter.itemCount == 0 && refresh is LoadState.NotLoading
             }
-            binding.layoutPagerLoading.root.animateVisibility {
+            binding.content.layoutLoading.root.animateVisibility {
                 adapter.itemCount == 0 && refresh is LoadState.Loading
             }
-            binding.layoutPagerError.root.animateVisibility {
+            binding.content.layoutError.root.animateVisibility {
                 adapter.itemCount == 0 && refresh is LoadState.Error
             }
         }
     }
 
     private fun initializeViewListeners() {
-        with (binding) {
-            initializeFilter()
-            recyclerEpisodes.addOnScrollListener(scrollListener)
-            fabEpisodesScrollToTop.setDebouncedClickListener {
-                recyclerEpisodes.stopScroll()
-                layoutManager.scrollToPositionWithOffset(0, 0)
-            }
-            layoutPagerError.buttonPagerRetry.setDebouncedClickListener {
-                adapter.retry()
-            }
-            refresherEpisodes.setOnRefreshListener { onRefreshRecycler() }
+        initializeFilter()
+        binding.content.recycler.addOnScrollListener(scrollListener)
+        binding.overlay.fabScrollToTop.setDebouncedClickListener {
+            binding.content.recycler.stopScroll()
+            layoutManager.scrollToPositionWithOffset(0, 0)
         }
+        binding.content.layoutError.buttonRetry.setDebouncedClickListener {
+            adapter.retry()
+        }
+        binding.content.refresher.setOnRefreshListener { onRefreshRecycler() }
     }
 
     private fun initializeFilter() {
         if (showsLimitedIds) {
-            binding.fabOpenEpisodeFilters.isVisible = false
+            binding.overlay.fabOpenFilters.isVisible = false
         } else {
-            binding.fabOpenEpisodeFilters.setDebouncedClickListener {
-                binding.fabOpenEpisodeFilters.animateVisibility(
+            binding.overlay.fabOpenFilters.setDebouncedClickListener {
+                binding.overlay.fabOpenFilters.animateVisibility(
                     Visibility.Gone,
                     coreR.anim.slide_out_right
                 )
                 EpisodeFilterFragment(
                     onClosed = {
-                        binding.fabOpenEpisodeFilters.animateVisibility(
+                        binding.overlay.fabOpenFilters.animateVisibility(
                             Visibility.Visible,
                             coreR.anim.slide_in_right
                         )
@@ -143,7 +140,7 @@ class EpisodeListFragment :
             launch {
                 viewModel.episodePagingData.collect {
                     adapter.submitData(it)
-                    binding.refresherEpisodes.isRefreshing = false
+                    binding.content.refresher.isRefreshing = false
                 }
             }
             launch {
@@ -182,12 +179,12 @@ class EpisodeListFragment :
 
     private fun animateScrollToTopFab() {
         if (layoutManager.findFirstVisibleItemPosition() >= SCROLL_TO_TOP_VISIBILITY_ITEM_COUNT) {
-            binding.fabEpisodesScrollToTop.animateVisibility(
+            binding.overlay.fabScrollToTop.animateVisibility(
                 Visibility.Visible,
                 coreR.anim.slide_in_right
             )
         } else {
-            binding.fabEpisodesScrollToTop.animateVisibility(
+            binding.overlay.fabScrollToTop.animateVisibility(
                 Visibility.Gone,
                 coreR.anim.slide_out_right
             )
@@ -195,31 +192,31 @@ class EpisodeListFragment :
     }
 
     private fun setNetworkLayoutsVisibility(state: EpisodeListViewModel.NetworkState) {
-        binding.layoutNetworkLost.root.isVisible =
+        binding.networkStatus.layoutNetworkLost.root.isVisible =
             state == EpisodeListViewModel.NetworkState.Lost
-        binding.layoutNetworkRestored.root.isVisible =
+        binding.networkStatus.layoutNetworkRestored.root.isVisible =
             state == EpisodeListViewModel.NetworkState.Restored
     }
 
     private fun animateNetworkLayoutsVisibility(state: EpisodeListViewModel.NetworkState) {
         if (state == EpisodeListViewModel.NetworkState.Lost) {
-            binding.layoutNetworkLost.root.animateVisibility(
+            binding.networkStatus.layoutNetworkLost.root.animateVisibility(
                 Visibility.Visible,
                 coreR.anim.slide_in_top
             )
         } else {
-            binding.layoutNetworkLost.root.animateVisibility(
+            binding.networkStatus.layoutNetworkLost.root.animateVisibility(
                 Visibility.Gone,
                 coreR.anim.slide_out_top
             )
         }
         if (state == EpisodeListViewModel.NetworkState.Restored) {
-            binding.layoutNetworkRestored.root.animateVisibility(
+            binding.networkStatus.layoutNetworkRestored.root.animateVisibility(
                 Visibility.Visible,
                 coreR.anim.slide_in_top
             )
         } else {
-            binding.layoutNetworkRestored.root.animateVisibility(
+            binding.networkStatus.layoutNetworkRestored.root.animateVisibility(
                 Visibility.Gone,
                 coreR.anim.slide_out_top
             )
@@ -237,7 +234,7 @@ class EpisodeListFragment :
                 coreR.anim.slide_in_left,
                 coreR.anim.slide_out_right
             )
-            add(R.id.fragment_container_episodes, fragment)
+            replace(R.id.fragment_container_episodes, fragment)
             addToBackStack(null)
         }
     }

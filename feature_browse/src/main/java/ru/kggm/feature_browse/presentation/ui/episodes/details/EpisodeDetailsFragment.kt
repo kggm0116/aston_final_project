@@ -3,7 +3,7 @@ package ru.kggm.feature_browse.presentation.ui.episodes.details
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
-import ru.kggm.core.presentation.ui.fragments.fragment.ViewModelFragment
+import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
 import ru.kggm.feature_main.databinding.FragmentEpisodeDetailsBinding
 import ru.kggm.feature_browse.di.EpisodeComponent
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
@@ -36,7 +36,7 @@ class EpisodeDetailsFragment :
     }
 
     private fun initializeToolbar() {
-        binding.toolbarEpisodeDetails.apply {
+        binding.toolbar.apply {
             setNavigationIcon(ru.kggm.presentation.R.drawable.baseline_arrow_back_24)
             setNavigationOnClickListener { navigateBack() }
             menu.clear()
@@ -52,14 +52,12 @@ class EpisodeDetailsFragment :
     }
 
     private fun displayEpisode(episode: EpisodePresentationEntity) {
-        with(binding.layoutEpisodeDetails) {
-            binding.toolbarEpisodeDetails.title = episode.name
-            layoutEpisodeDetailsTexts.textViewEpisodeCode.text = episode.code
-            layoutEpisodeDetailsTexts.textViewEpisodeAirDate.text = requireContext().getString(
-                R.string.composite_text_episode_air_date,
-                episode.airDate
-            )
-        }
+        binding.toolbar.title = episode.name
+        binding.info.textViewCode.text = episode.code
+        binding.info.textViewAirDate.text = requireContext().getString(
+            R.string.composite_text_episode_air_date,
+            episode.airDate
+        )
     }
 
     private fun navigateBack() {

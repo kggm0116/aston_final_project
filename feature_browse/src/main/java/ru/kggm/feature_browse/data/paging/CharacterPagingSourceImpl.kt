@@ -14,25 +14,24 @@ class CharacterPagingSourceImpl(
     filters: CharacterPagingFilters,
     private val characterService: CharacterService,
     private val characterDao: CharacterDao,
-) : FilterPagingSourceImpl<CharacterDataEntity, CharacterPagingFilters, CharacterPageDto, CharacterEntity>(
+) : FilterPagingSourceImpl<CharacterDataEntity, CharacterPagingFilters, CharacterEntity>(
     filters
 ) {
+    companion object {
+        private const val ITEMS_PER_NETWORK_PAGE: Int = 20
+    }
 
     override val logTag = classTag()
-    override val itemsPerNetworkPage: Int = 20
+
     override suspend fun onClearCache() {
         characterDao.deleteAll()
     }
-
-    override fun getNetworkConstraints(response: CharacterPageDto) = NetworkConstants(
-        pageCount = response.info.pageCount,
-        itemCount = response.info.itemCount
-    )
 
     override suspend fun fetchFromDatabase(range: IntRange) =
         characterDao.getRangeFiltered(
             skip = range.first,
             take = range.last - range.first + 1,
+            ids = filters.ids,
             name = filters.nameQuery,
             status = filters.status,
             type = filters.type,
@@ -40,7 +39,28 @@ class CharacterPagingSourceImpl(
             gender = filters.gender
         ).first()
 
-    override suspend fun fetchNetworkPage(pageNumber: Int) =
+    override suspend fun fetchFromNetwork(
+        itemRange: IntRange
+    ): List<CharacterDataEntity> {
+        val fetchedItems = mutableListOf<CharacterDataEntity>()
+        val itemCount = itemRange.last - itemRange.first + 1
+        var pageCount = Int.MAX_VALUE
+        var iPage = itemRange.first / ITEMS_PER_NETWORK_PAGE + 1
+        while (fetchedItems.size < itemCount) {
+            if (iPage >= pageCount)
+                break
+            fetchNetworkPage(iPage++)
+                .also { pageCount = it.info.pageCount }
+                .let { response ->
+                    mapNetworkPage(response).let { items ->
+                        fetchedItems.addAll(items)
+                    }
+                }
+        }
+        return fetchedItems.take(itemCount)
+    }
+
+    private suspend fun fetchNetworkPage(pageNumber: Int) =
         characterService.getPage(
             pageNumber = pageNumber,
             status = filters.status,
@@ -48,17 +68,8 @@ class CharacterPagingSourceImpl(
             species = filters.species,
             gender = filters.gender
         )
-            .also {
-                println()
-            }
 
-    override suspend fun cacheItems(items: List<CharacterDataEntity>) {
-        characterDao.insertOrUpdate(items)
-    }
-
-    override fun mapData(item: CharacterDataEntity) = item.toDomainEntity()
-
-    override fun mapNetworkPage(page: CharacterPageDto) = page.results
+    private fun mapNetworkPage(page: CharacterPageDto) = page.results
         .filter { dto ->
             filters.nameQuery?.let { query ->
                 dto.name.contains(query, ignoreCase = true)
@@ -66,5 +77,10 @@ class CharacterPagingSourceImpl(
         }
         .map { it.toDataEntity() }
 
+    override suspend fun cacheItems(items: List<CharacterDataEntity>) {
+        characterDao.insertOrUpdate(items)
+    }
+
+    override fun mapData(item: CharacterDataEntity) = item.toDomainEntity()
     override val itemComparator = compareBy<CharacterDataEntity> { it.id }
 }
