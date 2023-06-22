@@ -4,20 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
+import ru.kggm.feature_browse.presentation.ui.shared.ItemClickable
 import ru.kggm.feature_main.databinding.LayoutCharacterItemBinding
 
 class CharacterPagingAdapter : PagingDataAdapter<CharacterPresentationEntity, CharacterViewHolder>(
     CharacterDiffUtil
-) {
-
-    var onCharacterClicked: (CharacterPresentationEntity) -> Unit = { }
+), ItemClickable<CharacterPresentationEntity> {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = LayoutCharacterItemBinding.inflate(inflater, parent, false)
         return CharacterViewHolder(
             binding = binding,
-            onCharacterClicked = onCharacterClicked,
+            onCharacterClicked = { onItemClicked(it) },
         )
     }
 
@@ -25,4 +24,6 @@ class CharacterPagingAdapter : PagingDataAdapter<CharacterPresentationEntity, Ch
         val character = getItem(position)!!
         holder.bind(character)
     }
+
+    override var onItemClicked: (CharacterPresentationEntity) -> Unit = { }
 }

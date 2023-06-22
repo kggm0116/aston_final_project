@@ -22,7 +22,12 @@ fun Fragment.registerNetworkCallback(
 fun Fragment.unregisterNetworkCallback(
     callback: ConnectivityManager.NetworkCallback
 ) {
-    requireContext().getConnectivityManager().unregisterNetworkCallback(callback)
+    try {
+        requireContext().getConnectivityManager().unregisterNetworkCallback(callback)
+    }
+    catch (throwable: Throwable) {
+        Log.i(classTag(), "Unregister error:\n${throwable.stackTraceToString()}")
+    }
 }
 
 private val ALL_TRANSPORT_VARIANTS by lazy {

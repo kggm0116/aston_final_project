@@ -1,42 +1,59 @@
 package ru.kggm.feature_browse.data.repositories
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import ru.kggm.feature_browse.data.database.daos.CharacterDao
+import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.data.database.daos.EpisodeDao
+import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity.Companion.toDomainEntity
+import ru.kggm.feature_browse.data.entities.EpisodeDataEntity
 import ru.kggm.feature_browse.data.entities.EpisodeDataEntity.Companion.toDomainEntity
-import ru.kggm.feature_browse.data.network.services.CharacterService
 import ru.kggm.feature_browse.data.network.services.EpisodeService
-import ru.kggm.feature_browse.data.paging.CharacterPagingSourceImpl
 import ru.kggm.feature_browse.data.paging.EpisodePagingSourceImpl
-import ru.kggm.feature_browse.domain.paging.filters.CharacterPagingFilters
 import ru.kggm.feature_browse.domain.paging.filters.EpisodePagingFilters
-import ru.kggm.feature_browse.domain.repositories.CharacterRepository
 import ru.kggm.feature_browse.domain.repositories.EpisodeRepository
 import javax.inject.Inject
 
 class EpisodeRepositoryImpl @Inject constructor(
-    private val EpisodeService: EpisodeService,
-    private val EpisodeDao: EpisodeDao
+    private val episodeService: EpisodeService,
+    private val episodeDao: EpisodeDao
 ): EpisodeRepository {
+
+    companion object {
+        const val SIMULATED_DELAY_MS = 1000L
+    }
+
     override fun pagingSource(
         filterParameters: EpisodePagingFilters
     ) = EpisodePagingSourceImpl(
         filterParameters,
-        EpisodeService,
-        EpisodeDao
+        episodeService,
+        episodeDao
     )
 
     override suspend fun getById(id: Int) = withContext(Dispatchers.IO) {
-        when (val databaseEntity = EpisodeDao.getById(id)) {
+        when (val fromNetwork = getFromNetwork(id)) {
             null -> {
-                val fetchedEntity = EpisodeService.getById(listOf(id)).first().toDataEntity()
-                EpisodeDao.insertOrUpdate(fetchedEntity)
-                return@withContext fetchedEntity.toDomainEntity()
+                val fromDatabase = episodeDao.getById(id)
+                return@withContext fromDatabase?.toDomainEntity()
             }
-            else -> return@withContext databaseEntity.toDomainEntity()
+            else -> {
+                episodeDao.insertOrUpdate(fromNetwork)
+                return@withContext fromNetwork.toDomainEntity()
+            }
         }
     }
 
+    private suspend fun getFromNetwork(id: Int): EpisodeDataEntity? {
+        return try {
+            delay(CharacterRepositoryImpl.SIMULATED_DELAY_MS)
+            episodeService.getById(listOf(id)).first().toDataEntity()
+        }
+        catch (throwable: Throwable) {
+            Log.i(classTag(), "Error in service call:\n${throwable.stackTraceToString()}")
+            return null
+        }
+    }
 }

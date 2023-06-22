@@ -18,7 +18,7 @@ import ru.kggm.feature_browse.data.entities.LocationDataEntity
         LocationDataEntity::class,
         EpisodeDataEntity::class,
     ],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(

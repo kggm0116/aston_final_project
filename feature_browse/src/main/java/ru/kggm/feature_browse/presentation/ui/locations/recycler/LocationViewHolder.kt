@@ -3,6 +3,7 @@ package ru.kggm.feature_browse.presentation.ui.locations.recycler
 import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
+import ru.kggm.feature_main.R
 import ru.kggm.feature_main.databinding.LayoutLocationItemBinding
 
 class LocationViewHolder(
@@ -21,8 +22,14 @@ class LocationViewHolder(
     private fun displayLocation() {
         with (location) {
             binding.info.textViewLocationName.text = name
-            binding.info.textViewType.text = type
-            binding.info.textViewDimension.text = dimension
+            binding.info.textViewType.text = context.getString(
+                R.string.composite_text_location_type,
+                type
+            )
+            binding.info.textViewDimension.text = context.getString(
+                R.string.composite_text_location_dimension,
+                dimension
+            )
         }
     }
 }

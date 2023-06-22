@@ -17,6 +17,7 @@ import ru.kggm.feature_browse.domain.paging.filters.EpisodePagingFilters
 import ru.kggm.feature_browse.domain.repositories.EpisodePagingSource
 import ru.kggm.feature_browse.domain.use_cases.GetEpisodePagingSource
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity.Companion.toPresentationEntity
+import ru.kggm.feature_browse.presentation.ui.shared.ListNetworkState
 import javax.inject.Inject
 
 class EpisodeListViewModel @Inject constructor(
@@ -82,10 +83,12 @@ class EpisodeListViewModel @Inject constructor(
     fun refreshPagingData() {
         safeLaunch {
             episodePagingSource?.apply {
-                if (networkState.value != NetworkState.Lost)
+                if (networkState.value != ListNetworkState.Lost)
                     clearCache()
                 invalidate()
             }
+            if (networkStateFlow.value == ListNetworkState.Restored)
+                networkStateFlow.tryEmit(ListNetworkState.Normal)
         }
     }
 
@@ -99,22 +102,16 @@ class EpisodeListViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
-    enum class NetworkState { Normal, Lost, Restored }
-    private val networkStateFlow = MutableStateFlow(NetworkState.Normal)
+    private val networkStateFlow = MutableStateFlow(ListNetworkState.Normal)
     val networkState = networkStateFlow.asStateFlow()
 
     fun onNetworkLost() {
-        if (networkStateFlow.value != NetworkState.Lost)
-            runBlocking { networkStateFlow.emit(NetworkState.Lost) }
+        if (networkStateFlow.value != ListNetworkState.Lost)
+            runBlocking { networkStateFlow.emit(ListNetworkState.Lost) }
     }
 
-    fun onNetworkRestored() {
-        if (networkStateFlow.value == NetworkState.Lost)
-            runBlocking { networkStateFlow.emit(NetworkState.Restored) }
-    }
-
-    fun onDataRefreshed() {
-        if (networkStateFlow.value == NetworkState.Restored)
-            runBlocking { networkStateFlow.emit(NetworkState.Normal) }
+    fun onNetworkAvailable() {
+        if (networkStateFlow.value == ListNetworkState.Lost)
+            runBlocking { networkStateFlow.emit(ListNetworkState.Restored) }
     }
 }

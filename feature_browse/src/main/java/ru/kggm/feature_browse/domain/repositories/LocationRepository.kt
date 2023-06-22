@@ -10,5 +10,5 @@ typealias LocationPagingSource = FilterPagingSource<LocationEntity, LocationPagi
 interface LocationRepository {
     fun pagingSource(filterParameters: LocationPagingFilters): LocationPagingSource
 
-    suspend fun getById(id: Int): LocationEntity
+    suspend fun getById(id: Int): LocationEntity?
 }

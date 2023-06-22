@@ -19,14 +19,6 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-inline fun <reified VM : ViewModel> Fragment.parentViewModels() = viewModels<VM>(
-    { requireParentFragment() }
-)
-
-inline fun <reified VM : ViewModel> Fragment.grandparentViewModels() = viewModels<VM>(
-    { requireParentFragment().requireParentFragment() }
-)
-
 private val safeExceptionHandler = CoroutineExceptionHandler { _, throwable ->
     Log.e("SafeLaunch", "Exception in safeLaunch:\n${throwable.stackTraceToString()}")
 }

@@ -2,30 +2,31 @@ package ru.kggm.feature_browse.data.paging
 
 import android.util.Log
 import androidx.paging.PagingState
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.domain.paging.FilterPagingSource
 import kotlin.math.max
 
-abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TOut : Any>(
+abstract class BasePagingSourceImpl<TData, TFilters, TOut>(
     filterParameters: TFilters
-) : FilterPagingSource<TOut, TFilters>(filterParameters) {
+) : FilterPagingSource<TOut, TFilters>(filterParameters)
+        where TData : Any,
+              TFilters : Any,
+              TOut : Any {
 
     companion object {
         private const val STARTING_KEY = 0
         private const val SIMULATED_DELAY_MS = 500L
     }
 
-    open val logTag = "BasePagingSourceImpl"
+    protected open val logTag = "BasePagingSourceImpl"
 
-    abstract suspend fun fetchFromNetwork(itemRange: IntRange): List<TData>
-    abstract suspend fun fetchFromDatabase(range: IntRange): List<TData>
+    protected abstract suspend fun fetchFromNetwork(itemRange: IntRange): List<TData>
+    protected abstract suspend fun fetchFromDatabase(range: IntRange): List<TData>
 
-    abstract suspend fun cacheItems(items: List<TData>)
+    protected abstract suspend fun cacheItems(items: List<TData>)
     abstract suspend fun onClearCache()
 
     abstract val itemComparator: Comparator<TData>
@@ -55,7 +56,10 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TOut : Any>(
                 networkCallSuccessful = false
                 emptyList()
             } catch (throwable: Throwable) {
-                Log.e(logTag, "Unexpected error during network call:\n${throwable.stackTraceToString()}")
+                Log.e(
+                    logTag,
+                    "Unexpected error during network call:\n${throwable.stackTraceToString()}"
+                )
                 networkCallSuccessful = false
                 emptyList()
             }
@@ -70,7 +74,10 @@ abstract class FilterPagingSourceImpl<TData : Any, TFilters : Any, TOut : Any>(
 
             val combinedItems = (itemsFromDatabase + itemsFromNetwork)
                 .sortedWith(itemComparator)
-            Log.i(logTag, "Loaded ${itemsFromDatabase.size} from cache, ${itemsFromNetwork.size} from network")
+            Log.i(
+                logTag,
+                "Loaded ${itemsFromDatabase.size} from cache, ${itemsFromNetwork.size} from network"
+            )
 
             if (combinedItems.isEmpty() && !networkCallSuccessful)
                 return@withContext LoadResult.Error(Error("No network access and no cached items"))

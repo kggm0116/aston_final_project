@@ -8,6 +8,7 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
+        style="@style/style_text_view_info_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -15,44 +16,34 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         tools:background="#9909"
         tools:layout_height="56dp"
-        tools:paddingHorizontal="156dp" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text_view_location_residents"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/text_location_residents"
-        android:textSize="@dimen/text_size_large"
-        app:layout_constraintBottom_toTopOf="@id/fragment_container_residents"
-        app:layout_constraintEnd_toStartOf="@id/barrier_info_list"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_residents"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/barrier_info_list"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_location_residents"
-        tools:layout="@layout/layout_list" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier_info_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:barrierDirection="end"
-        app:constraint_referenced_ids="text_view_location_residents, fragment_container_residents" />
+         />
 
     <include
-        android:id="@+id/info"
-        layout="@layout/layout_location_info_full"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/barrier_info_list"
+        android:id="@+id/content"
+        layout="@layout/layout_location_details_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <include
+        android:id="@+id/layout_loading"
+        layout="@layout/layout_pager_loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:visibility="visible" />
+
+    <include
+        android:id="@+id/layout_error"
+        layout="@layout/layout_pager_error"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

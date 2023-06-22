@@ -3,4 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="style_text_view_info">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="style_text_view_info_header" parent="@style/style_text_view_info">
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

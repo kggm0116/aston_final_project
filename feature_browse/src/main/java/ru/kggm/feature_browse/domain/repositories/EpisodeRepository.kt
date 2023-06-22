@@ -11,5 +11,5 @@ typealias EpisodePagingSource = FilterPagingSource<EpisodeEntity, EpisodePagingF
 interface EpisodeRepository {
     fun pagingSource(filterParameters: EpisodePagingFilters): EpisodePagingSource
 
-    suspend fun getById(id: Int): EpisodeEntity
+    suspend fun getById(id: Int): EpisodeEntity?
 }

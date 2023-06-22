@@ -43,5 +43,8 @@
     <string name="text_network_lost">No network connection. Data may be incomplete.</string>
     <string name="text_network_restored">Network connection restored. Pull to refresh data.</string>
 
+    <string name="text_info_loading">loading...</string>
+    <string name="text_info_loading_error">failed to load!</string>
+    <string name="text_info_none">none</string>
 
 </resources>

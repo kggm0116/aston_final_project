@@ -3,7 +3,6 @@ package ru.kggm.feature_browse.data.paging
 import kotlinx.coroutines.flow.first
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.data.database.daos.EpisodeDao
-import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.entities.EpisodeDataEntity
 import ru.kggm.feature_browse.data.entities.EpisodeDataEntity.Companion.toDomainEntity
 import ru.kggm.feature_browse.data.network.dtos.page.EpisodePageDto
@@ -15,7 +14,7 @@ class EpisodePagingSourceImpl(
     filters: EpisodePagingFilters,
     private val episodeService: EpisodeService,
     private val episodeDao: EpisodeDao
-) : FilterPagingSourceImpl<EpisodeDataEntity, EpisodePagingFilters, EpisodeEntity>(
+) : BasePagingSourceImpl<EpisodeDataEntity, EpisodePagingFilters, EpisodeEntity>(
     filters
 ) {
     companion object {
@@ -31,7 +30,8 @@ class EpisodePagingSourceImpl(
     override suspend fun fetchFromDatabase(range: IntRange) = episodeDao.getRangeFiltered(
         skip = range.first,
         take = range.last - range.first + 1,
-        ids = filters.ids,
+        filterIds = filters.ids != null,
+        ids = filters.ids ?: emptyList(),
         name = filters.nameQuery,
         code = filters.code
     ).first()

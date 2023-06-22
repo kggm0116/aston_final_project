@@ -9,6 +9,7 @@ import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
+import ru.kggm.feature_main.R
 import ru.kggm.feature_main.databinding.LayoutCharacterItemBinding
 
 class CharacterViewHolder(
@@ -28,9 +29,18 @@ class CharacterViewHolder(
         with (character) {
             binding.image.load(image) { crossfade(true) }
             binding.info.textViewName.text = name
-            binding.info.textViewStatus.text = status.toResourceString(context)
-            binding.info.textViewSpecies.text = species
-            binding.info.textViewGender.text = gender.toResourceString(context)
+            binding.info.textViewStatus.text = context.getString(
+                R.string.composite_text_character_status,
+                status.toResourceString(context)
+            )
+            binding.info.textViewSpecies.text = context.getString(
+                R.string.composite_text_character_species,
+                species
+            )
+            binding.info.textViewGender.text  = context.getString(
+                R.string.composite_text_character_gender,
+                gender.toResourceString(context)
+            )
         }
     }
 }

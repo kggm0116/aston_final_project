@@ -25,7 +25,7 @@ interface LocationDao : BaseDao<LocationDataEntity> {
 
     @Query(
         "SELECT * FROM $LOCATION WHERE " +
-                "(:ids IS NULL OR $ID IN (:ids)) AND " +
+                "(:filterIds == 0 OR $ID IN (:ids)) AND " +
                 "(:name IS NULL OR $NAME LIKE '%'||:name||'%') AND " +
                 "(:type IS NULL OR $TYPE = :type) AND " +
                 "(:dimension IS NULL OR $DIMENSION = :dimension) " +
@@ -34,7 +34,8 @@ interface LocationDao : BaseDao<LocationDataEntity> {
     fun getRangeFiltered(
         skip: Int,
         take: Int,
-        ids: List<Int>?,
+        filterIds: Boolean = false, // Sqlite/Room seemingly can't check nullable list for NULL...
+        ids: List<Int>,
         name: String?,
         type: String?,
         dimension: String?

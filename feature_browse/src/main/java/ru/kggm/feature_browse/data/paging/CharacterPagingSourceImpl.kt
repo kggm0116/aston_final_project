@@ -14,7 +14,7 @@ class CharacterPagingSourceImpl(
     filters: CharacterPagingFilters,
     private val characterService: CharacterService,
     private val characterDao: CharacterDao,
-) : FilterPagingSourceImpl<CharacterDataEntity, CharacterPagingFilters, CharacterEntity>(
+) : BasePagingSourceImpl<CharacterDataEntity, CharacterPagingFilters, CharacterEntity>(
     filters
 ) {
     companion object {
@@ -31,7 +31,8 @@ class CharacterPagingSourceImpl(
         characterDao.getRangeFiltered(
             skip = range.first,
             take = range.last - range.first + 1,
-            ids = filters.ids,
+            filterIds = filters.ids != null,
+            ids = filters.ids ?: emptyList(),
             name = filters.nameQuery,
             status = filters.status,
             type = filters.type,
@@ -42,10 +43,26 @@ class CharacterPagingSourceImpl(
     override suspend fun fetchFromNetwork(
         itemRange: IntRange
     ): List<CharacterDataEntity> {
-        filters.ids?.let { ids ->
-            return characterService.getById(ids).map { it.toDataEntity() }
+        return if (filters.ids != null) {
+            fetchFromNetworkById(itemRange)
+        } else {
+            fetchFromNetworkByPage(itemRange)
         }
+    }
 
+    private suspend fun fetchFromNetworkById(itemRange: IntRange): List<CharacterDataEntity> {
+        val remainingIds = filters.ids!!
+            .drop(itemRange.first)
+            .take(itemRange.last - itemRange.first)
+        return if (remainingIds.none()) {
+            emptyList()
+        } else {
+            characterService.getById(remainingIds)
+                .map { it.toDataEntity() }
+        }
+    }
+
+    private suspend fun fetchFromNetworkByPage(itemRange: IntRange): List<CharacterDataEntity> {
         val fetchedItems = mutableListOf<CharacterDataEntity>()
         val itemCount = itemRange.last - itemRange.first + 1
         var pageCount = Int.MAX_VALUE
@@ -53,6 +70,7 @@ class CharacterPagingSourceImpl(
         while (fetchedItems.size < itemCount) {
             if (iPage >= pageCount)
                 break
+
             fetchNetworkPage(iPage++)
                 .also { pageCount = it.info.pageCount }
                 .let { response ->

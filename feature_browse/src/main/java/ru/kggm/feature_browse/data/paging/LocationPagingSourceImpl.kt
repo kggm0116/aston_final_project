@@ -3,7 +3,6 @@ package ru.kggm.feature_browse.data.paging
 import kotlinx.coroutines.flow.first
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.data.database.daos.LocationDao
-import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.entities.LocationDataEntity
 import ru.kggm.feature_browse.data.entities.LocationDataEntity.Companion.toDomainEntity
 import ru.kggm.feature_browse.data.network.dtos.page.LocationPageDto
@@ -15,7 +14,7 @@ class LocationPagingSourceImpl(
     filters: LocationPagingFilters,
     private val locationService: LocationService,
     private val locationDao: LocationDao
-) : FilterPagingSourceImpl<LocationDataEntity, LocationPagingFilters, LocationEntity>(
+) : BasePagingSourceImpl<LocationDataEntity, LocationPagingFilters, LocationEntity>(
     filters
 ) {
     companion object {
@@ -32,7 +31,8 @@ class LocationPagingSourceImpl(
         locationDao.getRangeFiltered(
             skip = range.first,
             take = range.last - range.first + 1,
-            ids = filters.ids,
+            filterIds = filters.ids != null,
+            ids = filters.ids ?: emptyList(),
             name = filters.nameQuery,
             type = filters.type,
             dimension = filters.dimension,
@@ -41,10 +41,26 @@ class LocationPagingSourceImpl(
     override suspend fun fetchFromNetwork(
         itemRange: IntRange
     ): List<LocationDataEntity> {
-        filters.ids?.let { ids ->
-            return locationService.getById(ids).map { it.toDataEntity() }
+        return if (filters.ids != null) {
+            fetchFromNetworkById(itemRange)
+        } else {
+            fetchFromNetworkByPage(itemRange)
         }
+    }
 
+    private suspend fun fetchFromNetworkById(itemRange: IntRange): List<LocationDataEntity> {
+        val remainingIds = filters.ids!!
+            .drop(itemRange.first)
+            .take(itemRange.last - itemRange.first)
+        return if (remainingIds.none()) {
+            emptyList()
+        } else {
+            locationService.getById(remainingIds)
+                .map { it.toDataEntity() }
+        }
+    }
+
+    private suspend fun fetchFromNetworkByPage(itemRange: IntRange): List<LocationDataEntity> {
         val fetchedItems = mutableListOf<LocationDataEntity>()
         val itemCount = itemRange.last - itemRange.first + 1
         var pageCount = Int.MAX_VALUE
@@ -52,6 +68,7 @@ class LocationPagingSourceImpl(
         while (fetchedItems.size < itemCount) {
             if (iPage >= pageCount)
                 break
+
             fetchNetworkPage(iPage++)
                 .also { pageCount = it.info.pageCount }
                 .let { response ->

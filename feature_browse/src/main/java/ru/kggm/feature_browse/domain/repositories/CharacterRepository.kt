@@ -9,5 +9,5 @@ typealias CharacterPagingSource = FilterPagingSource<CharacterEntity, CharacterP
 interface CharacterRepository {
     fun pagingSource(filterParameters: CharacterPagingFilters): CharacterPagingSource
 
-    suspend fun getById(id: Int): CharacterEntity
+    suspend fun getById(id: Int): CharacterEntity?
 }

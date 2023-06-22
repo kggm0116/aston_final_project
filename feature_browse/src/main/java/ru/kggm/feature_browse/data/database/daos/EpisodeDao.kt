@@ -5,11 +5,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import ru.kggm.core.data.database.daos.BaseDao
 import ru.kggm.feature_browse.data.database.SharedDatabase
-import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.entities.EpisodeDataEntity
-import ru.kggm.feature_browse.data.entities.LocationDataEntity
-import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import java.time.LocalDate
 
 @Dao
 interface EpisodeDao : BaseDao<EpisodeDataEntity> {
@@ -24,11 +20,9 @@ interface EpisodeDao : BaseDao<EpisodeDataEntity> {
     @Query("SELECT * FROM $EPISODE")
     fun getAll(): Flow<List<EpisodeDataEntity>>
 
-
-
     @Query(
         "SELECT * FROM $EPISODE WHERE " +
-                "(:ids IS NULL OR $ID IN (:ids)) AND " +
+                "(:filterIds == 0 OR $ID IN (:ids)) AND " +
                 "(:name IS NULL OR $NAME LIKE '%'||:name||'%') AND " +
                 "(:code IS NULL OR $CODE = :code) " +
                 "LIMIT :take OFFSET :skip"
@@ -36,7 +30,8 @@ interface EpisodeDao : BaseDao<EpisodeDataEntity> {
     fun getRangeFiltered(
         skip: Int,
         take: Int,
-        ids: List<Int>?,
+        filterIds: Boolean = false, // Sqlite/Room seemingly can't check nullable list for NULL...
+        ids: List<Int>,
         name: String?,
         code: String?,
     ): Flow<List<EpisodeDataEntity>>

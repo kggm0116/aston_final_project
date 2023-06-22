@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import ru.kggm.core.data.database.daos.BaseDao
 import ru.kggm.feature_browse.data.database.SharedDatabase
 import ru.kggm.feature_browse.data.entities.CharacterDataEntity
-import ru.kggm.feature_browse.data.entities.LocationDataEntity
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 
 @Dao
@@ -27,18 +26,21 @@ interface CharacterDao : BaseDao<CharacterDataEntity> {
 
     @Query(
         "SELECT * FROM $CHARACTER WHERE " +
-                "(:ids IS NULL OR $ID IN (:ids)) AND " +
+                "( " +
+                "(:filterIds == 0 OR $ID IN (:ids)) AND " +
                 "(:name IS NULL OR $NAME LIKE '%'||:name||'%') AND " +
                 "(:status IS NULL OR $STATUS = :status) AND " +
                 "(:type IS NULL OR $TYPE = :type) AND " +
                 "(:species IS NULL OR $SPECIES = :species) AND " +
                 "(:gender IS NULL OR $GENDER = :gender) " +
+                ") " +
                 "LIMIT :take OFFSET :skip"
     )
     fun getRangeFiltered(
         skip: Int,
         take: Int,
-        ids: List<Int>?,
+        filterIds: Boolean = false, // Sqlite/Room seemingly can't check nullable list for NULL...
+        ids: List<Int>,
         name: String?,
         status: CharacterEntity.Status?,
         type: String?,
