@@ -7,7 +7,7 @@
 
     <application>
         <activity android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
-            android:name="ru.kggm.feature_browse.presentation.ui.BrowseActivity"
+            android:name="ru.kggm.feature_browse.presentation.ui.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,5 +15,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:name="ru.kggm.feature_browse.presentation.ui.BrowseActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 </manifest>
