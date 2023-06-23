@@ -1,6 +1,6 @@
-package ru.kggm.aston_final_project
+package ru.kggm.application
 
-import ru.kggm.aston_final_project.di.ApplicationComponent
+import ru.kggm.application.di.ApplicationComponent
 import ru.kggm.core.application.DependenciesProviderApplication
 
 class Application: android.app.Application(), DependenciesProviderApplication  {

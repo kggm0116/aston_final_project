@@ -19,7 +19,7 @@ import ru.kggm.core.presentation.utility.network.registerNetworkCallback
 import ru.kggm.core.presentation.utility.network.unregisterNetworkCallback
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.presentation.ui.characters.filter.CharacterFilterFragment
-import ru.kggm.feature_main.databinding.LayoutListBinding
+import ru.kggm.feature_browse.databinding.LayoutListBinding
 
 abstract class BaseListFragment<VM, TAdapter, TData>(
     viewModelClass: Class<VM>

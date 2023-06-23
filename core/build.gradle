@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'ru.kggm.presentation'
+    namespace 'ru.kggm.core'
     compileSdk 33
 
     defaultConfig {

@@ -22,6 +22,9 @@ class CharacterDetailsViewModel @Inject constructor(
 ): ViewModel() {
 
     fun loadCharacter(id: Long) = safeLaunch {
+        if (characterFlow.value.item?.id == id)
+            return@safeLaunch
+
         characterFlow.tryEmit(LoadResult(null, LoadingState.Loading))
         when (val result = getCharacterById(id.toInt())) {
             null -> {

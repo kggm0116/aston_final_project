@@ -6,7 +6,7 @@ import androidx.paging.PagingDataAdapter
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
 import ru.kggm.feature_browse.presentation.ui.shared.ItemClickable
-import ru.kggm.feature_main.databinding.LayoutEpisodeItemBinding
+import ru.kggm.feature_browse.databinding.LayoutEpisodeItemBinding
 
 class EpisodePagingAdapter : PagingDataAdapter<EpisodePresentationEntity, EpisodeViewHolder>(
     EpisodeDiffUtil

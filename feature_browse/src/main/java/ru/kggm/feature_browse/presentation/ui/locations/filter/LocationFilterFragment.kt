@@ -13,7 +13,7 @@ import ru.kggm.feature_browse.di.LocationComponent
 import ru.kggm.feature_browse.domain.paging.filters.EpisodePagingFilters
 import ru.kggm.feature_browse.domain.paging.filters.LocationPagingFilters
 import ru.kggm.feature_browse.presentation.ui.locations.list.LocationListViewModel
-import ru.kggm.feature_main.databinding.FragmentLocationFilterBinding
+import ru.kggm.feature_browse.databinding.FragmentLocationFilterBinding
 
 class LocationFilterFragment(private val onClosed: () -> Unit = { }) :
     ViewModelBottomSheetDialogFragment<FragmentLocationFilterBinding, LocationListViewModel>(

@@ -12,7 +12,7 @@ import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.di.EpisodeComponent
 import ru.kggm.feature_browse.domain.paging.filters.EpisodePagingFilters
 import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListViewModel
-import ru.kggm.feature_main.databinding.FragmentEpisodeFilterBinding
+import ru.kggm.feature_browse.databinding.FragmentEpisodeFilterBinding
 
 class EpisodeFilterFragment(private val onClosed: () -> Unit = { }) :
     ViewModelBottomSheetDialogFragment<FragmentEpisodeFilterBinding, EpisodeListViewModel>(

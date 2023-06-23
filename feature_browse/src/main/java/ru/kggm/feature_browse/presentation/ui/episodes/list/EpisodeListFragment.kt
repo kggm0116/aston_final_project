@@ -16,7 +16,7 @@ import ru.kggm.feature_browse.presentation.ui.episodes.recycler.EpisodePagingAda
 import ru.kggm.feature_browse.presentation.ui.shared.BaseListFragment
 import ru.kggm.feature_browse.presentation.ui.shared.ListNetworkState
 import ru.kggm.feature_browse.presentation.ui.shared.openDetailsFragment
-import ru.kggm.feature_main.databinding.LayoutListBinding
+import ru.kggm.feature_browse.databinding.LayoutListBinding
 
 class EpisodeListFragment :
     BaseListFragment<EpisodeListViewModel, EpisodePagingAdapter, EpisodePresentationEntity>(

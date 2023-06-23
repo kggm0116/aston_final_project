@@ -17,6 +17,9 @@ class LocationDetailsViewModel @Inject constructor(
 ): ViewModel() {
 
     fun loadLocation(id: Long) = safeLaunch {
+        if (locationFlow.value.item?.id == id)
+            return@safeLaunch
+
         locationFlow.tryEmit(LoadResult(null, LoadingState.Loading))
         when (val result = getLocationById(id.toInt())) {
             null -> locationFlow.tryEmit(LoadResult(null, LoadingState.Error))

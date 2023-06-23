@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="string_character_status_alive">Живой</string>
+    <string name="string_character_status_dead">Мертвый</string>
+    <string name="string_character_status_unknown">Неизвестен</string>
+    <string name="string_character_gender_female">Женский</string>
+    <string name="string_character_gender_male">Мужской</string>
+    <string name="string_character_gender_genderless">Без пола</string>
+    <string name="string_character_gender_unknown">Неизвестен</string>
+    <string name="title_nav_bar_item_characters">Персонажи</string>
+    <string name="title_nav_bar_item_locations">Локации</string>
+    <string name="title_nav_bar_item_episodes">Эпизоды</string>
+    <string name="hint_character_name">Имя</string>
+    <string name="hint_character_type">Тип</string>
+    <string name="hint_character_species">Вид</string>
+    <string name="hint_location_name">Название</string>
+    <string name="hint_location_type">Тип</string>
+    <string name="hint_location_dimension">Измерение</string>
+    <string name="hint_episode_name">Название</string>
+    <string name="hint_episode_code">Код</string>
+    <string name="label_filter_character_status">Статус</string>
+    <string name="label_filter_character_gender">Пол</string>
+    <string name="composite_text_character_species">Вид:</string>
+    <string name="composite_text_character_status">Статус:</string>
+    <string name="composite_text_character_type">Тип:</string>
+    <string name="composite_text_character_gender">Пол:</string>
+    <string name="composite_text_character_origin">Происхождение:</string>
+    <string name="composite_text_character_location">Локация:</string>
+    <string name="composite_text_episode_air_date">Выпущен:</string>
+    <string name="composite_text_location_type">Тип:</string>
+    <string name="composite_text_location_dimension">Измерение:</string>
+    <string name="text_character_origin">Происхождение:</string>
+    <string name="text_character_location">Локация:</string>
+    <string name="text_character_episodes">Появляется в эпизодах:l</string>
+    <string name="text_episode_characters">Встречаются персонажи</string>
+    <string name="text_location_residents">Жители</string>
+    <string name="content_description_icon_filter">Иконка фильтра</string>
+    <string name="content_description_icon_up_arrow">Стрелка вверх</string>
+    <string name="text_list_network_lost">Нет соединения с сетью. Данные могут быть неполными</string>
+    <string name="text_list_network_restored">Соединение с сетью восстановлено. Потаните чтобы обновить данные</string>
+    <string name="text_info_loading">загрузка...</string>
+    <string name="text_info_loading_error">ошибка загрузки!</string>
+    <string name="text_info_none">нет</string>
+</resources>

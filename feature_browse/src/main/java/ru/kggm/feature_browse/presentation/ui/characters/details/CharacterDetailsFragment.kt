@@ -20,8 +20,8 @@ import ru.kggm.feature_browse.presentation.ui.shared.LoadResult
 import ru.kggm.feature_browse.presentation.ui.shared.LoadingState
 import ru.kggm.feature_browse.presentation.ui.shared.openDetailsFragment
 import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
-import ru.kggm.feature_main.R
-import ru.kggm.feature_main.databinding.FragmentCharacterDetailsBinding
+import ru.kggm.feature_browse.R
+import ru.kggm.feature_browse.databinding.FragmentCharacterDetailsBinding
 
 class CharacterDetailsFragment :
     ViewModelFragment<FragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
@@ -52,7 +52,7 @@ class CharacterDetailsFragment :
 
     private fun initializeToolbar() {
         binding.toolbar.apply {
-            setNavigationIcon(ru.kggm.presentation.R.drawable.baseline_arrow_back_24)
+            setNavigationIcon(ru.kggm.core.R.drawable.baseline_arrow_back_24)
             setNavigationOnClickListener { navigateBack() }
             menu.clear()
         }

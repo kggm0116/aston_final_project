@@ -16,7 +16,7 @@ import ru.kggm.feature_browse.presentation.ui.characters.recycler.CharacterPagin
 import ru.kggm.feature_browse.presentation.ui.shared.BaseListFragment
 import ru.kggm.feature_browse.presentation.ui.shared.ListNetworkState
 import ru.kggm.feature_browse.presentation.ui.shared.openDetailsFragment
-import ru.kggm.feature_main.databinding.LayoutListBinding
+import ru.kggm.feature_browse.databinding.LayoutListBinding
 
 class CharacterListFragment :
     BaseListFragment<CharacterListViewModel, CharacterPagingAdapter, CharacterPresentationEntity>(

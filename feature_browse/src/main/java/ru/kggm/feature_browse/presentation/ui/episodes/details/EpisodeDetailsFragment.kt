@@ -7,13 +7,13 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.base.ViewModelFragment
-import ru.kggm.feature_main.databinding.FragmentEpisodeDetailsBinding
+import ru.kggm.feature_browse.databinding.FragmentEpisodeDetailsBinding
 import ru.kggm.feature_browse.di.EpisodeComponent
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
 import ru.kggm.feature_browse.presentation.ui.shared.LoadResult
 import ru.kggm.feature_browse.presentation.ui.shared.LoadingState
-import ru.kggm.feature_main.R
+import ru.kggm.feature_browse.R
 
 class EpisodeDetailsFragment :
     ViewModelFragment<FragmentEpisodeDetailsBinding, EpisodeDetailsViewModel>(
@@ -43,7 +43,7 @@ class EpisodeDetailsFragment :
 
     private fun initializeToolbar() {
         binding.toolbar.apply {
-            setNavigationIcon(ru.kggm.presentation.R.drawable.baseline_arrow_back_24)
+            setNavigationIcon(ru.kggm.core.R.drawable.baseline_arrow_back_24)
             setNavigationOnClickListener { navigateBack() }
             menu.clear()
         }

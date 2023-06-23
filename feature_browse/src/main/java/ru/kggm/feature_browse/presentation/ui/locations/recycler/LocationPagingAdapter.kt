@@ -6,7 +6,7 @@ import androidx.paging.PagingDataAdapter
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.shared.ItemClickable
-import ru.kggm.feature_main.databinding.LayoutLocationItemBinding
+import ru.kggm.feature_browse.databinding.LayoutLocationItemBinding
 
 class LocationPagingAdapter : PagingDataAdapter<LocationPresentationEntity, LocationViewHolder>(
     LocationDiffUtil

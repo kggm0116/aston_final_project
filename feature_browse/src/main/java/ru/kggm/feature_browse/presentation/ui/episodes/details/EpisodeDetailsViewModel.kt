@@ -16,6 +16,9 @@ class EpisodeDetailsViewModel @Inject constructor(
 ): ViewModel() {
 
     fun loadEpisode(id: Long) = safeLaunch {
+        if (episodeFlow.value.item?.id == id)
+            return@safeLaunch
+
         episodeFlow.tryEmit(LoadResult(null, LoadingState.Loading))
         when (val result = getEpisodeById(id.toInt())) {
             null -> episodeFlow.tryEmit(LoadResult(null, LoadingState.Error))

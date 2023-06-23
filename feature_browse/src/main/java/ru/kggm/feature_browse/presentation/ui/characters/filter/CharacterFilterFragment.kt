@@ -12,7 +12,7 @@ import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.di.CharacterComponent
 import ru.kggm.feature_browse.domain.paging.filters.CharacterPagingFilters
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListViewModel
-import ru.kggm.feature_main.databinding.FragmentCharacterFilterBinding
+import ru.kggm.feature_browse.databinding.FragmentCharacterFilterBinding
 
 class CharacterFilterFragment(private val onClosed: () -> Unit = { }) :
     ViewModelBottomSheetDialogFragment<FragmentCharacterFilterBinding, CharacterListViewModel>(

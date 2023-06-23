@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.shared.ItemClickable
-import ru.kggm.feature_main.databinding.LayoutCharacterItemBinding
+import ru.kggm.feature_browse.databinding.LayoutCharacterItemBinding
 
 class CharacterPagingAdapter : PagingDataAdapter<CharacterPresentationEntity, CharacterViewHolder>(
     CharacterDiffUtil

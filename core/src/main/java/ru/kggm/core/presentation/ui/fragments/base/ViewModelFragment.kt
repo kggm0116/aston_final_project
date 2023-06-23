@@ -34,13 +34,5 @@ abstract class ViewModelFragment<VB : ViewBinding, VM : ViewModel>(
         _viewModel = ViewModelProvider(viewModelOwner(), viewModelFactory)[viewModelClass]
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     abstract fun initDaggerComponent(dependenciesProvider: DependenciesProvider)
 }

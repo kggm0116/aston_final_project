@@ -7,8 +7,8 @@ import com.google.android.material.navigation.NavigationBarView
 import ru.kggm.feature_browse.presentation.ui.characters.list.CharacterListFragment
 import ru.kggm.feature_browse.presentation.ui.episodes.list.EpisodeListFragment
 import ru.kggm.feature_browse.presentation.ui.locations.list.LocationListFragment
-import ru.kggm.feature_main.R
-import ru.kggm.feature_main.databinding.ActivityBrowseBinding
+import ru.kggm.feature_browse.R
+import ru.kggm.feature_browse.databinding.ActivityBrowseBinding
 
 class BrowseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBrowseBinding

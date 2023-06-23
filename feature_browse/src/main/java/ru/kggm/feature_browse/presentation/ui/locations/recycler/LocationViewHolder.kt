@@ -3,8 +3,8 @@ package ru.kggm.feature_browse.presentation.ui.locations.recycler
 import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
-import ru.kggm.feature_main.R
-import ru.kggm.feature_main.databinding.LayoutLocationItemBinding
+import ru.kggm.feature_browse.R
+import ru.kggm.feature_browse.databinding.LayoutLocationItemBinding
 
 class LocationViewHolder(
     private val binding: LayoutLocationItemBinding,

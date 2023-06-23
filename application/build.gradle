@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'ru.kggm.aston_final_project'
+    namespace 'ru.kggm.application'
     compileSdk 33
 
     defaultConfig {
-        applicationId "ru.kggm.aston_final_project"
+        applicationId 'ru.kggm.aston_final_project'
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -24,7 +24,6 @@ android {
         }
     }
     compileOptions {
-        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -55,19 +54,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.asynclayoutinflater:asynclayoutinflater:1.0.0'
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
     implementation "androidx.fragment:fragment-ktx:1.5.7"
-
-    // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
-    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
-    implementation "androidx.navigation:navigation-compose:2.5.3"
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:2.5.3"
-
-    // Desugaring
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
     // Network
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

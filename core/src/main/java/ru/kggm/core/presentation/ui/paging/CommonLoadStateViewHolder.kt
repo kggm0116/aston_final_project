@@ -22,7 +22,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
 import ru.kggm.core.utility.classTag
-import ru.kggm.presentation.databinding.PagerFooterLoadStateBinding
+import ru.kggm.core.databinding.PagerFooterLoadStateBinding
 
 class CommonLoadStateViewHolder(
     private val binding: PagerFooterLoadStateBinding,

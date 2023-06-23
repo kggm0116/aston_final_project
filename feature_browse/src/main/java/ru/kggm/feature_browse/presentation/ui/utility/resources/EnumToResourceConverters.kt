@@ -2,7 +2,7 @@ package ru.kggm.feature_browse.presentation.ui.utility.resources
 
 import android.content.Context
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import ru.kggm.feature_main.R
+import ru.kggm.feature_browse.R
 
 fun CharacterEntity.Status.toResourceString(context: Context) = context.getString(
     when (this) {

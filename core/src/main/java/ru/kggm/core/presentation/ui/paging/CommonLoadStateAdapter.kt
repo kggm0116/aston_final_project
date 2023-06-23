@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
-import ru.kggm.presentation.databinding.PagerFooterLoadStateBinding
+import ru.kggm.core.databinding.PagerFooterLoadStateBinding
 
 class CommonLoadStateAdapter(
     private val onRetry: () -> Unit

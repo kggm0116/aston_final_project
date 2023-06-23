@@ -1,4 +1,4 @@
-package ru.kggm.aston_final_project.di
+package ru.kggm.application.di
 
 import android.content.Context
 import dagger.BindsInstance
