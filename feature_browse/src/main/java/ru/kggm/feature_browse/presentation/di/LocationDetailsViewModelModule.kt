@@ -5,8 +5,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.kggm.core.presentation.di.ViewModelKey
-import ru.kggm.feature_browse.presentation.ui.characters.details.CharacterDetailsViewModel
-import ru.kggm.feature_browse.presentation.ui.episodes.details.EpisodeDetailsViewModel
 import ru.kggm.feature_browse.presentation.ui.locations.details.LocationDetailsViewModel
 
 @Module

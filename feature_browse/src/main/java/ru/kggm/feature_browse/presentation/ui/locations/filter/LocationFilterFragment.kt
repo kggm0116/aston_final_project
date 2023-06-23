@@ -9,11 +9,10 @@ import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.fragments.bottom_sheet.ViewModelBottomSheetDialogFragment
 import ru.kggm.core.presentation.utility.runOnUiThread
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
+import ru.kggm.feature_browse.databinding.FragmentLocationFilterBinding
 import ru.kggm.feature_browse.di.LocationComponent
-import ru.kggm.feature_browse.domain.paging.filters.EpisodePagingFilters
 import ru.kggm.feature_browse.domain.paging.filters.LocationPagingFilters
 import ru.kggm.feature_browse.presentation.ui.locations.list.LocationListViewModel
-import ru.kggm.feature_browse.databinding.FragmentLocationFilterBinding
 
 class LocationFilterFragment(private val onClosed: () -> Unit = { }) :
     ViewModelBottomSheetDialogFragment<FragmentLocationFilterBinding, LocationListViewModel>(

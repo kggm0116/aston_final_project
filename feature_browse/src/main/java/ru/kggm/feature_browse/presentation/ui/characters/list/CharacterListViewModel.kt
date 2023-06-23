@@ -10,7 +10,6 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
@@ -46,7 +45,7 @@ class CharacterListViewModel @Inject constructor(
                     filterParametersFlow.emit(newParameters)
                 }
             }
-            characterPagingSource!!.invalidate()
+            characterPagingSource?.invalidate()
         }
     }
 

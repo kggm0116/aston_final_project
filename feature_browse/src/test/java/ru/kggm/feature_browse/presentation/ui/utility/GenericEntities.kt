@@ -2,7 +2,6 @@ package ru.kggm.feature_browse.presentation.ui.utility
 
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.LocationEntity
-import ru.kggm.feature_browse.domain.paging.filters.CharacterPagingFilters
 
 val genericCharacterEntity = CharacterEntity(
     id = 0,

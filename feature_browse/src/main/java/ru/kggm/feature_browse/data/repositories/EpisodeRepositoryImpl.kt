@@ -6,8 +6,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import ru.kggm.core.utility.classTag
 import ru.kggm.feature_browse.data.database.daos.EpisodeDao
-import ru.kggm.feature_browse.data.entities.CharacterDataEntity
-import ru.kggm.feature_browse.data.entities.CharacterDataEntity.Companion.toDomainEntity
 import ru.kggm.feature_browse.data.entities.EpisodeDataEntity
 import ru.kggm.feature_browse.data.entities.EpisodeDataEntity.Companion.toDomainEntity
 import ru.kggm.feature_browse.data.network.services.EpisodeService
@@ -22,7 +20,7 @@ class EpisodeRepositoryImpl @Inject constructor(
 ): EpisodeRepository {
 
     companion object {
-        const val SIMULATED_DELAY_MS = 1000L
+        const val SIMULATED_DELAY_MS = 0L
     }
 
     override fun pagingSource(

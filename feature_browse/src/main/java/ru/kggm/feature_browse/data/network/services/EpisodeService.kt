@@ -5,9 +5,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.kggm.feature_browse.data.network.dtos.entity.EpisodeDto
 import ru.kggm.feature_browse.data.network.dtos.page.EpisodePageDto
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
-import java.net.URL
 
 interface EpisodeService {
 

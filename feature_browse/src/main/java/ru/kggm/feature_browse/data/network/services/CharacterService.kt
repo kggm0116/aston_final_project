@@ -6,9 +6,6 @@ import retrofit2.http.Query
 import ru.kggm.feature_browse.data.network.dtos.entity.CharacterDto
 import ru.kggm.feature_browse.data.network.dtos.page.CharacterPageDto
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
-import java.net.URL
 
 interface CharacterService {
 

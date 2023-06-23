@@ -1,9 +1,6 @@
 package ru.kggm.feature_browse.presentation.entities
 
-import com.google.gson.annotations.SerializedName
-import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.EpisodeEntity
-import java.time.LocalDate
 
 data class EpisodePresentationEntity(
     val id: Long,

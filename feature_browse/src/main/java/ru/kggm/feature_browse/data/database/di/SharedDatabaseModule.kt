@@ -5,7 +5,6 @@ import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import ru.kggm.feature_browse.data.database.SharedDatabase
-import ru.kggm.feature_browse.data.database.daos.CharacterDao
 
 @Module
 object SharedDatabaseModule {

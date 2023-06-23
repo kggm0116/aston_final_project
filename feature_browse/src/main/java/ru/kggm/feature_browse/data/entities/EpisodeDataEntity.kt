@@ -4,10 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.kggm.feature_browse.data.database.SharedDatabase
-import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.EpisodeEntity
-import ru.kggm.feature_browse.domain.entities.LocationEntity
-import java.time.LocalDate
 
 @Entity(tableName = SharedDatabase.TABLE_EPISODE)
 data class EpisodeDataEntity(

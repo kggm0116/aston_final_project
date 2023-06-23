@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.kggm.feature_browse.data.database.SharedDatabase
-import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.LocationEntity
 
 @Entity(tableName = SharedDatabase.TABLE_LOCATION)

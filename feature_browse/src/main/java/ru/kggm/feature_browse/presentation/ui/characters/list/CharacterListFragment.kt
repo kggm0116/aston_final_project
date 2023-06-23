@@ -17,6 +17,7 @@ import ru.kggm.feature_browse.presentation.ui.shared.BaseListFragment
 import ru.kggm.feature_browse.presentation.ui.shared.ListNetworkState
 import ru.kggm.feature_browse.presentation.ui.shared.openDetailsFragment
 import ru.kggm.feature_browse.databinding.LayoutListBinding
+import ru.kggm.feature_browse.presentation.ui.characters.filter.CharacterFilterFragment
 
 class CharacterListFragment :
     BaseListFragment<CharacterListViewModel, CharacterPagingAdapter, CharacterPresentationEntity>(
@@ -80,6 +81,14 @@ class CharacterListFragment :
             arguments = bundleOf(CharacterDetailsFragment.ARG_CHARACTER_ID to item.id)
         }
         openDetailsFragment(fragment)
+    }
+
+    override fun onFilterClicked() {
+        CharacterFilterFragment(
+            onClosed = {
+                binding.overlay.fabOpenFilters.isVisible = true
+            }
+        ).show(parentFragmentManager, null)
     }
 
     private suspend fun onPagingDataChanged(data: PagingData<CharacterPresentationEntity>) {

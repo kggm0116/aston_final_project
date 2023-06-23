@@ -5,7 +5,6 @@ import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.network.services.EpisodeService.Companion.getEpisodeId
 import ru.kggm.feature_browse.data.network.services.LocationService.Companion.getLocationId
 import ru.kggm.feature_browse.domain.entities.CharacterEntity
-import java.net.URL
 
 data class CharacterDto(
     val id: Int,

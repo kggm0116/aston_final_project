@@ -1,6 +1,5 @@
 package ru.kggm.feature_browse.presentation.di
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module

@@ -1,6 +1,5 @@
 package ru.kggm.feature_browse.domain.repositories
 
-import ru.kggm.feature_browse.domain.entities.CharacterEntity
 import ru.kggm.feature_browse.domain.entities.LocationEntity
 import ru.kggm.feature_browse.domain.paging.FilterPagingSource
 import ru.kggm.feature_browse.domain.paging.filters.LocationPagingFilters

@@ -9,14 +9,15 @@ import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.recycler.StyledItemDecoration
 import ru.kggm.core.presentation.utility.getColorAttr
+import ru.kggm.feature_browse.databinding.LayoutListBinding
 import ru.kggm.feature_browse.di.LocationComponent
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.locations.details.LocationDetailsFragment
+import ru.kggm.feature_browse.presentation.ui.locations.filter.LocationFilterFragment
 import ru.kggm.feature_browse.presentation.ui.locations.list.recycler.LocationPagingAdapter
 import ru.kggm.feature_browse.presentation.ui.shared.BaseListFragment
 import ru.kggm.feature_browse.presentation.ui.shared.ListNetworkState
 import ru.kggm.feature_browse.presentation.ui.shared.openDetailsFragment
-import ru.kggm.feature_browse.databinding.LayoutListBinding
 
 class LocationListFragment :
     BaseListFragment<LocationListViewModel, LocationPagingAdapter, LocationPresentationEntity>(
@@ -80,6 +81,14 @@ class LocationListFragment :
             arguments = bundleOf(LocationDetailsFragment.ARG_LOCATION_ID to item.id)
         }
         openDetailsFragment(fragment)
+    }
+
+    override fun onFilterClicked() {
+        LocationFilterFragment(
+            onClosed = {
+                binding.overlay.fabOpenFilters.isVisible = true
+            }
+        ).show(parentFragmentManager, null)
     }
 
     private suspend fun onPagingDataChanged(data: PagingData<LocationPresentationEntity>) {

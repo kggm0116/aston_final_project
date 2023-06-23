@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.kggm.core.presentation.utility.safeLaunch
 import ru.kggm.feature_browse.domain.use_cases.GetLocationById
-import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity.Companion.toPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.shared.LoadResult

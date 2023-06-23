@@ -1,16 +1,12 @@
 package ru.kggm.feature_browse.presentation.ui.characters.list.recycler
 
-import androidx.core.view.isVisible
-import coil.Coil
-import coil.imageLoader
 import coil.load
-import coil.request.ImageRequest
 import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
-import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
-import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
 import ru.kggm.feature_browse.R
 import ru.kggm.feature_browse.databinding.LayoutCharacterItemBinding
+import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
+import ru.kggm.feature_browse.presentation.ui.utility.resources.toResourceString
 
 class CharacterViewHolder(
     private val binding: LayoutCharacterItemBinding,

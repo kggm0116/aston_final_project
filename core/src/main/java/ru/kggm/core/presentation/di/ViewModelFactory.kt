@@ -1,6 +1,5 @@
 package ru.kggm.core.presentation.di
 
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject

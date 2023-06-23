@@ -10,7 +10,4 @@ class GetCharacterPagingSource @Inject constructor(
 ) {
     operator fun invoke(filters: CharacterPagingFilters) : CharacterPagingSource =
         characterRepository.pagingSource(filters)
-
-//    operator fun invoke() : CharacterPagingSource =
-//        characterRepository.pagingSource(CharacterPagingFilters.Default)
 }

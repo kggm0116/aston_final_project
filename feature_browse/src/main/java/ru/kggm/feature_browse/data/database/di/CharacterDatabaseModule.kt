@@ -1,7 +1,5 @@
 package ru.kggm.feature_browse.data.database.di
 
-import android.content.Context
-import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import ru.kggm.feature_browse.data.database.SharedDatabase

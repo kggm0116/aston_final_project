@@ -3,10 +3,9 @@ package ru.kggm.feature_browse.presentation.ui.episodes.list.recycler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import ru.kggm.feature_browse.presentation.entities.CharacterPresentationEntity
+import ru.kggm.feature_browse.databinding.LayoutEpisodeItemBinding
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
 import ru.kggm.feature_browse.presentation.ui.shared.ItemClickable
-import ru.kggm.feature_browse.databinding.LayoutEpisodeItemBinding
 
 class EpisodePagingAdapter : PagingDataAdapter<EpisodePresentationEntity, EpisodeViewHolder>(
     EpisodeDiffUtil

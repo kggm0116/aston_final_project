@@ -3,8 +3,6 @@ package ru.kggm.feature_browse.data.network.dtos.entity
 import com.google.gson.annotations.SerializedName
 import ru.kggm.feature_browse.data.entities.EpisodeDataEntity
 import ru.kggm.feature_browse.data.network.services.CharacterService.Companion.getCharacterId
-import java.net.URL
-import java.time.LocalDate
 
 data class EpisodeDto(
     val id: Int,

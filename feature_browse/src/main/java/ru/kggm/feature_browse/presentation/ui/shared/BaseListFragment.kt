@@ -18,7 +18,6 @@ import ru.kggm.core.presentation.utility.network.getIsNetworkConnectionActive
 import ru.kggm.core.presentation.utility.network.registerNetworkCallback
 import ru.kggm.core.presentation.utility.network.unregisterNetworkCallback
 import ru.kggm.core.presentation.utility.setDebouncedClickListener
-import ru.kggm.feature_browse.presentation.ui.characters.filter.CharacterFilterFragment
 import ru.kggm.feature_browse.databinding.LayoutListBinding
 
 abstract class BaseListFragment<VM, TAdapter, TData>(
@@ -52,6 +51,7 @@ abstract class BaseListFragment<VM, TAdapter, TData>(
     protected open val itemDecoration: ItemDecoration? = null
     private lateinit var layoutManager: FooterOptimizedGridLayoutManager
     abstract fun onItemClicked(item: TData)
+    abstract fun onFilterClicked()
     private fun initializeRecycler() {
         layoutManager = FooterOptimizedGridLayoutManager(requireContext(), columnCount, adapter)
         binding.content.recycler.layoutManager = layoutManager
@@ -104,11 +104,8 @@ abstract class BaseListFragment<VM, TAdapter, TData>(
 
     private fun onFilterFabClick() {
         binding.overlay.fabOpenFilters.isVisible = false
-        CharacterFilterFragment(
-            onClosed = {
-                binding.overlay.fabOpenFilters.isVisible = true
-            }
-        ).show(parentFragmentManager, null)
+        onFilterClicked()
+
     }
 
     private fun displayLoadStates(states: CombinedLoadStates) {

@@ -5,13 +5,11 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
-import android.util.Log
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.graphics.toRectF
 import androidx.recyclerview.widget.RecyclerView
 import ru.kggm.core.presentation.utility.dp2px
-import ru.kggm.core.utility.classTag
 import kotlin.math.roundToInt
 
 class StyledItemDecoration(

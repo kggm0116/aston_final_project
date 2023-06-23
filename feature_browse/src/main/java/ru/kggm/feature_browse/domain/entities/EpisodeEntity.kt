@@ -1,8 +1,5 @@
 package ru.kggm.feature_browse.domain.entities
 
-import com.google.gson.annotations.SerializedName
-import java.time.LocalDate
-
 data class EpisodeEntity(
     val id: Int,
     val name: String,

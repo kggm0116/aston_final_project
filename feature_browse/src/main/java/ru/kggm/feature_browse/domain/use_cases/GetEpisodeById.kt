@@ -2,9 +2,7 @@ package ru.kggm.feature_browse.domain.use_cases
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.kggm.feature_browse.domain.repositories.CharacterRepository
 import ru.kggm.feature_browse.domain.repositories.EpisodeRepository
-import ru.kggm.feature_browse.domain.repositories.LocationRepository
 import javax.inject.Inject
 
 class GetEpisodeById @Inject constructor(

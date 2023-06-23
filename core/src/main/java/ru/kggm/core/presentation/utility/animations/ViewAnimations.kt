@@ -3,7 +3,6 @@ package ru.kggm.core.presentation.utility.animations
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.view.animation.TranslateAnimation
 import androidx.annotation.AnimRes
 
 private const val DURATION_VIEW_ANIMATION_DEFAULT_MS = 200L

@@ -5,9 +5,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import ru.kggm.core.data.database.daos.BaseDao
 import ru.kggm.feature_browse.data.database.SharedDatabase
-import ru.kggm.feature_browse.data.entities.CharacterDataEntity
 import ru.kggm.feature_browse.data.entities.LocationDataEntity
-import ru.kggm.feature_browse.domain.entities.CharacterEntity
 
 @Dao
 interface LocationDao : BaseDao<LocationDataEntity> {

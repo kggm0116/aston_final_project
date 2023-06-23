@@ -9,14 +9,15 @@ import kotlinx.coroutines.launch
 import ru.kggm.core.di.DependenciesProvider
 import ru.kggm.core.presentation.ui.recycler.StyledItemDecoration
 import ru.kggm.core.presentation.utility.getColorAttr
+import ru.kggm.feature_browse.databinding.LayoutListBinding
 import ru.kggm.feature_browse.di.EpisodeComponent
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
 import ru.kggm.feature_browse.presentation.ui.episodes.details.EpisodeDetailsFragment
+import ru.kggm.feature_browse.presentation.ui.episodes.filter.EpisodeFilterFragment
 import ru.kggm.feature_browse.presentation.ui.episodes.list.recycler.EpisodePagingAdapter
 import ru.kggm.feature_browse.presentation.ui.shared.BaseListFragment
 import ru.kggm.feature_browse.presentation.ui.shared.ListNetworkState
 import ru.kggm.feature_browse.presentation.ui.shared.openDetailsFragment
-import ru.kggm.feature_browse.databinding.LayoutListBinding
 
 class EpisodeListFragment :
     BaseListFragment<EpisodeListViewModel, EpisodePagingAdapter, EpisodePresentationEntity>(
@@ -88,6 +89,14 @@ class EpisodeListFragment :
             arguments = bundleOf(EpisodeDetailsFragment.ARG_EPISODE_ID to item.id)
         }
         openDetailsFragment(fragment)
+    }
+
+    override fun onFilterClicked() {
+        EpisodeFilterFragment(
+            onClosed = {
+                binding.overlay.fabOpenFilters.isVisible = true
+            }
+        ).show(parentFragmentManager, null)
     }
 
     private suspend fun onPagingDataChanged(data: PagingData<EpisodePresentationEntity>) {
