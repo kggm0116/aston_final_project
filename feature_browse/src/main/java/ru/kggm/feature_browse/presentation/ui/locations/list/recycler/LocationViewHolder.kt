@@ -1,4 +1,4 @@
-package ru.kggm.feature_browse.presentation.ui.locations.recycler
+package ru.kggm.feature_browse.presentation.ui.locations.list.recycler
 
 import ru.kggm.core.presentation.ui.recycler.BaseViewHolder
 import ru.kggm.core.presentation.utility.setDebouncedClickListener

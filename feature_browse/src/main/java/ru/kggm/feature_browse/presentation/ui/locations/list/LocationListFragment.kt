@@ -12,7 +12,7 @@ import ru.kggm.core.presentation.utility.getColorAttr
 import ru.kggm.feature_browse.di.LocationComponent
 import ru.kggm.feature_browse.presentation.entities.LocationPresentationEntity
 import ru.kggm.feature_browse.presentation.ui.locations.details.LocationDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.locations.recycler.LocationPagingAdapter
+import ru.kggm.feature_browse.presentation.ui.locations.list.recycler.LocationPagingAdapter
 import ru.kggm.feature_browse.presentation.ui.shared.BaseListFragment
 import ru.kggm.feature_browse.presentation.ui.shared.ListNetworkState
 import ru.kggm.feature_browse.presentation.ui.shared.openDetailsFragment

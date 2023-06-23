@@ -143,11 +143,11 @@ class CharacterListViewModel @Inject constructor(
 
     fun onNetworkLost() {
         if (networkStateFlow.value != ListNetworkState.Lost)
-            runBlocking { networkStateFlow.emit(ListNetworkState.Lost) }
+            networkStateFlow.tryEmit(ListNetworkState.Lost)
     }
 
     fun onNetworkAvailable() {
         if (networkStateFlow.value == ListNetworkState.Lost)
-            runBlocking { networkStateFlow.emit(ListNetworkState.Restored) }
+            networkStateFlow.tryEmit(ListNetworkState.Restored)
     }
 }

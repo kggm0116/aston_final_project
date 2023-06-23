@@ -1,4 +1,4 @@
-package ru.kggm.feature_browse.presentation.ui.episodes.recycler
+package ru.kggm.feature_browse.presentation.ui.episodes.list.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,4 +1,4 @@
-package ru.kggm.feature_browse.presentation.ui.characters.recycler
+package ru.kggm.feature_browse.presentation.ui.characters.list.recycler
 
 import androidx.core.view.isVisible
 import coil.Coil

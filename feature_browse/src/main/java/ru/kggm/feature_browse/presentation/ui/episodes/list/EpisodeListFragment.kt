@@ -12,7 +12,7 @@ import ru.kggm.core.presentation.utility.getColorAttr
 import ru.kggm.feature_browse.di.EpisodeComponent
 import ru.kggm.feature_browse.presentation.entities.EpisodePresentationEntity
 import ru.kggm.feature_browse.presentation.ui.episodes.details.EpisodeDetailsFragment
-import ru.kggm.feature_browse.presentation.ui.episodes.recycler.EpisodePagingAdapter
+import ru.kggm.feature_browse.presentation.ui.episodes.list.recycler.EpisodePagingAdapter
 import ru.kggm.feature_browse.presentation.ui.shared.BaseListFragment
 import ru.kggm.feature_browse.presentation.ui.shared.ListNetworkState
 import ru.kggm.feature_browse.presentation.ui.shared.openDetailsFragment
